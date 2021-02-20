@@ -10,7 +10,9 @@ public enum SmsServiceType {
 
     RONGCLOUD(1),
 
-    YUNPIAN(2);
+    YUNPIAN(2),
+
+    CHUANGLAN(3);
 
     private int code;
 

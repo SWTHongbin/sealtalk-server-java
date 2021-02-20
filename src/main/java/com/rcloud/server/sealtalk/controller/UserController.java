@@ -51,7 +51,7 @@ public class UserController extends BaseController {
     private UserManager userManager;
 
 
-    @ApiOperation(value = "向手机发送验证码(RongCloud)")
+    @ApiOperation(value = "向手机发送验证码(创蓝)")
     @RequestMapping(value = "/send_code", method = RequestMethod.POST)
     public APIResult<Object> sendCode(
             @ApiParam(name = "region", value = "区号", required = true, type = "String", example = "86")
@@ -63,7 +63,7 @@ public class UserController extends BaseController {
         ValidateUtils.checkRegion(region);
         ValidateUtils.checkCompletePhone(phone);
 
-        userManager.sendCode(region, phone, SmsServiceType.RONGCLOUD, null);
+        userManager.sendCode(region, phone, SmsServiceType.CHUANGLAN, null);
         return APIResultWrap.ok();
     }
 
@@ -102,7 +102,7 @@ public class UserController extends BaseController {
      * -》如果返回码不等于200，返回融云内部错误码和错误信息
      * -》如果返回码等于200，说明校验成功，返回token
      */
-    @ApiOperation(value = "校验验证码")
+    @ApiOperation(value = "校验验证码(创蓝)")
     @RequestMapping(value = "/verify_code", method = RequestMethod.POST)
     public APIResult<Object> verifyCode(@ApiParam(name = "region", value = "区号", required = true, type = "String", example = "86")
                                         @RequestParam String region,
@@ -114,7 +114,7 @@ public class UserController extends BaseController {
         ValidateUtils.checkRegion(region);
         ValidateUtils.checkCompletePhone(phone);
 
-        String token = userManager.verifyCode(region, phone, code, SmsServiceType.RONGCLOUD);
+        String token = userManager.verifyCode(region, phone, code, SmsServiceType.CHUANGLAN);
         Map<String, String> result = new HashMap<>();
         result.put(Constants.VERIFICATION_TOKEN_KEY, token);
         return APIResultWrap.ok(token);
@@ -167,7 +167,7 @@ public class UserController extends BaseController {
         String phone = userParam.getPhone();
 
         region = MiscUtils.removeRegionPrefix(region);
-        if(Constants.REGION_NUM.equals(region)){
+        if (Constants.REGION_NUM.equals(region)) {
             ValidateUtils.checkCompletePhone(phone);
         }
         if (userManager.isExistUser(region, phone)) {
@@ -365,11 +365,11 @@ public class UserController extends BaseController {
 
         List<BlackLists> resultList = userManager.getBlackList(currentUserId);
 
-        List<BlackListDTO>  BlackListDTOList = new ArrayList<>();
+        List<BlackListDTO> BlackListDTOList = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMATR_PATTERN);
 
-        if(!CollectionUtils.isEmpty(resultList)) {
+        if (!CollectionUtils.isEmpty(resultList)) {
 
             for (BlackLists blackLists : resultList) {
                 BlackListDTO blackListDTO = new BlackListDTO();

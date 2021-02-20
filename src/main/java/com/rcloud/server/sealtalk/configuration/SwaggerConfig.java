@@ -32,8 +32,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo(){
         return new ApiInfoBuilder()
-                .title("API 接口文档")
-                .description("SealTalk API")
+                .title("tele studio API 接口文档")
                 .termsOfServiceUrl("")
                 .version("1.0")
                 .build();
