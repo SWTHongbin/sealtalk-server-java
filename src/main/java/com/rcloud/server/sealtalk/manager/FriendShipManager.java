@@ -252,32 +252,29 @@ public class FriendShipManager extends BaseManager {
      * @param timestamp
      */
     private void doAddFriend1(Integer currentUserId, Integer friendId, String message, long timestamp) {
-        transactionTemplate.execute(new TransactionCallback<Boolean>() {
-            @Override
-            public Boolean doInTransaction(TransactionStatus transactionStatus) {
-                //添加当前用户好友关系，状态FRIENDSHIP_REQUESTING 请求中
-                Friendships friendship = new Friendships();
-                friendship.setUserId(currentUserId);
-                friendship.setFriendId(friendId);
-                friendship.setStatus(Friendships.FRIENDSHIP_REQUESTING);
-                friendship.setMessage("");
-                friendship.setTimestamp(timestamp);
-                friendship.setCreatedAt(new Date());
-                friendship.setUpdatedAt(friendship.getCreatedAt());
-                friendshipsService.saveSelective(friendship);
+        transactionTemplate.execute(transactionStatus -> {
+            //添加当前用户好友关系，状态FRIENDSHIP_REQUESTING 请求中
+            Friendships friendship = new Friendships();
+            friendship.setUserId(currentUserId);
+            friendship.setFriendId(friendId);
+            friendship.setStatus(Friendships.FRIENDSHIP_REQUESTING);
+            friendship.setMessage("");
+            friendship.setTimestamp(timestamp);
+            friendship.setCreatedAt(new Date());
+            friendship.setUpdatedAt(friendship.getCreatedAt());
+            friendshipsService.saveSelective(friendship);
 
-                //添加对方好友关系，状态FRIENDSHIP_REQUESTED 被请求
-                Friendships friendship2 = new Friendships();
-                friendship2.setUserId(friendId);
-                friendship2.setFriendId(currentUserId);
-                friendship2.setStatus(Friendships.FRIENDSHIP_REQUESTED);
-                friendship2.setMessage(message);
-                friendship2.setTimestamp(timestamp);
-                friendship2.setCreatedAt(new Date());
-                friendship2.setUpdatedAt(friendship2.getCreatedAt());
-                friendshipsService.saveSelective(friendship2);
-                return true;
-            }
+            //添加对方好友关系，状态FRIENDSHIP_REQUESTED 被请求
+            Friendships friendship2 = new Friendships();
+            friendship2.setUserId(friendId);
+            friendship2.setFriendId(currentUserId);
+            friendship2.setStatus(Friendships.FRIENDSHIP_REQUESTED);
+            friendship2.setMessage(message);
+            friendship2.setTimestamp(timestamp);
+            friendship2.setCreatedAt(new Date());
+            friendship2.setUpdatedAt(friendship2.getCreatedAt());
+            friendshipsService.saveSelective(friendship2);
+            return true;
         });
 
     }
@@ -293,19 +290,16 @@ public class FriendShipManager extends BaseManager {
      * @param fcStatus
      */
     private void doAddFriend0(String message, Friendships friendshipsCF, Friendships friendshipsFC, long timestamp, int cfStatus, int fcStatus) {
-        transactionTemplate.execute(new TransactionCallback<Boolean>() {
-            @Override
-            public Boolean doInTransaction(TransactionStatus transactionStatus) {
-                friendshipsCF.setTimestamp(timestamp);
-                friendshipsCF.setStatus(cfStatus);
-                friendshipsService.updateByPrimaryKeySelective(friendshipsCF);
+        transactionTemplate.execute(transactionStatus -> {
+            friendshipsCF.setTimestamp(timestamp);
+            friendshipsCF.setStatus(cfStatus);
+            friendshipsService.updateByPrimaryKeySelective(friendshipsCF);
 
-                friendshipsFC.setTimestamp(timestamp);
-                friendshipsFC.setStatus(fcStatus);
-                friendshipsFC.setMessage(message);
-                friendshipsService.updateByPrimaryKeySelective(friendshipsFC);
-                return true;
-            }
+            friendshipsFC.setTimestamp(timestamp);
+            friendshipsFC.setStatus(fcStatus);
+            friendshipsFC.setMessage(message);
+            friendshipsService.updateByPrimaryKeySelective(friendshipsFC);
+            return true;
         });
     }
 
@@ -340,33 +334,30 @@ public class FriendShipManager extends BaseManager {
 
     private void doAddFriend2(Integer currentUserId, Integer friendId, String message, long timestamp) {
 
-        transactionTemplate.execute(new TransactionCallback<Boolean>() {
-            @Override
-            public Boolean doInTransaction(TransactionStatus transactionStatus) {
-                //插入或更新当前用户好友关系表状态为FRIENDSHIP_AGREED
-                Friendships friendship = new Friendships();
-                friendship.setUserId(currentUserId);
-                friendship.setFriendId(friendId);
-                friendship.setMessage(message);
-                friendship.setStatus(Friendships.FRIENDSHIP_AGREED);
-                friendship.setTimestamp(timestamp);
-                friendship.setCreatedAt(new Date());
-                friendship.setUpdatedAt(friendship.getCreatedAt());
+        transactionTemplate.execute(transactionStatus -> {
+            //插入或更新当前用户好友关系表状态为FRIENDSHIP_AGREED
+            Friendships friendship = new Friendships();
+            friendship.setUserId(currentUserId);
+            friendship.setFriendId(friendId);
+            friendship.setMessage(message);
+            friendship.setStatus(Friendships.FRIENDSHIP_AGREED);
+            friendship.setTimestamp(timestamp);
+            friendship.setCreatedAt(new Date());
+            friendship.setUpdatedAt(friendship.getCreatedAt());
 
-                friendshipsService.saveOrUpdate(friendship, currentUserId, friendId);
+            friendshipsService.saveOrUpdate(friendship, currentUserId, friendId);
 
-                //插入或更新对方用户好友关系表状态为FRIENDSHIP_AGREED
-                Friendships friendship2 = new Friendships();
-                friendship2.setUserId(friendId);
-                friendship2.setFriendId(currentUserId);
-                friendship2.setMessage(message);
-                friendship2.setStatus(Friendships.FRIENDSHIP_AGREED);
-                friendship2.setTimestamp(timestamp);
-                friendship2.setCreatedAt(new Date());
-                friendship2.setUpdatedAt(friendship2.getCreatedAt());
-                friendshipsService.saveOrUpdate(friendship2, friendId, currentUserId);
-                return true;
-            }
+            //插入或更新对方用户好友关系表状态为FRIENDSHIP_AGREED
+            Friendships friendship2 = new Friendships();
+            friendship2.setUserId(friendId);
+            friendship2.setFriendId(currentUserId);
+            friendship2.setMessage(message);
+            friendship2.setStatus(Friendships.FRIENDSHIP_AGREED);
+            friendship2.setTimestamp(timestamp);
+            friendship2.setCreatedAt(new Date());
+            friendship2.setUpdatedAt(friendship2.getCreatedAt());
+            friendshipsService.saveOrUpdate(friendship2, friendId, currentUserId);
+            return true;
         });
     }
 
