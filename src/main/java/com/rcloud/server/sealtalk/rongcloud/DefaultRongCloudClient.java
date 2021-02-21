@@ -87,16 +87,13 @@ public class DefaultRongCloudClient implements RongCloudClient {
     @Override
     public TokenResult register(String encodeId, String name, String portrait) throws ServiceException {
 
-        return RongCloudInvokeTemplate.getData(new RongCloudCallBack<TokenResult>() {
-            @Override
-            public TokenResult doInvoker() throws Exception {
-                UserModel user = new UserModel()
-                        .setId(encodeId)
-                        .setName(name)
-                        .setPortrait(portrait);
+        return RongCloudInvokeTemplate.getData(() -> {
+            UserModel user = new UserModel()
+                    .setId(encodeId)
+                    .setName(name)
+                    .setPortrait(portrait);
 
-                return User.register(user);
-            }
+            return User.register(user);
         });
     }
 
