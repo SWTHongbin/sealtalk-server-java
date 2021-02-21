@@ -117,7 +117,7 @@ public class UserController extends BaseController {
         String token = userManager.verifyCode(region, phone, code, SmsServiceType.CHUANGLAN);
         Map<String, String> result = new HashMap<>();
         result.put(Constants.VERIFICATION_TOKEN_KEY, token);
-        return APIResultWrap.ok(token);
+        return APIResultWrap.ok(result);
     }
 
 
