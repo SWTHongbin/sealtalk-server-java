@@ -101,7 +101,7 @@ public class UserManager extends BaseManager {
         ValidateUtils.checkRegion(region);
         ValidateUtils.checkCompletePhone(phone);
 
-        String ip = serverApiParams.getRequestUriInfo().getIp();
+        //  String ip = serverApiParams.getRequestUriInfo().getIp();
 
         // 获取最近一次发送验证码记录
         VerificationCodes verificationCodes = verificationCodesService.getByRegionAndPhone(region, phone);
@@ -111,7 +111,7 @@ public class UserManager extends BaseManager {
 
         if (SmsServiceType.YUNPIAN.equals(smsServiceType)) {
             //云片服务获取验证码，检查IP请求频率限制
-            checkRequestFrequency(ip);
+            //  checkRequestFrequency(ip);
         }
 
         //保存或更新verificationCodes、 发送验证码
@@ -119,7 +119,7 @@ public class UserManager extends BaseManager {
 
         //云片服务获取验证码 刷新请求频率限制指标数据
         if (SmsServiceType.YUNPIAN.equals(smsServiceType)) {
-            refreshRequestFrequency(ip);
+            //  refreshRequestFrequency(ip);
         }
     }
 
@@ -1082,7 +1082,7 @@ public class UserManager extends BaseManager {
 
 
         SyncUserDTO userDTO = new SyncUserDTO();
-        if(users!=null){
+        if (users != null) {
             userDTO.setId(N3d.encode(users.getId()));
             userDTO.setNickname(users.getNickname());
             userDTO.setPortraitUri(users.getPortraitUri());
@@ -1091,17 +1091,17 @@ public class UserManager extends BaseManager {
         syncInfoDTO.setUser(userDTO);
 
         List<SyncBlackListDTO> syncBlackListDTOList = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(blackListsList)){
-            for(BlackLists blackLists:blackListsList){
+        if (!CollectionUtils.isEmpty(blackListsList)) {
+            for (BlackLists blackLists : blackListsList) {
                 SyncBlackListDTO syncBlackListDTO = new SyncBlackListDTO();
                 syncBlackListDTO.setFriendId(N3d.encode(blackLists.getFriendId()));
-                syncBlackListDTO.setStatus(BlackLists.STATUS_VALID.equals(blackLists.getStatus())?true:false);
+                syncBlackListDTO.setStatus(BlackLists.STATUS_VALID.equals(blackLists.getStatus()) ? true : false);
                 syncBlackListDTO.setTimestamp(blackLists.getTimestamp());
 
                 Users u = blackLists.getUsers();
                 SyncUserDTO sUser = new SyncUserDTO();
 
-                if(u!=null){
+                if (u != null) {
                     sUser.setId(N3d.encode(u.getId()));
                     sUser.setNickname(u.getNickname());
                     sUser.setPortraitUri(u.getPortraitUri());
@@ -1116,8 +1116,8 @@ public class UserManager extends BaseManager {
 
 
         List<SyncFriendshipDTO> syncFriendshipDTOList = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(friendshipsList)){
-            for(Friendships friendships:friendshipsList){
+        if (!CollectionUtils.isEmpty(friendshipsList)) {
+            for (Friendships friendships : friendshipsList) {
                 SyncFriendshipDTO syncFriendshipDTO = new SyncFriendshipDTO();
                 syncFriendshipDTO.setFriendId(N3d.encode(friendships.getFriendId()));
                 syncFriendshipDTO.setDisplayName(friendships.getDisplayName());
@@ -1125,7 +1125,7 @@ public class UserManager extends BaseManager {
                 syncFriendshipDTO.setTimestamp(friendships.getTimestamp());
                 Users u = friendships.getUsers();
                 SyncUserDTO syncUserDTO = new SyncUserDTO();
-                if(u!=null){
+                if (u != null) {
                     syncUserDTO.setId(N3d.encode(u.getId()));
                     syncUserDTO.setNickname(u.getNickname());
                     syncUserDTO.setPortraitUri(u.getPortraitUri());
@@ -1139,16 +1139,16 @@ public class UserManager extends BaseManager {
         syncInfoDTO.setFriends(syncFriendshipDTOList);
 
         List<SyncGroupDTO> syncGroupDTOList = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(groupsList)){
-            for(GroupMembers groupMembers:groupsList){
+        if (!CollectionUtils.isEmpty(groupsList)) {
+            for (GroupMembers groupMembers : groupsList) {
                 SyncGroupDTO syncGroupDTO = new SyncGroupDTO();
                 syncGroupDTO.setGroupId(N3d.encode(groupMembers.getGroupId()));
                 syncGroupDTO.setDisplayName(groupMembers.getDisplayName());
-                syncGroupDTO.setIsDeleted(GroupMembers.IS_DELETED_YES.equals(groupMembers.getIsDeleted())?true:false);
+                syncGroupDTO.setIsDeleted(GroupMembers.IS_DELETED_YES.equals(groupMembers.getIsDeleted()) ? true : false);
                 syncGroupDTO.setRole(groupMembers.getRole());
                 Groups g = groupMembers.getGroups();
                 SyncGroupInnerDTO groupInnerDTO = new SyncGroupInnerDTO();
-                if(g!=null){
+                if (g != null) {
                     groupInnerDTO.setId(N3d.encode(g.getId()));
                     groupInnerDTO.setName(g.getName());
                     groupInnerDTO.setPortraitUri(g.getPortraitUri());
@@ -1163,20 +1163,19 @@ public class UserManager extends BaseManager {
         syncInfoDTO.setGroups(syncGroupDTOList);
 
 
-
         List<SyncGroupMemberDTO> syncGroupMemberDTOList = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(groupMembersList)){
-            for(GroupMembers groupMembers:groupMembersList){
+        if (!CollectionUtils.isEmpty(groupMembersList)) {
+            for (GroupMembers groupMembers : groupMembersList) {
                 SyncGroupMemberDTO syncGroupMemberDTO = new SyncGroupMemberDTO();
                 syncGroupMemberDTO.setGroupId(N3d.encode(groupMembers.getGroupId()));
                 syncGroupMemberDTO.setDisplayName(groupMembers.getDisplayName());
-                syncGroupMemberDTO.setIsDeleted(GroupMembers.IS_DELETED_YES.equals(groupMembers.getIsDeleted())?true:false);
+                syncGroupMemberDTO.setIsDeleted(GroupMembers.IS_DELETED_YES.equals(groupMembers.getIsDeleted()) ? true : false);
                 syncGroupMemberDTO.setMemberId(N3d.encode(groupMembers.getMemberId()));
                 syncGroupMemberDTO.setRole(groupMembers.getRole());
                 syncGroupMemberDTO.setTimestamp(groupMembers.getTimestamp());
                 Users u = groupMembers.getUsers();
                 SyncUserDTO su = new SyncUserDTO();
-                if(u!=null){
+                if (u != null) {
                     su.setId(N3d.encode(u.getId()));
                     su.setNickname(u.getNickname());
                     su.setTimestamp(u.getTimestamp());
