@@ -53,17 +53,11 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "向手机发送验证码(创蓝)")
     @RequestMapping(value = "/send_code", method = RequestMethod.POST)
-    public APIResult<Object> sendCode(
-            @ApiParam(name = "region", value = "区号", required = true, type = "String", example = "86")
-            @RequestParam String region,
-            @ApiParam(name = "phone", value = "电话号", required = true, type = "String", example = "188xxxxxxxx")
-            @RequestParam String phone
-    ) throws ServiceException {
+    public APIResult<Object> sendCode(@RequestBody UserParam userParam) throws ServiceException {
 
-        ValidateUtils.checkRegion(region);
-        ValidateUtils.checkCompletePhone(phone);
-
-        userManager.sendCode(region, phone, SmsServiceType.CHUANGLAN, null);
+        ValidateUtils.checkRegion(userParam.getRegion());
+        ValidateUtils.checkCompletePhone(userParam.getPhone());
+        userManager.sendCode(userParam.getRegion(), userParam.getPhone(), SmsServiceType.CHUANGLAN, null);
         return APIResultWrap.ok();
     }
 
