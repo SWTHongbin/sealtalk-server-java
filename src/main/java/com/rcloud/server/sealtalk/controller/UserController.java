@@ -98,17 +98,12 @@ public class UserController extends BaseController {
      */
     @ApiOperation(value = "校验验证码(创蓝)")
     @RequestMapping(value = "/verify_code", method = RequestMethod.POST)
-    public APIResult<Object> verifyCode(@ApiParam(name = "region", value = "区号", required = true, type = "String", example = "86")
-                                        @RequestParam String region,
-                                        @ApiParam(name = "phone", value = "电话号", required = true, type = "String", example = "188xxxxxxxx")
-                                        @RequestParam String phone,
-                                        @ApiParam(name = "code", value = "验证码", required = true, type = "String", example = "xxxxxx")
-                                        @RequestParam String code) throws ServiceException {
+    public APIResult<Object> verifyCode(@RequestBody UserParam userParam) throws ServiceException {
 
-        ValidateUtils.checkRegion(region);
-        ValidateUtils.checkCompletePhone(phone);
+        ValidateUtils.checkRegion(userParam.getRegion());
+        ValidateUtils.checkCompletePhone(userParam.getPhone());
 
-        String token = userManager.verifyCode(region, phone, code, SmsServiceType.CHUANGLAN);
+        String token = userManager.verifyCode(userParam.getRegion(), userParam.getPhone(), userParam.getCode(), SmsServiceType.CHUANGLAN);
         Map<String, String> result = new HashMap<>();
         result.put(Constants.VERIFICATION_TOKEN_KEY, token);
         return APIResultWrap.ok(result);
