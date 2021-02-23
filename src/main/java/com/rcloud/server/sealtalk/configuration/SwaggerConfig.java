@@ -24,6 +24,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .enable(swaggerEnabled)
+                .host("telepathytech.com/api-tele")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.rcloud.server.sealtalk"))
                 .paths(PathSelectors.any())
@@ -33,7 +34,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo(){
         return new ApiInfoBuilder()
                 .title("tele studio API 接口文档")
-                .termsOfServiceUrl("")
+                .termsOfServiceUrl("http://telepathytech.com/api-tele")
                 .version("1.0")
                 .build();
     }
