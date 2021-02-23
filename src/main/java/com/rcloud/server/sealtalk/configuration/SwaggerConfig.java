@@ -23,6 +23,7 @@ public class SwaggerConfig {
     public Docket createRestApi(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
+                .host("34.94.185.132:9097")
                 .enable(swaggerEnabled)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.rcloud.server.sealtalk"))
