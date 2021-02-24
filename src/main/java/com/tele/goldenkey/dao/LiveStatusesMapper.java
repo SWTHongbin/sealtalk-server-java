@@ -10,4 +10,5 @@ public interface LiveStatusesMapper extends Mapper<LiveStatuses> {
 
     Integer closeByLivedId(@Param("livedId") Integer livedId);
 
+    Integer openByLivedId(@Param("livedId") Integer livedId);
 }

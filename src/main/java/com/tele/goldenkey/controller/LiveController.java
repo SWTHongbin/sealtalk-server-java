@@ -2,10 +2,12 @@ package com.tele.goldenkey.controller;
 
 import com.google.common.collect.Maps;
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.manager.MiscManager;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.service.LiveService;
 import com.tele.goldenkey.util.N3d;
+import com.tele.goldenkey.util.ValidateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,9 +25,10 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/live")
 @Slf4j
-public class LiveController {
+public class LiveController  extends BaseController  {
     @Resource
     private LiveService liveService;
+
 
     @ApiOperation(value = "获取直播流推送地址")
     @PostMapping(value = "/get/push-url/{id}")
@@ -33,10 +36,7 @@ public class LiveController {
             @ApiParam(name = "id", value = "id", required = true, type = "String")
             @PathVariable("id") String encodeGroupId) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
-        String url = liveService.getPushUrl(id);
-        HashMap<String, String> hashMap = Maps.newHashMap();
-        hashMap.put("pushUrl", url);
-        return APIResultWrap.ok(hashMap);
+        return APIResultWrap.ok(liveService.getPushUrl(getCurrentUserId(),id));
     }
 
     @ApiOperation(value = "是否开播")

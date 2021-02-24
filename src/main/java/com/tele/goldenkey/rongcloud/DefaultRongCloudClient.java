@@ -217,12 +217,7 @@ public class DefaultRongCloudClient implements RongCloudClient {
     @Override
     public ResponseResult sendGroupMessage(GroupMessage groupMessage) throws ServiceException {
 
-        return RongCloudInvokeTemplate.getData(new RongCloudCallBack<ResponseResult>() {
-            @Override
-            public ResponseResult doInvoker() throws Exception {
-                return rongCloud.message.group.send(groupMessage);
-            }
-        });
+        return RongCloudInvokeTemplate.getData(() -> rongCloud.message.group.send(groupMessage));
     }
 
     @Override
