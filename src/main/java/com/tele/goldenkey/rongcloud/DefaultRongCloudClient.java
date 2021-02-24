@@ -206,12 +206,7 @@ public class DefaultRongCloudClient implements RongCloudClient {
     @Override
     public ResponseResult sendPrivateMessage(PrivateMessage privateMessage) throws ServiceException {
 
-        return RongCloudInvokeTemplate.getData(new RongCloudCallBack<ResponseResult>() {
-            @Override
-            public ResponseResult doInvoker() throws Exception {
-                return Private.send(privateMessage);
-            }
-        });
+        return RongCloudInvokeTemplate.getData(() -> Private.send(privateMessage));
     }
 
     @Override

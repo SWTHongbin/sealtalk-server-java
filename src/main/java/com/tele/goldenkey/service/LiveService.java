@@ -8,6 +8,7 @@ import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.manager.MiscManager;
 import com.tele.goldenkey.util.N3d;
 import com.tele.goldenkey.util.ValidateUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
