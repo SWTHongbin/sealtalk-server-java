@@ -3,8 +3,8 @@ package com.tele.goldenkey.rongcloud;
 import com.tele.goldenkey.configuration.SealtalkConfig;
 import com.tele.goldenkey.domain.Groups;
 import com.tele.goldenkey.exception.ServiceException;
-import com.tele.goldenkey.util.N3d;
 import com.tele.goldenkey.rongcloud.message.*;
+import com.tele.goldenkey.util.N3d;
 import io.rong.RongCloud;
 import io.rong.messages.GroupNotificationMessage;
 import io.rong.messages.TxtMessage;
@@ -99,61 +99,49 @@ public class DefaultRongCloudClient implements RongCloudClient {
     @Override
     public Result updateUser(String encodeId, String name, String portrait) throws ServiceException {
 
-        return RongCloudInvokeTemplate.getData(new RongCloudCallBack<Result>() {
-            @Override
-            public Result doInvoker() throws Exception {
-                UserModel user = new UserModel()
-                        .setId(encodeId)
-                        .setName(name)
-                        .setPortrait(portrait);
+        return RongCloudInvokeTemplate.getData(() -> {
+            UserModel user = new UserModel()
+                    .setId(encodeId)
+                    .setName(name)
+                    .setPortrait(portrait);
 
-                return User.update(user);
-            }
+            return User.update(user);
         });
 
     }
 
     @Override
     public UserResult getUserInfo(String encodeId) throws ServiceException {
-        return RongCloudInvokeTemplate.getData(new RongCloudCallBack<UserResult>() {
-            @Override
-            public UserResult doInvoker() throws Exception {
-                UserModel user = new UserModel()
-                        .setId(encodeId);
-                return User.get(user);
-            }
+        return RongCloudInvokeTemplate.getData(() -> {
+            UserModel user = new UserModel()
+                    .setId(encodeId);
+            return User.get(user);
         });
     }
 
     @Override
     public Result addUserBlackList(String encodeId, String[] encodeBlackUserIds) throws ServiceException {
-        return RongCloudInvokeTemplate.getData(new RongCloudCallBack<Result>() {
-            @Override
-            public Result doInvoker() throws Exception {
+        return RongCloudInvokeTemplate.getData(() -> {
 
-                UserModel[] blacklist = new UserModel[encodeBlackUserIds.length];
-                int i = 0;
-                for (String blackUserId : encodeBlackUserIds) {
-                    UserModel userModel = new UserModel().setId(blackUserId);
-                    blacklist[i++] = userModel;
-                }
-                UserModel user = new UserModel()
-                        .setId(encodeId)
-                        .setBlacklist(blacklist);
-
-                return BlackList.add(user);
+            UserModel[] blacklist = new UserModel[encodeBlackUserIds.length];
+            int i = 0;
+            for (String blackUserId : encodeBlackUserIds) {
+                UserModel userModel = new UserModel().setId(blackUserId);
+                blacklist[i++] = userModel;
             }
+            UserModel user = new UserModel()
+                    .setId(encodeId)
+                    .setBlacklist(blacklist);
+
+            return BlackList.add(user);
         });
     }
 
     @Override
     public BlackListResult queryUserBlackList(String encodeId) throws ServiceException {
-        return RongCloudInvokeTemplate.getData(new RongCloudCallBack<BlackListResult>() {
-            @Override
-            public BlackListResult doInvoker() throws Exception {
-                UserModel user = new UserModel().setId(encodeId);
-                return BlackList.getList(user);
-            }
+        return RongCloudInvokeTemplate.getData(() -> {
+            UserModel user = new UserModel().setId(encodeId);
+            return BlackList.getList(user);
         });
     }
 
@@ -181,23 +169,20 @@ public class DefaultRongCloudClient implements RongCloudClient {
 
 
     public void sendContactNotification(String senderId, String nickname, String[] targetIds, String toUserId, String operation, String message, long timestamp) throws ServiceException {
-        RongCloudInvokeTemplate.getData(new RongCloudCallBack<Result>() {
-            @Override
-            public Result doInvoker() throws Exception {
+        RongCloudInvokeTemplate.getData((RongCloudCallBack<Result>) () -> {
 
-                Map<String, Object> extraInfoMap = new HashMap<>();
-                extraInfoMap.put("sourceUserNickname", nickname);
-                extraInfoMap.put("version", timestamp);
+            Map<String, Object> extraInfoMap = new HashMap<>();
+            extraInfoMap.put("sourceUserNickname", nickname);
+            extraInfoMap.put("version", timestamp);
 
-                ContactNotificationMessage contactNotificationMessage = new ContactNotificationMessage(senderId, toUserId, operation, message, extraInfoMap);
+            ContactNotificationMessage contactNotificationMessage = new ContactNotificationMessage(senderId, toUserId, operation, message, extraInfoMap);
 
-                SystemMessage systemMessage = new SystemMessage()
-                        .setSenderId(senderId)
-                        .setTargetId(targetIds)
-                        .setObjectName(contactNotificationMessage.getType())
-                        .setContent(contactNotificationMessage);
-                return system.send(systemMessage);
-            }
+            SystemMessage systemMessage = new SystemMessage()
+                    .setSenderId(senderId)
+                    .setTargetId(targetIds)
+                    .setObjectName(contactNotificationMessage.getType())
+                    .setContent(contactNotificationMessage);
+            return system.send(systemMessage);
         });
 
     }

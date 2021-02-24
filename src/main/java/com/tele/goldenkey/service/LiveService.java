@@ -2,7 +2,9 @@ package com.tele.goldenkey.service;
 
 import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.domain.LiveStatuses;
-import org.apache.commons.lang3.StringUtils;
+import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.spi.live.LiveSpiService;
+import com.tele.goldenkey.util.N3d;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -12,19 +14,24 @@ import javax.annotation.Resource;
 public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     @Resource
     private LiveStatusesMapper liveStatusesMapper;
+    @Resource
+    private LiveSpiService liveSpiService;
 
     @Override
     protected Mapper<LiveStatuses> getMapper() {
         return liveStatusesMapper;
     }
 
-    public String getPushUrl(Integer id) {
+    public String getPushUrl(Integer id) throws ServiceException {
         LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
-        String url = liveStatuses.getPushUrl();
-        if (StringUtils.isNotBlank(url)) {
+        if (liveStatuses == null) {
+            liveStatuses = new LiveStatuses();
+            liveStatuses.setLiveId(id);
+            this.saveSelective(liveStatuses);
+        } else {
             liveStatusesMapper.openByLivedId(id);
         }
-        return url;
+        return liveSpiService.pushUrl(N3d.encode(id));
     }
 
     public Boolean isOpen(Integer id) {
@@ -36,12 +43,12 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper.closeByLivedId(id) > 0;
     }
 
-    public String getLiveUrl(Integer id) {
+    public String getLiveUrl(Integer id) throws ServiceException {
         LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
         if (liveStatuses == null || liveStatuses.getStatus() == 0) {
             return null;
         }
-        return liveStatuses.getLiveUrl();
+        return liveSpiService.liveUrl(N3d.encode(id));
     }
 
 }
