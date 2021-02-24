@@ -188,11 +188,11 @@
             <version>${tk.mapper.version}</version>
         </dependency>
 
-        <!--    <dependency>-->
-        <!--      <groupId>com.qiniu</groupId>-->
-        <!--      <artifactId>qiniu-java-sdk</artifactId>-->
-        <!--      <version>7.2.29</version>-->
-        <!--    </dependency>-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>7.2.29</version>
+        </dependency>
         <dependency>
             <groupId>com.qiniu.pili</groupId>
             <artifactId>pili-sdk-java</artifactId>
@@ -218,7 +218,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.1.RELEASE</version>
                 <configuration>
-                    <!--          <mainClass>com.rcloud.server.sealtalk.SealtalkServerApplication</mainClass>-->
+                    <!--          <mainClass>SealtalkServerApplication</mainClass>-->
                     <!--          &lt;!&ndash; 简化启动命令&ndash;&gt;-->
                     <!--          <executable>true</executable>-->
                     <includeSystemScope>true</includeSystemScope>
