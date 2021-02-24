@@ -26,15 +26,16 @@ public class LiveController {
     private LiveService liveService;
 
     @ApiOperation(value = "获取直播流推送地址")
-    @PostMapping(value = "/get/push-stream-url/{id}")
-    public APIResult<Object> getStreamUrl(
+    @PostMapping(value = "/get/push-url/{id}")
+    public APIResult<String> getPushUrl(
             @ApiParam(name = "id", value = "id", required = true, type = "String")
             @PathVariable("id") String encodeGroupId) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
+//        liveService.
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "是否开麦")
+    @ApiOperation(value = "是否开播")
     @PostMapping(value = "/is-open/{id}")
     public APIResult<Object> isOpen(@ApiParam(name = "id", value = "id", required = true, type = "String")
                                     @PathVariable("id") String encodeGroupId) throws ServiceException {
@@ -50,8 +51,8 @@ public class LiveController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "获取直播流")
-    @PostMapping(value = "/get-stream/{id}")
+    @ApiOperation(value = "获取直播地址")
+    @PostMapping(value = "/get-url/{id}")
     public APIResult<Object> getStream(@ApiParam(name = "id", value = "id", required = true, type = "String")
                                        @PathVariable("id") String encodeGroupId) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
