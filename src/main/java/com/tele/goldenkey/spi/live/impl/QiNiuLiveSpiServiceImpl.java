@@ -5,14 +5,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class QiNiuLiveSpiServiceImpl implements LiveSpiService {
-
+    /**
+     * todo
+     *
+     * @param key
+     * @return
+     */
     @Override
     public String pushUrl(String key) {
-        return null;
+        return "www.baidu.com";
     }
 
     @Override
     public String liveUrl(String key) {
-        return null;
+        return "www.baidu.com";
     }
 }
