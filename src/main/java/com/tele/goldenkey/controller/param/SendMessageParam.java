@@ -1,8 +1,6 @@
 package com.tele.goldenkey.controller.param;
 
-import io.swagger.annotations.ApiParam;
 import lombok.Data;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @Author: Jianlu.Yu
