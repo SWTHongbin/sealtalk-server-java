@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rcloud.server.sealtalk.dao.FriendshipsMapper">
-    <resultMap id="BaseResultMap" type="com.rcloud.server.sealtalk.domain.Friendships">
+<mapper namespace="com.tele.goldenkey.dao.FriendshipsMapper">
+    <resultMap id="BaseResultMap" type="com.tele.goldenkey.domain.Friendships">
         <!--
           WARNING - @mbg.generated
         -->
@@ -20,8 +20,8 @@
         <result column="updatedAt" jdbcType="TIMESTAMP" property="updatedAt"/>
     </resultMap>
 
-    <resultMap id="withUserResultMap" extends="BaseResultMap" type="com.rcloud.server.sealtalk.domain.Friendships">
-        <association property="users" javaType="com.rcloud.server.sealtalk.domain.Users">
+    <resultMap id="withUserResultMap" extends="BaseResultMap" type="com.tele.goldenkey.domain.Friendships">
+        <association property="users" javaType="com.tele.goldenkey.domain.Users">
             <id column="u_user_id" jdbcType="INTEGER" property="id"/>
             <result column="u_user_nickname" jdbcType="VARCHAR" property="nickname"/>
             <result column="u_user_portraitUri" jdbcType="VARCHAR" property="portraitUri"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rcloud.server.sealtalk.dao.GroupReceiversMapper">
-    <resultMap id="BaseResultMap" type="com.rcloud.server.sealtalk.domain.GroupReceivers">
+<mapper namespace="com.tele.goldenkey.dao.GroupReceiversMapper">
+    <resultMap id="BaseResultMap" type="com.tele.goldenkey.domain.GroupReceivers">
         <!--
           WARNING - @mbg.generated
         -->
@@ -23,7 +23,7 @@
     </resultMap>
 
 
-    <resultMap id="withIncludeResultMap" type="com.rcloud.server.sealtalk.domain.GroupReceivers">
+    <resultMap id="withIncludeResultMap" type="com.tele.goldenkey.domain.GroupReceivers">
         <!--
           WARNING - @mbg.generated
         -->
@@ -43,7 +43,7 @@
         <result column="createdAt" jdbcType="TIMESTAMP" property="createdAt"/>
         <result column="updatedAt" jdbcType="TIMESTAMP" property="updatedAt"/>
 
-        <association property="group" javaType="com.rcloud.server.sealtalk.domain.Groups">
+        <association property="group" javaType="com.tele.goldenkey.domain.Groups">
             <id column="g_id" jdbcType="INTEGER" property="id"/>
             <result column="g_name" jdbcType="VARCHAR" property="name"/>
             <result column="g_portraitUri" jdbcType="VARCHAR" property="portraitUri"/>
@@ -54,7 +54,7 @@
             <result column="g_timestamp" jdbcType="INTEGER" property="timestamp"/>
         </association>
 
-        <association property="requester" javaType="com.rcloud.server.sealtalk.domain.Users">
+        <association property="requester" javaType="com.tele.goldenkey.domain.Users">
             <id column="requester_user_id" jdbcType="INTEGER" property="id"/>
             <result column="requester_user_nickname" jdbcType="VARCHAR" property="nickname"/>
             <result column="requester_user_portraitUri" jdbcType="VARCHAR" property="portraitUri"/>
@@ -63,7 +63,7 @@
             <result column="requester_user_phone" jdbcType="INTEGER" property="phone"/>
             <result column="requester_user_region" jdbcType="INTEGER" property="region"/>
         </association>
-        <association property="receiver" javaType="com.rcloud.server.sealtalk.domain.Users">
+        <association property="receiver" javaType="com.tele.goldenkey.domain.Users">
             <id column="receiverU_user_id" jdbcType="INTEGER" property="id"/>
             <result column="receiverU_user_nickname" jdbcType="VARCHAR" property="nickname"/>
             <result column="receiverU_user_portraitUri" jdbcType="VARCHAR" property="portraitUri"/>

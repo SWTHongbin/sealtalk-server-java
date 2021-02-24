@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rcloud.server.sealtalk.dao.GroupMembersMapper">
-    <resultMap id="BaseResultMap" type="com.rcloud.server.sealtalk.domain.GroupMembers">
+<mapper namespace="com.tele.goldenkey.dao.GroupMembersMapper">
+    <resultMap id="BaseResultMap" type="com.tele.goldenkey.domain.GroupMembers">
         <!--
           WARNING - @mbg.generated
         -->
@@ -23,7 +23,7 @@
     </resultMap>
 
 
-    <resultMap id="resultMapWithGroups" type="com.rcloud.server.sealtalk.domain.GroupMembers">
+    <resultMap id="resultMapWithGroups" type="com.tele.goldenkey.domain.GroupMembers">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="groupId" jdbcType="INTEGER" property="groupId"/>
         <result column="memberId" jdbcType="INTEGER" property="memberId"/>
@@ -39,7 +39,7 @@
         <result column="timestamp" jdbcType="BIGINT" property="timestamp"/>
         <result column="createdAt" jdbcType="TIMESTAMP" property="createdAt"/>
         <result column="updatedAt" jdbcType="TIMESTAMP" property="updatedAt"/>
-        <association property="groups" javaType="com.rcloud.server.sealtalk.domain.Groups">
+        <association property="groups" javaType="com.tele.goldenkey.domain.Groups">
             <id column="g_id" jdbcType="INTEGER" property="id"/>
             <result column="g_name" jdbcType="VARCHAR" property="name"/>
             <result column="g_portraitUri" jdbcType="VARCHAR" property="portraitUri"/>
@@ -51,7 +51,7 @@
         </association>
     </resultMap>
 
-    <resultMap id="resultMapWithUsers" type="com.rcloud.server.sealtalk.domain.GroupMembers">
+    <resultMap id="resultMapWithUsers" type="com.tele.goldenkey.domain.GroupMembers">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="groupId" jdbcType="INTEGER" property="groupId"/>
         <result column="memberId" jdbcType="INTEGER" property="memberId"/>
@@ -67,7 +67,7 @@
         <result column="timestamp" jdbcType="BIGINT" property="timestamp"/>
         <result column="createdAt" jdbcType="TIMESTAMP" property="createdAt"/>
         <result column="updatedAt" jdbcType="TIMESTAMP" property="updatedAt"/>
-        <association property="users" javaType="com.rcloud.server.sealtalk.domain.Users">
+        <association property="users" javaType="com.tele.goldenkey.domain.Users">
             <id column="user_id" jdbcType="INTEGER" property="id"/>
             <result column="user_nickname" jdbcType="VARCHAR" property="nickname"/>
             <result column="user_portraitUri" jdbcType="VARCHAR" property="portraitUri"/>

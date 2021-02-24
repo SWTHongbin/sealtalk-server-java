@@ -41,7 +41,7 @@
     </appender>
 
     <!--指定包日志输出-->
-    <logger name="com.rcloud.server.sealtalk.dao"  level="INFO"/>
+    <logger name="com.tele.goldenkey.dao"  level="INFO"/>
 
     <!--指定基础的日志输出级别-->
     <root level="INFO">

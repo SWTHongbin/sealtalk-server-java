@@ -41,7 +41,7 @@
         </jdbcConnection>
 
         <javaModelGenerator
-          targetPackage="com.rcloud.server.sealtalk.domain"
+          targetPackage="com.tele.goldenkey.domain"
           targetProject="src/main/java">
         </javaModelGenerator>
 
@@ -51,7 +51,7 @@
         </sqlMapGenerator>
 
         <javaClientGenerator type="XMLMAPPER"
-          targetPackage="com.rcloud.server.sealtalk.dao"
+          targetPackage="com.tele.goldenkey.dao"
           targetProject="src/main/java">
             <property name="suppressAllComments" value="true"/>
         </javaClientGenerator>
