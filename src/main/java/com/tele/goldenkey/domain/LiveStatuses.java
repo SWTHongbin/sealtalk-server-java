@@ -14,8 +14,11 @@ public class LiveStatuses implements Serializable {
     @Column(name = "liveId")
     private Integer liveId;
 
-    @Column(name = "streamUrl")
-    private String streamUrl;
+    @Column(name = "pushUrl")
+    private String pushUrl;
+
+    @Column(name = "liveUrl")
+    private String liveUrl;
 
     private Integer status;
 
@@ -63,12 +66,20 @@ public class LiveStatuses implements Serializable {
         this.liveId = liveId;
     }
 
-    public String getStreamUrl() {
-        return streamUrl;
+    public String getPushUrl() {
+        return pushUrl;
     }
 
-    public void setStreamUrl(String streamUrl) {
-        this.streamUrl = streamUrl;
+    public void setPushUrl(String pushUrl) {
+        this.pushUrl = pushUrl;
+    }
+
+    public String getLiveUrl() {
+        return liveUrl;
+    }
+
+    public void setLiveUrl(String liveUrl) {
+        this.liveUrl = liveUrl;
     }
 
     /**

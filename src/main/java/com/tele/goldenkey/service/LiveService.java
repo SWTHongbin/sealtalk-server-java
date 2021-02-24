@@ -16,4 +16,30 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     protected Mapper<LiveStatuses> getMapper() {
         return liveStatusesMapper;
     }
+
+    public String getPushUrl(Integer id) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
+        return null;
+    }
+
+    public Boolean isOpen(Integer id) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
+        return liveStatuses != null && liveStatuses.getStatus() == 1;
+    }
+
+    public Boolean close(Integer id) {
+        return liveStatusesMapper.closeByLivedId(id) > 0;
+    }
+
+    public String getLiveUrl(Integer id) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
+        if (liveStatuses == null || liveStatuses.getStatus() == 0) {
+            return null;
+        }
+        return liveStatuses.getLiveUrl();
+    }
+
+    private String createStreamUrl() {
+        return null;
+    }
 }
