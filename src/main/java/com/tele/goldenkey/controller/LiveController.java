@@ -1,8 +1,8 @@
 package com.tele.goldenkey.controller;
 
 import com.google.common.collect.Maps;
+import com.tele.goldenkey.event.type.OpenLiveEvent;
 import com.tele.goldenkey.exception.ServiceException;
-import com.tele.goldenkey.manager.MiscManager;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.service.LiveService;
@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +26,11 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/live")
 @Slf4j
-public class LiveController  extends BaseController  {
+public class LiveController extends BaseController {
     @Resource
     private LiveService liveService;
-
+    @Resource
+    private ApplicationContext applicationContext;
 
     @ApiOperation(value = "获取直播流推送地址")
     @PostMapping(value = "/get/push-url/{id}")
@@ -36,7 +38,13 @@ public class LiveController  extends BaseController  {
             @ApiParam(name = "id", value = "id", required = true, type = "String")
             @PathVariable("id") String encodeGroupId) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
-        return APIResultWrap.ok(liveService.getPushUrl(getCurrentUserId(),id));
+        String pushUrl = liveService.getPushUrl(id);
+        ValidateUtils.notEmpty(pushUrl);
+
+        applicationContext.publishEvent(new OpenLiveEvent(getCurrentUserId(), id));
+        HashMap<String, String> hashMap = Maps.newHashMap();
+        hashMap.put("pushUrl", pushUrl);
+        return APIResultWrap.ok();
     }
 
     @ApiOperation(value = "是否开播")

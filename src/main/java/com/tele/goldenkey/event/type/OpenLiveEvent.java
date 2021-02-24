@@ -4,17 +4,32 @@ import org.springframework.context.ApplicationEvent;
 
 public class OpenLiveEvent extends ApplicationEvent {
 
-    private Integer code;
+    private Integer currentUserId;
 
-    /**
-     * Create a new {@code ApplicationEvent}.
-     *
-     * @param source the object on which the event initially occurred or with
-     *               which the event is associated (never {@code null})
-     */
-    public OpenLiveEvent(Object source) {
-        super(source);
+    private Integer targetId;
+
+    public OpenLiveEvent(Integer currentUserId, Integer targetId) {
+        super(currentUserId);
+        this.currentUserId = currentUserId;
+        this.targetId = targetId;
+    }
+
+    public Integer getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(Integer currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+
+    public Integer getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(Integer targetId) {
+        this.targetId = targetId;
     }
 
 
 }
+
