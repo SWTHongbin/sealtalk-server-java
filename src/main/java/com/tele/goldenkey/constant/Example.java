@@ -18,30 +18,30 @@ public class Example {
         Config.APIHost = "pili.qiniuapi.com";
 
         //初始化client
-        Client cli = new Client(accessKey,secretKey);
+        Client cli = new Client(accessKey, secretKey);
 
         //初始化Hub
         Hub hub = cli.newHub("PiliSDKTest");
 
         //获得不存在的流
         String keyA = streamKeyPrefix + "A";
-        try{
+        try {
             hub.get(keyA);
-        }catch (PiliException e){
+        } catch (PiliException e) {
             if (e.isNotFound()) {
                 System.out.printf("Stream %s doesn't exist\n", keyA);
-            }else {
+            } else {
                 System.out.println(keyA + " should not exist");
                 e.printStackTrace();
                 return;
             }
         }
-        System.out.printf("keyA=%s 不存在\n",keyA);
+        System.out.printf("keyA=%s 不存在\n", keyA);
 
         //创建流
         try {
             hub.create(keyA);
-        }catch (PiliException e){
+        } catch (PiliException e) {
             e.printStackTrace();
             return;
         }
@@ -49,9 +49,9 @@ public class Example {
 
         //获得流
         Stream streamA;
-        try{
+        try {
             streamA = hub.get(keyA);
-        }catch (PiliException e){
+        } catch (PiliException e) {
             e.printStackTrace();
             return;
         }
@@ -61,7 +61,7 @@ public class Example {
         try {
             hub.create(keyA);
         } catch (PiliException e) {
-            if (!e.isDuplicate()){
+            if (!e.isDuplicate()) {
                 e.printStackTrace();
                 return;
             }
@@ -71,70 +71,70 @@ public class Example {
         //创建另一路流
         String keyB = streamKeyPrefix + "B";
         Stream streamB;
-        try{
+        try {
             streamB = hub.create(keyB);
-        }catch(PiliException e){
+        } catch (PiliException e) {
             e.printStackTrace();
             return;
         }
         System.out.printf("keyB=%s 创建: %s\n", keyB, streamB.toJson());
 
         //列出所有流
-        try{
+        try {
             Hub.ListRet listRet = hub.list(streamKeyPrefix, 0, "");
-            System.out.printf("hub=%s 列出流: keys=%s marker=%s\n", hubName,printArrary(listRet.keys) , listRet.omarker);
-        }catch (PiliException e){
+            System.out.printf("hub=%s 列出流: keys=%s marker=%s\n", hubName, printArrary(listRet.keys), listRet.omarker);
+        } catch (PiliException e) {
             e.printStackTrace();
             return;
         }
 
         //列出正在直播的流
-        try{
+        try {
             Hub.ListRet listRet = hub.listLive(streamKeyPrefix, 0, "");
             System.out.printf("hub=%s 列出正在直播的流: keys=%s marker=%s\n", hubName, printArrary(listRet.keys), listRet.omarker);
-        }catch (PiliException e){
+        } catch (PiliException e) {
             e.printStackTrace();
             return;
         }
 
         //禁用流
-        try{
+        try {
             streamA.disable();
             streamA = hub.get(keyA);
-        }catch (PiliException e ){
+        } catch (PiliException e) {
             e.printStackTrace();
             return;
         }
         System.out.printf("keyA=%s 禁用: %s\n", keyA, streamA.toJson());
 
         //启用流
-        try{
+        try {
             streamA.enable();
             streamA = hub.get(keyA);
-        }catch (PiliException e ){
+        } catch (PiliException e) {
             e.printStackTrace();
             return;
         }
         System.out.printf("keyA=%s 启用: %s\n", keyA, streamA.toJson());
 
         //查询直播状态
-        try{
+        try {
             Stream.LiveStatus status = streamA.liveStatus();
             System.out.printf("keyA=%s 直播状态: status=%s\n", keyA, status.toJson());
-        }catch (PiliException e){
+        } catch (PiliException e) {
             if (!e.isNotInLive()) {
                 e.printStackTrace();
                 return;
-            }else{
-                System.out.printf("keyA=%s 不在直播\n",keyA);
+            } else {
+                System.out.printf("keyA=%s 不在直播\n", keyA);
             }
         }
 
         //查询推流历史
         Stream.Record[] records;
-        try{
+        try {
             records = streamA.historyRecord(0, 0);
-        }catch (PiliException e){
+        } catch (PiliException e) {
             e.printStackTrace();
             return;
         }
@@ -143,19 +143,19 @@ public class Example {
         //保存直播数据
         String fname = null;
         try {
-            fname = streamA.save(0,0);
-        }catch (PiliException e){
+            fname = streamA.save(0, 0);
+        } catch (PiliException e) {
             if (!e.isNotInLive()) {
                 e.printStackTrace();
                 return;
-            }else{
-                System.out.printf("keyA=%s 不在直播\n",keyA);
+            } else {
+                System.out.printf("keyA=%s 不在直播\n", keyA);
             }
         }
         System.out.printf("keyA=%s 保存直播数据: fname=%s\n", keyA, fname);
 
         //保存直播数据并获取作业id
-         fname = null;
+        fname = null;
         try {
             Stream.SaveOptions options = new Stream.SaveOptions();
             options.start = 0;
@@ -163,14 +163,14 @@ public class Example {
             options.format = "mp4";
 
             Map<String, String> ret = streamA.saveReturn(options);
-            System.out.println( "fname:" + ret.get("fname") );
-            System.out.println( "persistentID:" + ret.get("persistentID") );
-        }catch (PiliException e){
+            System.out.println("fname:" + ret.get("fname"));
+            System.out.println("persistentID:" + ret.get("persistentID"));
+        } catch (PiliException e) {
             if (!e.isNotInLive()) {
                 e.printStackTrace();
                 return;
-            }else{
-                System.out.printf("keyA=%s 不在直播\n","hutext");
+            } else {
+                System.out.printf("keyA=%s 不在直播\n", "hutext");
             }
         }
 
@@ -197,11 +197,11 @@ public class Example {
 
     }
 
-    private static String printArrary(Object[] arr){
+    private static String printArrary(Object[] arr) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (Object a : arr){
-            sb.append(a.toString()+" ");
+        for (Object a : arr) {
+            sb.append(a.toString() + " ");
         }
         sb.append("]");
         return sb.toString();

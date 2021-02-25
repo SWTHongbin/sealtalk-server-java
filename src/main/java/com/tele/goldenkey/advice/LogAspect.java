@@ -1,10 +1,12 @@
 package com.tele.goldenkey.advice;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tele.goldenkey.interceptor.ServerApiParamHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -64,7 +66,6 @@ public class LogAspect {
             String traceId = ServerApiParamHolder.getTraceId();
             String uid = ServerApiParamHolder.getEncodedCurrentUserId();
             log.info("invoke controller info: traceId={},uri={},target={},params=[{}],uid={}", traceId, uri, target, objectMapper.writeValueAsString(paramMap), uid);
-
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } catch (Throwable e) {
@@ -72,5 +73,18 @@ public class LogAspect {
         }
     }
 
-
+    @AfterReturning(value = "executeService()", returning = "returnValue")
+    public void doAfter(Object returnValue) {
+        try {
+            log.info("invoke controller info: traceId={},uri={},uid={},return value={}",
+                    ServerApiParamHolder.getTraceId(),
+                    ServerApiParamHolder.getURI(),
+                    ServerApiParamHolder.getEncodedCurrentUserId(),
+                    JSON.toJSONString(returnValue));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } catch (Throwable e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }
