@@ -99,7 +99,7 @@ public class UserManager extends BaseManager {
 
         region = MiscUtils.removeRegionPrefix(region);
         ValidateUtils.checkRegion(region);
-        ValidateUtils.checkCompletePhone(phone);
+        ValidateUtils.notEmpty(phone);
 
         //  String ip = serverApiParams.getRequestUriInfo().getIp();
 

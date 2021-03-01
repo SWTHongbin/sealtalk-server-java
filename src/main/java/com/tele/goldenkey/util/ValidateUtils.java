@@ -73,11 +73,11 @@ public class ValidateUtils {
 
     }
 
-    public static void checkCompletePhone(String completePhone) throws ServiceException {
-        if (!RegexUtils.checkMobile(completePhone)) {
-            throw new ServiceException(ErrorCode.INVALID_REGION_PHONE);
-        }
-    }
+//    public static void checkCompletePhone(String completePhone) throws ServiceException {
+//        if (!RegexUtils.checkMobile(completePhone)) {
+//            throw new ServiceException(ErrorCode.INVALID_REGION_PHONE);
+//        }
+//    }
 
     public static void checkRegion(String region) throws ServiceException {
         if (!Constants.REGION_NUM.equals(region)) {

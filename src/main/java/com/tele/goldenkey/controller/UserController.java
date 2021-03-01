@@ -56,7 +56,7 @@ public class UserController extends BaseController {
     public APIResult<Object> sendCode(@RequestBody UserParam userParam) throws ServiceException {
 
         ValidateUtils.checkRegion(userParam.getRegion());
-        ValidateUtils.checkCompletePhone(userParam.getPhone());
+        ValidateUtils.notEmpty(userParam.getPhone());
         userManager.sendCode(userParam.getRegion(), userParam.getPhone(), SmsServiceType.CHUANGLAN, null);
         return APIResultWrap.ok();
     }
@@ -73,7 +73,7 @@ public class UserController extends BaseController {
 
         region = MiscUtils.removeRegionPrefix(region);
         ValidateUtils.checkRegion(region);
-        ValidateUtils.checkCompletePhone(phone);
+        ValidateUtils.notEmpty(phone);
 
         ServerApiParams serverApiParams = getServerApiParams();
         userManager.sendCode(region, phone, SmsServiceType.YUNPIAN, serverApiParams);
@@ -101,7 +101,7 @@ public class UserController extends BaseController {
     public APIResult<Object> verifyCode(@RequestBody UserParam userParam) throws ServiceException {
 
         ValidateUtils.checkRegion(userParam.getRegion());
-        ValidateUtils.checkCompletePhone(userParam.getPhone());
+        ValidateUtils.notEmpty(userParam.getPhone());
 
         String token = userManager.verifyCode(userParam.getRegion(), userParam.getPhone(), userParam.getCode(), SmsServiceType.CHUANGLAN);
         Map<String, String> result = new HashMap<>();
@@ -131,7 +131,7 @@ public class UserController extends BaseController {
         region = MiscUtils.removeRegionPrefix(region);
 
         ValidateUtils.checkRegion(region);
-        ValidateUtils.checkCompletePhone(phone);
+        ValidateUtils.notEmpty(phone);
 
         String token = userManager.verifyCode(region, phone, code, SmsServiceType.YUNPIAN);
         Map<String, String> result = new HashMap<>();
@@ -157,7 +157,7 @@ public class UserController extends BaseController {
 
         region = MiscUtils.removeRegionPrefix(region);
         if (Constants.REGION_NUM.equals(region)) {
-            ValidateUtils.checkCompletePhone(phone);
+            ValidateUtils.notEmpty(phone);
         }
         if (userManager.isExistUser(region, phone)) {
             return APIResultWrap.ok(false, "Phone number has already existed.");
@@ -227,7 +227,7 @@ public class UserController extends BaseController {
 
         region = MiscUtils.removeRegionPrefix(region);
 //        ValidateUtils.checkRegionName(MiscUtils.getRegionName(region));
-        ValidateUtils.checkCompletePhone(phone);
+        ValidateUtils.notEmpty(phone);
 
         Pair<Integer, String> pairResult = userManager.login(region, phone, password);
 
@@ -466,7 +466,7 @@ public class UserController extends BaseController {
                                             @ApiParam(name = "phone", value = "phone", required = true, type = "String", example = "xxx")
                                             @PathVariable("phone") String phone) throws ServiceException {
         ValidateUtils.checkRegion(region);
-        ValidateUtils.checkCompletePhone(phone);
+        ValidateUtils.notEmpty(phone);
 
         Users users = userManager.getUser(region, phone);
         if (users != null) {
