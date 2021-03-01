@@ -38,11 +38,8 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(value = ServiceRuntimeException.class)
     public void serviceRuntimeExceptionHandler(HttpServletRequest request, HttpServletResponse response, ServiceRuntimeException e) throws Exception {
         String url = request.getRequestURI();
-        if(log.isDebugEnabled()){
-            String errorInfo = String.format("Error found: url:[%s],traceId:[%s],uid=[%s] ",url, ServerApiParamHolder.getTraceId(),ServerApiParamHolder.getEncodedCurrentUserId());
-            log.debug(errorInfo,e);
-        }
-
+        String errorInfo = String.format("Error found: url:[%s],traceId:[%s],uid=[%s] ", url, ServerApiParamHolder.getTraceId(), ServerApiParamHolder.getEncodedCurrentUserId());
+        log.error(errorInfo, e);
         String contentType = "application/json;charset=" + CHARSET;
         response.addHeader("Content-Type", contentType);
 
@@ -59,11 +56,8 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(value = ServiceException.class)
     public void serviceAPIExceptionHandler(HttpServletRequest request, HttpServletResponse response, ServiceException e) throws Exception {
         String url = request.getRequestURI();
-        if(log.isDebugEnabled()){
-            String errorInfo = String.format("Error found: url:[%s],traceId:[%s],uid=[%s] ",url, ServerApiParamHolder.getTraceId(),ServerApiParamHolder.getEncodedCurrentUserId());
-            log.debug(errorInfo,e);
-        }
-
+        String errorInfo = String.format("Error found: url:[%s],traceId:[%s],uid=[%s] ", url, ServerApiParamHolder.getTraceId(), ServerApiParamHolder.getEncodedCurrentUserId());
+        log.error(errorInfo, e);
         String contentType = "application/json;charset=" + CHARSET;
         response.addHeader("Content-Type", contentType);
 
