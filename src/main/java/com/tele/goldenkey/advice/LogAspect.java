@@ -65,9 +65,7 @@ public class LogAspect {
             String uri = ServerApiParamHolder.getURI();
             String traceId = ServerApiParamHolder.getTraceId();
             String uid = ServerApiParamHolder.getEncodedCurrentUserId();
-            log.info("invoke controller info: traceId={},uri={},target={},params=[{}],uid={}", traceId, uri, target, objectMapper.writeValueAsString(paramMap), uid);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.info("请求: traceId={},uri={},target={},params=[{}],uid={}", traceId, uri, target, objectMapper.writeValueAsString(paramMap), uid);
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
         }
@@ -76,13 +74,11 @@ public class LogAspect {
     @AfterReturning(value = "executeService()", returning = "returnValue")
     public void doAfter(Object returnValue) {
         try {
-            log.info("invoke controller info: traceId={},uri={},uid={},return value={}",
+            log.info("响应: traceId={},uri={},uid={},return value={}",
                     ServerApiParamHolder.getTraceId(),
                     ServerApiParamHolder.getURI(),
                     ServerApiParamHolder.getEncodedCurrentUserId(),
                     JSON.toJSONString(returnValue));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
         }
