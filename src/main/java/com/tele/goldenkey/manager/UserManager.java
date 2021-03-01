@@ -98,7 +98,7 @@ public class UserManager extends BaseManager {
         log.info("send code. region:[{}] phone:[{}] smsServiceType:[{}]", region, phone, smsServiceType.getCode());
 
         region = MiscUtils.removeRegionPrefix(region);
-        ValidateUtils.checkRegion(region);
+        ValidateUtils.notEmpty(region);
         ValidateUtils.notEmpty(phone);
 
         //  String ip = serverApiParams.getRequestUriInfo().getIp();

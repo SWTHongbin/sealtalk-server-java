@@ -1,7 +1,6 @@
 package com.tele.goldenkey.util;
 
 import com.google.common.collect.ImmutableList;
-import com.tele.goldenkey.constant.Constants;
 import com.tele.goldenkey.constant.ErrorCode;
 import com.tele.goldenkey.exception.ServiceException;
 import org.springframework.util.StringUtils;
@@ -72,25 +71,6 @@ public class ValidateUtils {
         }
 
     }
-
-//    public static void checkCompletePhone(String completePhone) throws ServiceException {
-//        if (!RegexUtils.checkMobile(completePhone)) {
-//            throw new ServiceException(ErrorCode.INVALID_REGION_PHONE);
-//        }
-//    }
-
-    public static void checkRegion(String region) throws ServiceException {
-        if (!Constants.REGION_NUM.equals(region)) {
-            throw new ServiceException(ErrorCode.INVALID_REGION_PHONE);
-        }
-    }
-
-    public static void checkRegionName(String regionName) throws ServiceException {
-        if (!Constants.REGION_NAME.equals(regionName)) {
-            throw new ServiceException(ErrorCode.REQUEST_ERROR, "Invalid region and phone number.");
-        }
-    }
-
 
     public static boolean checkUUIDStr(String str) {
         try {
@@ -187,7 +167,7 @@ public class ValidateUtils {
     }
 
     public static void checkInviteMessage(String message) throws ServiceException {
-        if(message==null){
+        if (message == null) {
             return;
         }
         if (message.length() < FRIEND_REQUEST_MESSAGE_MIN_LENGTH || message.length() > FRIEND_REQUEST_MESSAGE_MAX_LENGTH) {

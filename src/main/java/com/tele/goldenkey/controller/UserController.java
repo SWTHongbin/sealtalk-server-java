@@ -55,7 +55,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/send_code", method = RequestMethod.POST)
     public APIResult<Object> sendCode(@RequestBody UserParam userParam) throws ServiceException {
 
-        ValidateUtils.checkRegion(userParam.getRegion());
+        ValidateUtils.notEmpty(userParam.getRegion());
         ValidateUtils.notEmpty(userParam.getPhone());
         userManager.sendCode(userParam.getRegion(), userParam.getPhone(), SmsServiceType.CHUANGLAN, null);
         return APIResultWrap.ok();
@@ -72,7 +72,7 @@ public class UserController extends BaseController {
         ValidateUtils.notEmpty(phone);
 
         region = MiscUtils.removeRegionPrefix(region);
-        ValidateUtils.checkRegion(region);
+        ValidateUtils.notEmpty(region);
         ValidateUtils.notEmpty(phone);
 
         ServerApiParams serverApiParams = getServerApiParams();
@@ -100,7 +100,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/verify_code", method = RequestMethod.POST)
     public APIResult<Object> verifyCode(@RequestBody UserParam userParam) throws ServiceException {
 
-        ValidateUtils.checkRegion(userParam.getRegion());
+        ValidateUtils.notEmpty(userParam.getRegion());
         ValidateUtils.notEmpty(userParam.getPhone());
 
         String token = userManager.verifyCode(userParam.getRegion(), userParam.getPhone(), userParam.getCode(), SmsServiceType.CHUANGLAN);
@@ -130,7 +130,7 @@ public class UserController extends BaseController {
         String code = userParam.getCode();
         region = MiscUtils.removeRegionPrefix(region);
 
-        ValidateUtils.checkRegion(region);
+        ValidateUtils.notEmpty(region);
         ValidateUtils.notEmpty(phone);
 
         String token = userManager.verifyCode(region, phone, code, SmsServiceType.YUNPIAN);
@@ -465,7 +465,7 @@ public class UserController extends BaseController {
                                             @PathVariable("region") String region,
                                             @ApiParam(name = "phone", value = "phone", required = true, type = "String", example = "xxx")
                                             @PathVariable("phone") String phone) throws ServiceException {
-        ValidateUtils.checkRegion(region);
+        ValidateUtils.notEmpty(region);
         ValidateUtils.notEmpty(phone);
 
         Users users = userManager.getUser(region, phone);
