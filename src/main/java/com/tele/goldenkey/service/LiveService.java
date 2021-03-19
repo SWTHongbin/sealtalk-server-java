@@ -37,7 +37,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
             liveStatuses.setLiveId(id);
             this.saveSelective(liveStatuses);
         } else {
-            this.isOpen(id);
+            liveStatusesMapper.openByLivedId(id);
         }
         return liveStatuses.getPushUrl();
     }

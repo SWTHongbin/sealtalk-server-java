@@ -1,6 +1,7 @@
 package com.tele.goldenkey.service;
 
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.util.N3d;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class LiveSpiServiceTest {
 
     @Test
     public void getPushUrl() throws ServiceException {
+        System.out.println(N3d.encode(1233));
+
         System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
         System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
         System.out.println(liveSpiService.getPushUrl(12233));
