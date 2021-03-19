@@ -3,9 +3,10 @@ package com.tele.goldenkey.service;
 import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.domain.LiveStatuses;
 import com.tele.goldenkey.exception.ServiceException;
-import com.tele.goldenkey.spi.live.LiveSpiService;
-import com.tele.goldenkey.util.N3d;
+import com.tele.goldenkey.spi.live.IVSClient;
+import com.tele.goldenkey.util.ValidateUtils;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.ivs.model.Channel;
 import tk.mybatis.mapper.common.Mapper;
 
 import javax.annotation.Resource;
@@ -15,7 +16,8 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     @Resource
     private LiveStatusesMapper liveStatusesMapper;
     @Resource
-    private LiveSpiService liveSpiService;
+    private IVSClient ivsClient;
+    private final static String CHANNEL_KEY = "tele_tech_";
 
     @Override
     protected Mapper<LiveStatuses> getMapper() {
@@ -25,13 +27,19 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public String getPushUrl(Integer id) throws ServiceException {
         LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
         if (liveStatuses == null) {
+            Channel channel = ivsClient.createChannel(CHANNEL_KEY + id);
+            ValidateUtils.notNull(channel);
+
             liveStatuses = new LiveStatuses();
+            liveStatuses.setPushUrl(channel.ingestEndpoint());
+            liveStatuses.setLiveUrl(channel.playbackUrl());
+            liveStatuses.setCode(channel.arn());
             liveStatuses.setLiveId(id);
             this.saveSelective(liveStatuses);
         } else {
-            liveStatusesMapper.openByLivedId(id);
+            this.isOpen(id);
         }
-        return liveSpiService.pushUrl(N3d.encode(id));
+        return liveStatuses.getPushUrl();
     }
 
     public Boolean isOpen(Integer id) {
@@ -40,15 +48,18 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public Boolean close(Integer id) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
+        if (liveStatuses != null) {
+            ivsClient.stopStream(liveStatuses.getCode());
+        }
         return liveStatusesMapper.closeByLivedId(id) > 0;
     }
 
-    public String getLiveUrl(Integer id) throws ServiceException {
+    public String getLiveUrl(Integer id) {
         LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
         if (liveStatuses == null || liveStatuses.getStatus() == 0) {
             return null;
         }
-        return liveSpiService.liveUrl(N3d.encode(id));
+        return liveStatuses.getLiveUrl();
     }
-
 }

@@ -1,13 +1,12 @@
 package com.tele.goldenkey.service;
 
-import com.alibaba.fastjson.JSON;
-import com.tele.goldenkey.spi.live.LiveSpiService;
+import com.tele.goldenkey.exception.ServiceException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import software.amazon.awssdk.core.SdkSystemSetting;
 
 
 @RunWith(SpringRunner.class)
@@ -15,11 +14,29 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class LiveSpiServiceTest {
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private LiveService liveSpiService;
 
     @Test
-    public void createDataVersion() {
+    public void getPushUrl() throws ServiceException {
+        System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
+        System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
+        System.out.println(liveSpiService.getPushUrl(12233));
+    }
 
-        System.out.println(JSON.toJSONString(applicationContext.getBeansOfType(LiveSpiService.class)));
+    @Test
+    public void isOpen() {
+        System.out.println(liveSpiService.isOpen(12233));
+    }
+
+    @Test
+    public void close() {
+        System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
+        System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
+        System.out.println(liveSpiService.close(12233));
+    }
+
+    @Test
+    public void getLiveUrl() {
+        System.out.println(liveSpiService.getLiveUrl(12233));
     }
 }

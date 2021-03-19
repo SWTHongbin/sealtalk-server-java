@@ -28,6 +28,9 @@ public class LiveStatuses implements Serializable {
     @Column(name = "updatedAt")
     private Date updatedAt;
 
+    @Column(name = "code")
+    private String code;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -108,5 +111,13 @@ public class LiveStatuses implements Serializable {
      */
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }
