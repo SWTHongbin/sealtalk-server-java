@@ -43,7 +43,6 @@ public abstract class AbstractBaseService<T, PrimaryKey> implements BaseService<
     @Override
     public int saveSelective(T t) {
         return getMapper().insertSelective(t);
-
     }
 
     @Override
