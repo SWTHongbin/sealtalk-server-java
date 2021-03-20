@@ -16,7 +16,7 @@ public class DelChannelStream {
     private final IVSClient ivsClient;
 
     @Scheduled(cron = "0 0 1 1 * ?")
-    public void clearGroupMessageTask() {
+    public void removeChannel() {
         log.info("begin  clear channel");
         liveStatusesMapper.noLongerUsed()
                 .forEach(
