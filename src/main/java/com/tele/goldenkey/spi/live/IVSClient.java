@@ -6,7 +6,9 @@ import software.amazon.awssdk.auth.credentials.SystemPropertyCredentialsProvider
 import software.amazon.awssdk.http.SdkHttpResponse;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ivs.IvsClient;
-import software.amazon.awssdk.services.ivs.model.*;
+import software.amazon.awssdk.services.ivs.model.Channel;
+import software.amazon.awssdk.services.ivs.model.CreateChannelResponse;
+import software.amazon.awssdk.services.ivs.model.GetChannelResponse;
 
 @Slf4j
 @Component
@@ -18,10 +20,7 @@ public class IVSClient {
             .build();
 
     public Channel createChannel(String channelName) {
-        CreateChannelRequest build = CreateChannelRequest.builder()
-                .name(channelName)
-                .build();
-        CreateChannelResponse channelResponse = IVS_CLIENT.createChannel(build);
+        CreateChannelResponse channelResponse = IVS_CLIENT.createChannel((builder -> builder.name(channelName)));
         SdkHttpResponse sdkHttpResponse = channelResponse.sdkHttpResponse();
         if (!sdkHttpResponse.isSuccessful()) {
             return null;
@@ -30,10 +29,7 @@ public class IVSClient {
     }
 
     public Channel getChannel(String arn) {
-        GetChannelRequest build = GetChannelRequest.builder()
-                .arn(arn)
-                .build();
-        GetChannelResponse channelResponse = IVS_CLIENT.getChannel(build);
+        GetChannelResponse channelResponse = IVS_CLIENT.getChannel((request) -> request.arn(arn));
         SdkHttpResponse sdkHttpResponse = channelResponse.sdkHttpResponse();
         if (!sdkHttpResponse.isSuccessful()) {
             return null;
@@ -44,10 +40,7 @@ public class IVSClient {
 
     public Boolean stopStream(String arn) {
         try {
-            StopStreamRequest request = StopStreamRequest.builder()
-                    .channelArn(arn)
-                    .build();
-            return IVS_CLIENT.stopStream(request).sdkHttpResponse().isSuccessful();
+            return IVS_CLIENT.stopStream((request) -> request.channelArn(arn)).sdkHttpResponse().isSuccessful();
         } catch (Exception e) {
             log.error("stop stream err", e);
         }
@@ -62,10 +55,7 @@ public class IVSClient {
 
     private static Boolean delStreamKey(String arn) {
         try {
-            DeleteStreamKeyRequest request = DeleteStreamKeyRequest.builder()
-                    .arn(arn)
-                    .build();
-            return IVS_CLIENT.deleteStreamKey(request).sdkHttpResponse().isSuccessful();
+            return IVS_CLIENT.deleteStreamKey((request) -> request.arn(arn)).sdkHttpResponse().isSuccessful();
         } catch (Exception e) {
             log.error("del stream err", e);
             return false;
@@ -73,9 +63,6 @@ public class IVSClient {
     }
 
     private static Boolean delChannel(String arn) {
-        DeleteChannelRequest request = DeleteChannelRequest.builder()
-                .arn(arn)
-                .build();
-        return IVS_CLIENT.deleteChannel(request).sdkHttpResponse().isSuccessful();
+        return IVS_CLIENT.deleteChannel((request) -> request.arn(arn)).sdkHttpResponse().isSuccessful();
     }
 }
