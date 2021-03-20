@@ -29,12 +29,29 @@ public class IVSClient {
         return channelResponse.channel();
     }
 
+    public Channel getChannel(String arn) {
+        GetChannelRequest build = GetChannelRequest.builder()
+                .arn(arn)
+                .build();
+        GetChannelResponse channelResponse = IVS_CLIENT.getChannel(build);
+        SdkHttpResponse sdkHttpResponse = channelResponse.sdkHttpResponse();
+        if (!sdkHttpResponse.isSuccessful()) {
+            return null;
+        }
+        return channelResponse.channel();
+    }
+
 
     public Boolean stopStream(String arn) {
-        StopStreamRequest request = StopStreamRequest.builder()
-                .channelArn(arn)
-                .build();
-        return IVS_CLIENT.stopStream(request).sdkHttpResponse().isSuccessful();
+        try {
+            StopStreamRequest request = StopStreamRequest.builder()
+                    .channelArn(arn)
+                    .build();
+            return IVS_CLIENT.stopStream(request).sdkHttpResponse().isSuccessful();
+        } catch (Exception e) {
+            log.error("stop stream err", e);
+        }
+        return false;
     }
 
 

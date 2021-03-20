@@ -29,4 +29,9 @@ public class LiveStatusesMapperTest {
     void openByLivedId() {
         System.out.println(liveStatusesMapper.openByLivedId(1));
     }
+
+    @Test
+    void noLongerUsed() {
+        System.out.println(JSON.toJSONString(liveStatusesMapper.noLongerUsed()));
+    }
 }

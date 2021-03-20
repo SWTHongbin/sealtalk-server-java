@@ -17,6 +17,11 @@
         ORDER BY createdAt desc LIMIT 0,1
     </select>
 
+    <select id="noLongerUsed" resultMap="BaseResultMap">
+        select code, id, liveId
+        from live_statuses
+        WHERE updatedAt &lt; DATE_ADD(now(), INTERVAL - 30 DAY)
+    </select>
 
     <update id="closeByLivedId" parameterType="map">
         UPDATE live_statuses
