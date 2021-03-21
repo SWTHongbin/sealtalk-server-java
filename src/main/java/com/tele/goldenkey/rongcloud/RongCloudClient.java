@@ -62,7 +62,7 @@ public interface RongCloudClient {
      * @return
      * @throws ServiceException
      */
-    public Result addUserBlackList(String encodeId, String[] encodeBlackUserIds) throws ServiceException;
+    Result addUserBlackList(String encodeId, String[] encodeBlackUserIds) throws ServiceException;
 
     /**
      * 查询用户黑名单
@@ -88,16 +88,16 @@ public interface RongCloudClient {
     /**
      * 发送联系人通知
      *
-     * @param senderId       发送人
-     * @param nickname       发送人昵称
-     * @param targetIds      这条消息的接收人
-     * @param toUserId       operatoion操作对应的人，比如添加好友动作的好友
-     * @param operation      操作
-     * @param message 消息内容
-     * @param timestamp      版本
+     * @param senderId  发送人
+     * @param nickname  发送人昵称
+     * @param targetIds 这条消息的接收人
+     * @param toUserId  operatoion操作对应的人，比如添加好友动作的好友
+     * @param operation 操作
+     * @param message   消息内容
+     * @param timestamp 版本
      * @throws ServiceException
      */
-    public void sendContactNotification(String senderId, String nickname, String[] targetIds, String toUserId, String operation, String message, long timestamp) throws ServiceException;
+    void sendContactNotification(String senderId, String nickname, String[] targetIds, String toUserId, String operation, String message, long timestamp) throws ServiceException;
 
 
     ResponseResult sendPrivateMessage(PrivateMessage privateMessage) throws ServiceException;
@@ -273,21 +273,23 @@ public interface RongCloudClient {
 
     /**
      * 发送群组通知，消息类型：ST:MsgClear
+     *
      * @param encodeUserId
      * @param encodeTargetId
      * @param operation
      * @return
      * @throws ServiceException
      */
-    Result sendCustomerClearGroupMessage(String encodeUserId, String encodeTargetId, String operation,Long clearTimestamp) throws ServiceException;
+    Result sendCustomerClearGroupMessage(String encodeUserId, String encodeTargetId, String operation, Long clearTimestamp) throws ServiceException;
 
 
     /**
-     *  清除历史消息
+     * 清除历史消息
+     *
      * @param conversationType 会话类型 3 群聊
      * @param fromUserId
      * @param targetId
-     * @param msgTimestamp 时间戳，在这时间戳之前的记录会被清除
+     * @param msgTimestamp     时间戳，在这时间戳之前的记录会被清除
      * @return
      * @throws ServiceException
      */

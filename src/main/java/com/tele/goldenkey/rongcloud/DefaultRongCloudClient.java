@@ -203,22 +203,19 @@ public class DefaultRongCloudClient implements RongCloudClient {
     @Override
     public Result createGroup(String encodeGroupId, String[] encodeMemberIds, String name) throws ServiceException {
 
-        return RongCloudInvokeTemplate.getData(new RongCloudCallBack<Result>() {
-            @Override
-            public Result doInvoker() throws Exception {
-                GroupMember[] members = new GroupMember[encodeMemberIds.length];
-                for (int i = 0; i < encodeMemberIds.length; i++) {
-                    GroupMember groupMember = new GroupMember();
-                    groupMember.setId(encodeMemberIds[i]);
-                    members[i] = groupMember;
-                }
-                GroupModel group = new GroupModel()
-                        .setId(encodeGroupId)
-                        .setMembers(members)
-                        .setName(name);
-                Result result = (Result) rongCloud.group.create(group);
-                return result;
+        return RongCloudInvokeTemplate.getData(() -> {
+            GroupMember[] members = new GroupMember[encodeMemberIds.length];
+            for (int i = 0; i < encodeMemberIds.length; i++) {
+                GroupMember groupMember = new GroupMember();
+                groupMember.setId(encodeMemberIds[i]);
+                members[i] = groupMember;
             }
+            GroupModel group = new GroupModel()
+                    .setId(encodeGroupId)
+                    .setMembers(members)
+                    .setName(name);
+            Result result = (Result) rongCloud.group.create(group);
+            return result;
         });
     }
 
