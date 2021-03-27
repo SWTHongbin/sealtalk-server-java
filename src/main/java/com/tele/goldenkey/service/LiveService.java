@@ -69,7 +69,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public void initRoom(LiveParam liveParam, Integer livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
         LiveStatuses newLive = new LiveStatuses();
-        newLive.setStyle(liveParam.getStyle());
+        newLive.setType(liveParam.getType());
         newLive.setTheme(liveParam.getTheme());
         newLive.setCount(1);
         newLive.setId(liveStatuses.getId());
@@ -83,7 +83,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public Map<String, Object> room(Integer livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
         Map<String, Object> map = Maps.newHashMap();
-        map.put("style", liveStatuses.getStyle());
+        map.put("type", liveStatuses.getType());
         map.put("theme", liveStatuses.getTheme());
         map.put("count", liveStatuses.getCount());
         map.put("timestamp", System.currentTimeMillis() - liveStatuses.getStartTime().getTime());

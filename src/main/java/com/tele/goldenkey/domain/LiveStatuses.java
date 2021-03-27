@@ -30,7 +30,7 @@ public class LiveStatuses implements Serializable {
     /**
      * 直播方式
      */
-    private Integer style;
+    private Integer type;
 
     /**
      * 总人数
@@ -150,12 +150,12 @@ public class LiveStatuses implements Serializable {
         this.theme = theme;
     }
 
-    public Integer getStyle() {
-        return style;
+    public Integer getType() {
+        return type;
     }
 
-    public void setStyle(Integer style) {
-        this.style = style;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Integer getCount() {

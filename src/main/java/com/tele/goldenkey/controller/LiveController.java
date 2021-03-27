@@ -3,12 +3,14 @@ package com.tele.goldenkey.controller;
 import com.google.common.collect.Maps;
 import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.event.type.LeaveEvent;
+import com.tele.goldenkey.event.type.LiveEvent;
 import com.tele.goldenkey.event.type.OpenLiveEvent;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.service.LiveService;
 import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
+import com.tele.goldenkey.spi.agora.eums.RtmMsgType;
 import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
 import com.tele.goldenkey.util.N3d;
 import com.tele.goldenkey.util.ValidateUtils;
@@ -30,7 +32,7 @@ import java.util.HashMap;
 public class LiveController extends BaseController {
     private final LiveService liveService;
     private final ApplicationContext applicationContext;
-    private final static String AGORA_CHANNEL_PREFIX = "agora_";
+    public final static String AGORA_CHANNEL_PREFIX = "agora_";
 
     @ApiOperation(value = "获取直播流推送地址")
     @PostMapping(value = "/get/push-url/{id}")
@@ -48,7 +50,7 @@ public class LiveController extends BaseController {
         hashMap.put("pushUrl", pushUrl);
         hashMap.put("token", RtcTokenBuilderSample.buildToken(AGORA_CHANNEL_PREFIX + id, String.valueOf(getCurrentUserId()), RtcTokenBuilder.Role.Role_Publisher));
         hashMap.put("channelId", AGORA_CHANNEL_PREFIX + id);
-        applicationContext.publishEvent(new OpenLiveEvent(getCurrentUserId(), id));
+        applicationContext.publishEvent(new LiveEvent(RtmMsgType.open, id, getCurrentUserId()));
         return APIResultWrap.ok(hashMap);
     }
 
@@ -68,6 +70,7 @@ public class LiveController extends BaseController {
                                  @PathVariable("id") String encodeGroupId) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
         liveService.close(id);
+        applicationContext.publishEvent(new LiveEvent(RtmMsgType.close, id, getCurrentUserId()));
         return APIResultWrap.ok();
     }
 
@@ -77,7 +80,7 @@ public class LiveController extends BaseController {
                                                      @PathVariable("id") String encodeGroupId) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
         liveService.leave(id, -1);
-        applicationContext.publishEvent(new LeaveEvent(getCurrentUserId(), id));
+        applicationContext.publishEvent(new LiveEvent(RtmMsgType.leave, id, getCurrentUserId()));
         return APIResultWrap.ok();
     }
 
@@ -92,6 +95,7 @@ public class LiveController extends BaseController {
         hashMap.put("token", RtcTokenBuilderSample.buildToken(AGORA_CHANNEL_PREFIX + id, String.valueOf(getCurrentUserId()), RtcTokenBuilder.Role.Role_Subscriber));
         hashMap.put("channelId", AGORA_CHANNEL_PREFIX + id);
         hashMap.put("liveUrl", liveService.getLiveUrl(id));
+        applicationContext.publishEvent(new LiveEvent(RtmMsgType.jion, id, getCurrentUserId()));
         return APIResultWrap.ok(hashMap);
     }
 }

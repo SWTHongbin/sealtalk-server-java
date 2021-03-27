@@ -14,5 +14,5 @@ public class LiveParam {
      * 直播方式
      * 1： 语音 2：视频
      */
-    private Integer style;
+    private Integer type;
 }
