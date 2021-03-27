@@ -2,9 +2,7 @@ package com.tele.goldenkey.controller;
 
 import com.google.common.collect.Maps;
 import com.tele.goldenkey.controller.param.LiveParam;
-import com.tele.goldenkey.event.type.LeaveEvent;
 import com.tele.goldenkey.event.type.LiveEvent;
-import com.tele.goldenkey.event.type.OpenLiveEvent;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
@@ -84,7 +82,7 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "获取直播地址")
+    @ApiOperation(value = "获取房间信息")
     @PostMapping(value = "/get/live-url/{id}")
     public APIResult<HashMap<String, Object>> getLiveUrl(@ApiParam(name = "id", value = "id", required = true, type = "String")
                                                          @PathVariable("id") String encodeGroupId) throws ServiceException {
