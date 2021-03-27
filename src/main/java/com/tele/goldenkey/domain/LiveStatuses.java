@@ -23,19 +23,25 @@ public class LiveStatuses implements Serializable {
     private Integer status;
 
     /**
-     *  主题
+     * 主题
      */
     private String theme;
 
     /**
-     *  直播方式
+     * 直播方式
      */
     private Integer style;
 
     /**
-     *  总人数
+     * 总人数
      */
     private Integer count;
+
+    /**
+     * 开始时间
+     */
+    @Column(name = "startTime")
+    private Date startTime;
 
     @Column(name = "createdAt")
     private Date createdAt;
@@ -158,5 +164,13 @@ public class LiveStatuses implements Serializable {
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 }

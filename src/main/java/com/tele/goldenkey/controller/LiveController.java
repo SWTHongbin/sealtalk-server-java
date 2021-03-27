@@ -8,6 +8,8 @@ import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.service.LiveService;
+import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
+import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
 import com.tele.goldenkey.util.N3d;
 import com.tele.goldenkey.util.ValidateUtils;
 import io.swagger.annotations.Api;
@@ -20,29 +22,33 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
-
+@Slf4j
 @Api(tags = "直播相关")
 @RestController
 @RequestMapping("/live")
-@Slf4j
 @RequiredArgsConstructor
 public class LiveController extends BaseController {
     private final LiveService liveService;
     private final ApplicationContext applicationContext;
+    private final static String AGORA_CHANNEL_PREFIX = "agora_";
 
     @ApiOperation(value = "获取直播流推送地址")
     @PostMapping(value = "/get/push-url/{id}")
-    public APIResult<HashMap<String, String>> getPushUrl(
+    public APIResult<HashMap<String, Object>> getPushUrl(
             @ApiParam(name = "id", value = "id", required = true, type = "String")
             @PathVariable("id") String encodeGroupId,
             @RequestBody LiveParam liveParam) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
         String pushUrl = liveService.getPushUrl(id);
         ValidateUtils.notEmpty(pushUrl);
-        applicationContext.publishEvent(new OpenLiveEvent(getCurrentUserId(), id));
-        HashMap<String, String> hashMap = Maps.newHashMap();
-        hashMap.putAll(liveService.initRoom(liveParam, id));
+        liveService.initRoom(liveParam, id);
+
+        HashMap<String, Object> hashMap = Maps.newHashMap();
+        hashMap.putAll(liveService.room(id));
         hashMap.put("pushUrl", pushUrl);
+        hashMap.put("token", RtcTokenBuilderSample.buildToken(AGORA_CHANNEL_PREFIX + id, String.valueOf(getCurrentUserId()), RtcTokenBuilder.Role.Role_Publisher));
+        hashMap.put("channelId", AGORA_CHANNEL_PREFIX + id);
+        applicationContext.publishEvent(new OpenLiveEvent(getCurrentUserId(), id));
         return APIResultWrap.ok(hashMap);
     }
 
@@ -78,10 +84,13 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "获取直播地址")
     @PostMapping(value = "/get/live-url/{id}")
-    public APIResult<HashMap<String, String>> getLiveUrl(@ApiParam(name = "id", value = "id", required = true, type = "String")
+    public APIResult<HashMap<String, Object>> getLiveUrl(@ApiParam(name = "id", value = "id", required = true, type = "String")
                                                          @PathVariable("id") String encodeGroupId) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
-        HashMap<String, String> hashMap = Maps.newHashMap();
+        HashMap<String, Object> hashMap = Maps.newHashMap();
+        hashMap.putAll(liveService.room(id));
+        hashMap.put("token", RtcTokenBuilderSample.buildToken(AGORA_CHANNEL_PREFIX + id, String.valueOf(getCurrentUserId()), RtcTokenBuilder.Role.Role_Subscriber));
+        hashMap.put("channelId", AGORA_CHANNEL_PREFIX + id);
         hashMap.put("liveUrl", liveService.getLiveUrl(id));
         return APIResultWrap.ok(hashMap);
     }

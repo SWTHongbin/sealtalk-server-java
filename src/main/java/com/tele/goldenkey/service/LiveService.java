@@ -1,12 +1,12 @@
 package com.tele.goldenkey.service;
 
+import com.google.common.collect.Maps;
 import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.domain.LiveStatuses;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.spi.live.IVSClient;
 import com.tele.goldenkey.util.ValidateUtils;
-import io.swagger.models.auth.In;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.ivs.model.Channel;
 import tk.mybatis.mapper.common.Mapper;
@@ -66,7 +66,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatuses.getLiveUrl();
     }
 
-    public Map<String, String> initRoom(LiveParam liveParam, Integer livedId) {
+    public void initRoom(LiveParam liveParam, Integer livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
         LiveStatuses newLive = new LiveStatuses();
         newLive.setStyle(liveParam.getStyle());
@@ -74,10 +74,19 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         newLive.setCount(1);
         newLive.setId(liveStatuses.getId());
         liveStatusesMapper.updateByPrimaryKeySelective(newLive);
-        return null;
     }
 
     public void leave(Integer livedId, Integer num) {
         liveStatusesMapper.updateCount(livedId, num);
+    }
+
+    public Map<String, Object> room(Integer livedId) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("style", liveStatuses.getStyle());
+        map.put("theme", liveStatuses.getTheme());
+        map.put("count", liveStatuses.getCount());
+        map.put("timestamp", System.currentTimeMillis() - liveStatuses.getStartTime().getTime());
+        return map;
     }
 }

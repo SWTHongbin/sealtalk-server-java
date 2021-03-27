@@ -25,19 +25,23 @@
 
     <update id="closeByLivedId" parameterType="map">
         UPDATE live_statuses
-        set `status` =0
+        set `status` =0,
+            `count`=0,
+            startTime=null
         WHERE liveId = #{livedId}
     </update>
 
     <update id="openByLivedId" parameterType="map">
         UPDATE live_statuses
-        set `status` =1
+        set `status` =1,
+            `count`=1,
+            startTime=now()
         WHERE liveId = #{livedId}
     </update>
 
     <update id="updateCount" parameterType="map">
         UPDATE live_statuses
-        set count=count + #{num}
+        set `count`=`count` + #{num}
         WHERE liveId = #{livedId}
     </update>
 
