@@ -64,12 +64,11 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "关闭直播")
     @PostMapping(value = "/close/{id}")
-    public APIResult<HashMap<String, Boolean>> close(@ApiParam(name = "id", value = "id", required = true, type = "String")
-                                                     @PathVariable("id") String encodeGroupId) throws ServiceException {
+    public APIResult<Void> close(@ApiParam(name = "id", value = "id", required = true, type = "String")
+                                 @PathVariable("id") String encodeGroupId) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
-        HashMap<String, Boolean> hashMap = Maps.newHashMap();
-        hashMap.put("close", liveService.close(id));
-        return APIResultWrap.ok(hashMap);
+        liveService.close(id);
+        return APIResultWrap.ok();
     }
 
     @ApiOperation(value = "用户离开房间")
@@ -87,6 +86,7 @@ public class LiveController extends BaseController {
     public APIResult<HashMap<String, Object>> getLiveUrl(@ApiParam(name = "id", value = "id", required = true, type = "String")
                                                          @PathVariable("id") String encodeGroupId) throws ServiceException {
         Integer id = N3d.decode(encodeGroupId);
+        liveService.leave(id, 1);
         HashMap<String, Object> hashMap = Maps.newHashMap();
         hashMap.putAll(liveService.room(id));
         hashMap.put("token", RtcTokenBuilderSample.buildToken(AGORA_CHANNEL_PREFIX + id, String.valueOf(getCurrentUserId()), RtcTokenBuilder.Role.Role_Subscriber));
