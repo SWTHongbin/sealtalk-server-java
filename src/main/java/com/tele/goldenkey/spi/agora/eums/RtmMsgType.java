@@ -9,9 +9,7 @@ public enum RtmMsgType {
     open(3, "开播"),
     close(4, "关播");
 
-
     public Integer code;
-
 
     public String dsc;
 }
