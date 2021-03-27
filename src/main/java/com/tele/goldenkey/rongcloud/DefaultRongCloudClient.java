@@ -294,21 +294,18 @@ public class DefaultRongCloudClient implements RongCloudClient {
 
     @Override
     public Result sendGroupApplyMessage(String senderId, String[] targetId, CustomerGroupApplyMessage grpApplyMessage) throws ServiceException {
-        return RongCloudInvokeTemplate.getData(new RongCloudCallBack<Result>() {
-            @Override
-            public Result doInvoker() throws Exception {
+        return RongCloudInvokeTemplate.getData((RongCloudCallBack<Result>) () -> {
 
-                //构建消息内容
-                PrivateMessage privateMessage = new PrivateMessage();
+            //构建消息内容
+            PrivateMessage privateMessage = new PrivateMessage();
 
-                privateMessage.setSenderId(senderId);
-                privateMessage.setTargetId(targetId);
-                privateMessage.setObjectName(grpApplyMessage.getType());
-                privateMessage.setContent(grpApplyMessage);
+            privateMessage.setSenderId(senderId);
+            privateMessage.setTargetId(targetId);
+            privateMessage.setObjectName(grpApplyMessage.getType());
+            privateMessage.setContent(grpApplyMessage);
 
-                //发送单聊消息
-                return Private.send(privateMessage);
-            }
+            //发送单聊消息
+            return Private.send(privateMessage);
         });
     }
 
