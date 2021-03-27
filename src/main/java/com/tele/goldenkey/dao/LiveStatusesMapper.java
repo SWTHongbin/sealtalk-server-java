@@ -15,4 +15,6 @@ public interface LiveStatusesMapper extends Mapper<LiveStatuses> {
     Integer openByLivedId(@Param("livedId") Integer livedId);
 
     List<LiveStatuses> noLongerUsed();
+
+    void updateCount(@Param("livedId")Integer id,@Param("num")Integer num);
 }

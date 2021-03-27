@@ -35,4 +35,10 @@
         WHERE liveId = #{livedId}
     </update>
 
+    <update id="updateCount" parameterType="map">
+        UPDATE live_statuses
+        set count=count + #{num}
+        WHERE liveId = #{livedId}
+    </update>
+
 </mapper>

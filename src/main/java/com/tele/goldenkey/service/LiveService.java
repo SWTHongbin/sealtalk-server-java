@@ -1,15 +1,18 @@
 package com.tele.goldenkey.service;
 
+import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.domain.LiveStatuses;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.spi.live.IVSClient;
 import com.tele.goldenkey.util.ValidateUtils;
+import io.swagger.models.auth.In;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.ivs.model.Channel;
 import tk.mybatis.mapper.common.Mapper;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 @Service
 public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
@@ -24,42 +27,57 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper;
     }
 
-    public String getPushUrl(Integer id) throws ServiceException {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
+    public String getPushUrl(Integer livedId) throws ServiceException {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
         if (liveStatuses == null) {
-            Channel channel = ivsClient.createChannel(CHANNEL_KEY + id);
+            Channel channel = ivsClient.createChannel(CHANNEL_KEY + livedId);
             ValidateUtils.notNull(channel);
 
             liveStatuses = new LiveStatuses();
             liveStatuses.setPushUrl(channel.ingestEndpoint());
             liveStatuses.setLiveUrl(channel.playbackUrl());
             liveStatuses.setCode(channel.arn());
-            liveStatuses.setLiveId(id);
+            liveStatuses.setLiveId(livedId);
             this.saveSelective(liveStatuses);
         } else {
-            liveStatusesMapper.openByLivedId(id);
+            liveStatusesMapper.openByLivedId(livedId);
         }
         return liveStatuses.getPushUrl();
     }
 
-    public Boolean isOpen(Integer id) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
+    public Boolean isOpen(Integer livedId) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
         return liveStatuses != null && liveStatuses.getStatus() == 1;
     }
 
-    public Boolean close(Integer id) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
+    public Boolean close(Integer livedId) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
         if (liveStatuses != null) {
             ivsClient.stopStream(liveStatuses.getCode());
         }
-        return liveStatusesMapper.closeByLivedId(id) > 0;
+        return liveStatusesMapper.closeByLivedId(livedId) > 0;
     }
 
-    public String getLiveUrl(Integer id) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(id);
+    public String getLiveUrl(Integer livedId) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
         if (liveStatuses == null || liveStatuses.getStatus() == 0) {
             return null;
         }
         return liveStatuses.getLiveUrl();
+    }
+
+    public Map<String, String> initRoom(LiveParam liveParam, Integer livedId) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
+        LiveStatuses newLive = new LiveStatuses();
+        newLive.setStyle(liveParam.getStyle());
+        newLive.setTheme(liveParam.getTheme());
+        newLive.setCount(1);
+        newLive.setId(liveStatuses.getId());
+        liveStatusesMapper.updateByPrimaryKeySelective(newLive);
+        return null;
+    }
+
+    public void leave(Integer livedId, Integer num) {
+        liveStatusesMapper.updateCount(livedId, num);
     }
 }

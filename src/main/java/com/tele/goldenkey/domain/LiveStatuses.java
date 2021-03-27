@@ -22,6 +22,21 @@ public class LiveStatuses implements Serializable {
 
     private Integer status;
 
+    /**
+     *  主题
+     */
+    private String theme;
+
+    /**
+     *  直播方式
+     */
+    private Integer style;
+
+    /**
+     *  总人数
+     */
+    private Integer count;
+
     @Column(name = "createdAt")
     private Date createdAt;
 
@@ -119,5 +134,29 @@ public class LiveStatuses implements Serializable {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public Integer getStyle() {
+        return style;
+    }
+
+    public void setStyle(Integer style) {
+        this.style = style;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }
