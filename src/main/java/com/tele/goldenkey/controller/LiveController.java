@@ -93,7 +93,8 @@ public class LiveController extends BaseController {
     public APIResult<Void> maiEvent(@ApiParam(name = "type", value = "消息类型") @PathVariable("type") String eventType,
                                     @ApiParam(name = "livedId", value = "直播id")
                                     @PathVariable("livedId") Integer livedId) throws ServiceException {
-        LiveEventFactory.getByKey(eventType).execute(new LiveEventDto(livedId, getCurrentUserId()));
+        LiveEvent liveEvent = LiveEventFactory.getByKey(eventType).execute(new LiveEventDto(livedId, getCurrentUserId()));
+        applicationContext.publishEvent(liveEvent);
         return APIResultWrap.ok(null, "操作成功");
     }
 
