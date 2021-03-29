@@ -55,7 +55,7 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "是否开播")
     @PostMapping(value = "/is-open/{livedId}")
-    public APIResult<HashMap<String, Boolean>> isOpen(@PathVariable("livedId") Integer livedId) {
+    public APIResult<HashMap<String, Boolean>> isOpen(@ApiParam(name = "livedId", value = "直播id") @PathVariable("livedId") Integer livedId) {
         HashMap<String, Boolean> hashMap = Maps.newHashMap();
         hashMap.put("isOpen", liveService.isOpen(livedId));
         return APIResultWrap.ok(hashMap);
@@ -72,7 +72,8 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "查询直播间用户")
     @PostMapping(value = "/user/{livedId}")
-    public APIResult<List<LiveUserDto>> user(@RequestBody LiveUserParam param, @PathVariable("livedId") Integer livedId) {
+    public APIResult<List<LiveUserDto>> user(@RequestBody LiveUserParam param,
+                                             @ApiParam(name = "livedId", value = "直播id") @PathVariable("livedId") Integer livedId) {
         return APIResultWrap.ok(userService.getUsers(param, livedId));
     }
 
