@@ -1,29 +1,29 @@
 package com.tele.goldenkey.event.type;
 
-import com.tele.goldenkey.spi.agora.eums.RtmMsgType;
+import com.tele.goldenkey.spi.agora.eums.EventType;
 import org.springframework.context.ApplicationEvent;
 
 public class LiveEvent extends ApplicationEvent {
 
-    private RtmMsgType msgType;
+    private EventType msgType;
 
     private Integer livedId;
 
     private Integer userId;
 
 
-    public LiveEvent(RtmMsgType msgType, Integer livedId, Integer userId) {
+    public LiveEvent(EventType msgType, Integer livedId, Integer userId) {
         super(msgType);
         this.msgType = msgType;
         this.livedId = livedId;
         this.userId = userId;
     }
 
-    public RtmMsgType getMsgType() {
+    public EventType getMsgType() {
         return msgType;
     }
 
-    public void setMsgType(RtmMsgType msgType) {
+    public void setMsgType(EventType msgType) {
         this.msgType = msgType;
     }
 

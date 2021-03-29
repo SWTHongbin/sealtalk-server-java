@@ -44,7 +44,7 @@ public class RtmTokenBuilderSample {
         return token;
     }
 
-    public static void sendMsg(String channelName, RtmMsgDto rtmMsgDto) {
+    public static void sendMsgOfChannel(String channelName, RtmMsgDto rtmMsgDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         headers.set("x-agora-token", buildRtmToken(USER_ID));

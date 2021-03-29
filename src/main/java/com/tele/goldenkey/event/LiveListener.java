@@ -61,6 +61,6 @@ public class LiveListener {
         RtmMsgDto rtmMsgDto = new RtmMsgDto();
         rtmMsgDto.setType(event.getMsgType().code);
         rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getUserId()) + event.getMsgType().dsc);
-        RtmTokenBuilderSample.sendMsg(AGORA_CHANNEL_PREFIX + event.getLivedId(), rtmMsgDto);
+        RtmTokenBuilderSample.sendMsgOfChannel(AGORA_CHANNEL_PREFIX + event.getLivedId(), rtmMsgDto);
     }
 }

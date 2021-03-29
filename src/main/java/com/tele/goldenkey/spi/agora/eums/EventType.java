@@ -3,7 +3,7 @@ package com.tele.goldenkey.spi.agora.eums;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum RtmMsgType {
+public enum EventType {
     join(1, "加入"),
     leave(2, "离开"),
     open(3, "开播"),
