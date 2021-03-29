@@ -20,13 +20,13 @@ public class RtmTokenBuilderSample {
     private final static String APP_ID = "a75d7dfc56454049aa425f39b085db94";
     private final static String APP_CERTIFICATE = "a0a62266ac204e9eae02add460fabcbd";
     private final static String USER_ID = "825034474290024448";
-    private final static String REQUEST_URL = "https://api.agora.io/dev/v2/project/" + APP_ID + "/rtm/users/" + USER_ID + "/channel_messages";
+    private final static String REQUEST_URL = "https://api.agora.io/dev/v2/project/" + APP_ID + "/rtm/users/%s/channel_messages";
 
 
-    private static String buildRtmToken() {
+    public static String buildRtmToken(String userId) {
         try {
             RtmTokenBuilder token = new RtmTokenBuilder();
-            return token.buildToken(APP_ID, APP_CERTIFICATE, USER_ID, RtmTokenBuilder.Role.Rtm_User, 0);
+            return token.buildToken(APP_ID, APP_CERTIFICATE, userId, RtmTokenBuilder.Role.Rtm_User, 0);
         } catch (Exception e) {
             log.error("", e);
         }
@@ -36,11 +36,11 @@ public class RtmTokenBuilderSample {
     public static void sendMsg(String channelName, RtmMsgDto rtmMsgDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
-        headers.set("x-agora-token", buildRtmToken());
+        headers.set("x-agora-token", buildRtmToken(USER_ID));
         headers.set("x-agora-uid", USER_ID);
         HttpEntity<Object> httpEntity = new HttpEntity<>(new RtmMsgBody(channelName, JSON.toJSONString(rtmMsgDto)), headers);
         RestTemplate restTemplate = SpringContextUtil.getBean(RestTemplate.class);
-        System.out.println(restTemplate.exchange(REQUEST_URL, HttpMethod.POST, httpEntity, String.class).getBody());
+        log.info(restTemplate.exchange(String.format(REQUEST_URL, USER_ID), HttpMethod.POST, httpEntity, String.class).getBody());
     }
 
     @Data

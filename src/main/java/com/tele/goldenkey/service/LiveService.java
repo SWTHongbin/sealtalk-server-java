@@ -1,9 +1,9 @@
 package com.tele.goldenkey.service;
 
-import com.google.common.collect.Maps;
 import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.domain.LiveStatuses;
+import com.tele.goldenkey.dto.LiveRoomDto;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.spi.live.IVSClient;
 import com.tele.goldenkey.util.ValidateUtils;
@@ -12,7 +12,6 @@ import software.amazon.awssdk.services.ivs.model.Channel;
 import tk.mybatis.mapper.common.Mapper;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 @Service
 public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
@@ -80,13 +79,13 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveStatusesMapper.updateCount(livedId, num);
     }
 
-    public Map<String, Object> room(Integer livedId) {
+    public LiveRoomDto room(Integer livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("type", liveStatuses.getType());
-        map.put("theme", liveStatuses.getTheme());
-        map.put("count", liveStatuses.getCount());
-        map.put("timestamp", System.currentTimeMillis() - liveStatuses.getStartTime().getTime());
-        return map;
+        LiveRoomDto liveRoomDto = new LiveRoomDto();
+        liveRoomDto.setType(liveStatuses.getType());
+        liveRoomDto.setTimestamp(System.currentTimeMillis() - liveStatuses.getStartTime().getTime());
+        liveRoomDto.setTheme(liveStatuses.getTheme());
+        liveRoomDto.setCount(liveStatuses.getCount());
+        return liveRoomDto;
     }
 }
