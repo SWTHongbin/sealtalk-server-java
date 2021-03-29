@@ -30,6 +30,10 @@ public class RtmTokenBuilderSample {
     private final static RedissonClient redissonClient = SpringContextUtil.getBean(RedissonClient.class);
 
 
+    /**
+     * @param userId 用户id
+     * @return
+     */
     public static String buildRtmToken(String userId) {
         String token = null;
         try {

@@ -98,12 +98,15 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         }
     }
 
-    public void leave(Integer userId) {
+    public Integer leave(Integer userId) throws ServiceException {
+        LiveUser liveUser = liveUserMapper.selectByUserId(userId);
+        ValidateUtils.notNull(liveUser);
         liveUserMapper.deleteByUserId(userId);
+        return liveUser.getLiveId();
     }
 
-    public void join(Integer userId,Integer livedId) {
-        liveUserMapper.insertSelective( convertLiveUser(getUserById(userId), livedId));
+    public void join(Integer userId, Integer livedId) {
+        liveUserMapper.insertSelective(convertLiveUser(getUserById(userId), livedId));
     }
 
     public LiveRoomDto room(Integer livedId) {

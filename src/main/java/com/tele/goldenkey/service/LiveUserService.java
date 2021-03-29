@@ -21,19 +21,19 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
         return liveUserMapper;
     }
 
-    public List<LiveUserDto> getUsers(LiveUserParam param) {
+    public List<LiveUserDto> getUsers(LiveUserParam param, Integer livedId) {
         LiveUser liveUser = new LiveUser();
         liveUser.setMaiStatus(param.getMaiStatus());
+        liveUser.setLiveId(livedId);
         return liveUserMapper.selectByExample(liveUser).stream()
-                .map(
-                        x -> {
-                            LiveUserDto dto = new LiveUserDto();
-                            dto.setUserId(x.getUserId());
-                            dto.setPhone(x.getPhone());
-                            dto.setPortraitUri(x.getPortraitUri());
-                            dto.setMaiStatus(x.getMaiStatus());
-                            dto.setName(x.getName());
-                            return dto;
-                        }).collect(Collectors.toList());
+                .map(x -> {
+                    LiveUserDto dto = new LiveUserDto();
+                    dto.setUserId(x.getUserId());
+                    dto.setPhone(x.getPhone());
+                    dto.setPortraitUri(x.getPortraitUri());
+                    dto.setMaiStatus(x.getMaiStatus());
+                    dto.setName(x.getName());
+                    return dto;
+                }).collect(Collectors.toList());
     }
 }
