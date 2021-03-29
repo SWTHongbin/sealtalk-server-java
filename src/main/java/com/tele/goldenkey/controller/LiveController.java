@@ -93,7 +93,7 @@ public class LiveController extends BaseController {
         hashMap.put("token", RtcTokenBuilderSample.buildToken(AGORA_CHANNEL_PREFIX + id, String.valueOf(getCurrentUserId()), RtcTokenBuilder.Role.Role_Subscriber));
         hashMap.put("channelId", AGORA_CHANNEL_PREFIX + id);
         hashMap.put("liveUrl", liveService.getLiveUrl(id));
-        applicationContext.publishEvent(new LiveEvent(RtmMsgType.jion, id, getCurrentUserId()));
+        applicationContext.publishEvent(new LiveEvent(RtmMsgType.join, id, getCurrentUserId()));
         return APIResultWrap.ok(hashMap);
     }
 }
