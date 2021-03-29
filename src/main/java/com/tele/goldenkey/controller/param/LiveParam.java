@@ -1,6 +1,7 @@
 package com.tele.goldenkey.controller.param;
 
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 @Data
@@ -20,8 +21,8 @@ public class LiveParam {
     private Integer type;
 
     /**
-     * 是否允许连麦
+     * 连麦  1开启  0 关闭
      */
     @ApiParam(name = "linkMai", required = true, value = "是否允许连麦")
-    private boolean linkMai;
+    private Integer linkMai;
 }

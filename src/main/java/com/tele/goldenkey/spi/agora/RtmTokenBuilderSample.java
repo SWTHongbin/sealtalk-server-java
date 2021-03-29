@@ -27,7 +27,6 @@ public class RtmTokenBuilderSample {
     private final static String USER_ID = "825034474290024448";
     private final static String CHANNEL_REQUEST_URL = "https://api.agora.io/dev/v2/project/" + APP_ID + "/rtm/users/%s/channel_messages";
     private final static String TERMINAL_REQUEST_URL = "https://api.agora.io/dev/v2/project/" + APP_ID + "/rtm/users/%s/peer_messages";
-    private final static RedissonClient redissonClient = SpringContextUtil.getBean(RedissonClient.class);
 
 
     /**
@@ -37,7 +36,7 @@ public class RtmTokenBuilderSample {
     public static String buildRtmToken(String userId) {
         String token = null;
         try {
-            RMapCache<String, String> mapCache = redissonClient.getMapCache("tele.goldenkey:agora:rtm");
+            RMapCache<String, String> mapCache = SpringContextUtil.getBean(RedissonClient.class).getMapCache("tele.goldenkey:agora:rtm");
             token = mapCache.get(userId);
             if (StringUtils.isNotBlank(token)) return token;
             RtmTokenBuilder tokenBuilder = new RtmTokenBuilder();
@@ -50,12 +49,12 @@ public class RtmTokenBuilderSample {
     }
 
     /**
-     * 频道消息推送   管理员发送
+     * 广播消息推送   管理员发送
      *
      * @param channelName
      * @param rtmMsgDto
      */
-    public static void sendMsgOfChannel(String channelName, RtmMsgDto rtmMsgDto) {
+    public static void sendMsgOfBroadcast(String channelName, RtmMsgDto rtmMsgDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         headers.set("x-agora-token", buildRtmToken(USER_ID));

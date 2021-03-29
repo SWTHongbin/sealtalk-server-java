@@ -41,7 +41,7 @@ class IVSServiceTest {
         RtmMsgDto rtmMsgDto = new RtmMsgDto();
         rtmMsgDto.setType(1);
         rtmMsgDto.setMessage("hello");
-        RtmTokenBuilderSample.sendMsgOfChannel("admin_123", rtmMsgDto);
+        RtmTokenBuilderSample.sendMsgOfBroadcast("admin_123", rtmMsgDto);
     }
 
 

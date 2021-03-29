@@ -1,9 +1,10 @@
-package com.tele.goldenkey.service;
+package com.tele.goldenkey.live;
 
 import com.tele.goldenkey.controller.param.LiveUserParam;
 import com.tele.goldenkey.dao.LiveUserMapper;
 import com.tele.goldenkey.domain.LiveUser;
 import com.tele.goldenkey.dto.LiveUserDto;
+import com.tele.goldenkey.service.AbstractBaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;

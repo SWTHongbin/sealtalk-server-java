@@ -1,6 +1,7 @@
 package com.tele.goldenkey.service;
 
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.live.LiveService;
 import com.tele.goldenkey.util.N3d;
 import org.junit.Test;
 import org.junit.runner.RunWith;

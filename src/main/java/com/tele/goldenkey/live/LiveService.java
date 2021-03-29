@@ -1,4 +1,4 @@
-package com.tele.goldenkey.service;
+package com.tele.goldenkey.live;
 
 import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.dao.LiveStatusesMapper;
@@ -9,6 +9,7 @@ import com.tele.goldenkey.domain.LiveUser;
 import com.tele.goldenkey.domain.Users;
 import com.tele.goldenkey.dto.LiveRoomDto;
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.service.AbstractBaseService;
 import com.tele.goldenkey.spi.live.IVSClient;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
@@ -90,7 +91,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveStatuses.setLiveId(liveStatuses.getLiveId());
         liveStatuses.setType(liveParam.getType());
         liveStatuses.setTheme(liveParam.getTheme());
-        liveStatuses.setLinkMai(liveParam.isLinkMai() ? 1 : 0);
+        liveStatuses.setLinkMai(liveParam.getLinkMai());
         if (flag) {
             liveStatusesMapper.insertSelective(liveStatuses);
         } else {

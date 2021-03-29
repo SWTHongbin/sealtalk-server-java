@@ -9,14 +9,22 @@ public class LiveEvent extends ApplicationEvent {
 
     private Integer livedId;
 
-    private Integer userId;
+    private Integer terminalId;
 
 
-    public LiveEvent(EventType msgType, Integer livedId, Integer userId) {
+    public LiveEvent(EventType msgType, Integer livedId, Integer terminalId) {
         super(msgType);
         this.msgType = msgType;
         this.livedId = livedId;
-        this.userId = userId;
+        this.terminalId = terminalId;
+    }
+
+    public Integer getTerminalId() {
+        return terminalId;
+    }
+
+    public void setTerminalId(Integer terminalId) {
+        this.terminalId = terminalId;
     }
 
     public EventType getMsgType() {
@@ -35,12 +43,6 @@ public class LiveEvent extends ApplicationEvent {
         this.livedId = livedId;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 }
 

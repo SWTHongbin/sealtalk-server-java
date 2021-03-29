@@ -3,14 +3,16 @@ package com.tele.goldenkey.controller;
 import com.google.common.collect.Maps;
 import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.controller.param.LiveUserParam;
+import com.tele.goldenkey.dto.LiveEventDto;
 import com.tele.goldenkey.dto.LiveTokenDto;
 import com.tele.goldenkey.dto.LiveUserDto;
 import com.tele.goldenkey.event.type.LiveEvent;
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.live.LiveEventFactory;
+import com.tele.goldenkey.live.LiveService;
+import com.tele.goldenkey.live.LiveUserService;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
-import com.tele.goldenkey.service.LiveService;
-import com.tele.goldenkey.service.LiveUserService;
 import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.RtmTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.eums.EventType;
@@ -87,9 +89,11 @@ public class LiveController extends BaseController {
 
 
     @ApiOperation(value = "直播事件")
-    @PostMapping(value = "/event/{type}")
-    public APIResult<Void> maiEvent(@PathVariable EventType eventType) {
-        //todo
+    @PostMapping(value = "/event/{type}/{livedId}")
+    public APIResult<Void> maiEvent(@ApiParam(name = "type", value = "消息类型") @PathVariable("type") String eventType,
+                                    @ApiParam(name = "livedId", value = "直播id")
+                                    @PathVariable("livedId") Integer livedId) throws ServiceException {
+        LiveEventFactory.getByKey(eventType).execute(new LiveEventDto(livedId, getCurrentUserId()));
         return APIResultWrap.ok(null, "操作成功");
     }
 
