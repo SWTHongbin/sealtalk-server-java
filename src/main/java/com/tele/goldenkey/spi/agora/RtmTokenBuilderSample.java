@@ -39,7 +39,7 @@ public class RtmTokenBuilderSample {
             token = tokenBuilder.buildToken(APP_ID, APP_CERTIFICATE, userId, RtmTokenBuilder.Role.Rtm_User, 0);
             mapCache.putAsync(userId, token, 23, TimeUnit.HOURS);
         } catch (Exception e) {
-            log.error("", e);
+            log.error("rtm token 失败:", e);
         }
         return token;
     }
