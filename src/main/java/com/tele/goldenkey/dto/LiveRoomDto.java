@@ -17,4 +17,8 @@ public class LiveRoomDto {
 
     @ApiParam(name = "timestamp", value = "时间戳")
     private Long timestamp;
+
+    @ApiParam(name = "linkMai", value = "是否允许连麦")
+    private Boolean linkMai;
+
 }

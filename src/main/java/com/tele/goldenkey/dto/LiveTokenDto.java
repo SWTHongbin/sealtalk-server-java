@@ -11,7 +11,8 @@ public class LiveTokenDto {
 
     private String url;
 
-    private Integer agoroId;
+    @ApiParam(name = "livedId", value = "房间id")
+    private Integer livedId;
 
     private String rtcToken;
 
