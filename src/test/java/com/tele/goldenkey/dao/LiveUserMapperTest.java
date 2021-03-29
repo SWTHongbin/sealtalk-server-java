@@ -14,7 +14,7 @@ class LiveUserMapperTest {
 
     @Test
     void deleteByLivedId() {
-        liveUserMapper.selectByUserId(1);
+        liveUserMapper.deleteByLivedId(1);
     }
 
     @Test
