@@ -27,7 +27,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public String getPushUrl(Integer livedId) throws ServiceException {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses == null) {
             Channel channel = ivsClient.createChannel(CHANNEL_KEY + livedId);
             ValidateUtils.notNull(channel);
@@ -39,26 +39,26 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
             liveStatuses.setLiveId(livedId);
             this.saveSelective(liveStatuses);
         } else {
-            liveStatusesMapper.openByLivedId(livedId);
+            liveStatusesMapper.openById(livedId);
         }
         return liveStatuses.getPushUrl();
     }
 
     public Boolean isOpen(Integer livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         return liveStatuses != null && liveStatuses.getStatus() == 1;
     }
 
     public Boolean close(Integer livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses != null) {
             ivsClient.stopStream(liveStatuses.getCode());
         }
-        return liveStatusesMapper.closeByLivedId(livedId) > 0;
+        return liveStatusesMapper.closeById(livedId) > 0;
     }
 
     public String getLiveUrl(Integer livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses == null || liveStatuses.getStatus() == 0) {
             return null;
         }
@@ -66,21 +66,21 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public void initRoom(LiveParam liveParam, Integer livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         LiveStatuses newLive = new LiveStatuses();
         newLive.setType(liveParam.getType());
         newLive.setTheme(liveParam.getTheme());
         newLive.setCount(1);
-        newLive.setId(liveStatuses.getId());
+        newLive.setLiveId(liveStatuses.getLiveId());
         liveStatusesMapper.updateByPrimaryKeySelective(newLive);
     }
 
     public void leave(Integer livedId, Integer num) {
-        liveStatusesMapper.updateCount(livedId, num);
+        //toto
     }
 
     public LiveRoomDto room(Integer livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findByLivedId(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         LiveRoomDto liveRoomDto = new LiveRoomDto();
         liveRoomDto.setType(liveStatuses.getType());
         liveRoomDto.setTimestamp(System.currentTimeMillis() - liveStatuses.getStartTime().getTime());

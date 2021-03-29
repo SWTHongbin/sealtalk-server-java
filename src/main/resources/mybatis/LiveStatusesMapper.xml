@@ -10,7 +10,7 @@
     </resultMap>
 
 
-    <select id="findByLivedId" resultMap="BaseResultMap" parameterType="map">
+    <select id="findById" resultMap="BaseResultMap" parameterType="map">
         select *
         from live_statuses
         WHERE liveId = #{livedId}
@@ -18,31 +18,24 @@
     </select>
 
     <select id="noLongerUsed" resultMap="BaseResultMap">
-        select code, id, liveId
+        select code, liveId
         from live_statuses
         WHERE updatedAt &lt; DATE_ADD(now(), INTERVAL - 30 DAY)
     </select>
 
-    <update id="closeByLivedId" parameterType="map">
+    <update id="closeById" parameterType="map">
         UPDATE live_statuses
         set `status` =0,
-            `count`=0,
             startTime=null
         WHERE liveId = #{livedId}
     </update>
 
-    <update id="openByLivedId" parameterType="map">
+    <update id="openById" parameterType="map">
         UPDATE live_statuses
         set `status` =1,
-            `count`=1,
             startTime=now()
         WHERE liveId = #{livedId}
     </update>
 
-    <update id="updateCount" parameterType="map">
-        UPDATE live_statuses
-        set `count`=`count` + #{num}
-        WHERE liveId = #{livedId}
-    </update>
 
 </mapper>

@@ -77,9 +77,9 @@ public class LiveController extends BaseController {
     }
 
 
-    @ApiOperation(value = "用户离开房间")
+    @ApiOperation(value = "直播事件")
     @PostMapping(value = "/event/{type}")
-    public APIResult<Void> event(@PathVariable EventType eventType) {
+    public APIResult<Void> maiEvent(@PathVariable EventType eventType) {
         Integer id = getCurrentUserId();
         liveService.leave(id, -1);
         applicationContext.publishEvent(new LiveEvent(EventType.leave, id, id));

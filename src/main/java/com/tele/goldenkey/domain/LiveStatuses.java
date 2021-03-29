@@ -8,9 +8,8 @@ import java.util.Date;
 
 @Table(name = "live_statuses")
 public class LiveStatuses implements Serializable {
-    @Id
-    private Integer id;
 
+    @Id
     @Column(name = "liveId")
     private Integer liveId;
 
@@ -54,19 +53,6 @@ public class LiveStatuses implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * @return id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     /**
      * @return status

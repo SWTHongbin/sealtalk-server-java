@@ -26,7 +26,7 @@ public class DelChannelStream {
                             } catch (Exception e) {
                                 log.error("clear channel  id:" + x.getLiveId(), e);
                             }
-                            liveStatusesMapper.deleteByPrimaryKey(x.getId());
+                            liveStatusesMapper.deleteByPrimaryKey(x.getLiveId());
                         });
 
     }

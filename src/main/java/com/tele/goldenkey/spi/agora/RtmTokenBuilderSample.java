@@ -25,7 +25,8 @@ public class RtmTokenBuilderSample {
     private final static String APP_ID = "a75d7dfc56454049aa425f39b085db94";
     private final static String APP_CERTIFICATE = "a0a62266ac204e9eae02add460fabcbd";
     private final static String USER_ID = "825034474290024448";
-    private final static String REQUEST_URL = "https://api.agora.io/dev/v2/project/" + APP_ID + "/rtm/users/%s/channel_messages";
+    private final static String CHANNEL_REQUEST_URL = "https://api.agora.io/dev/v2/project/" + APP_ID + "/rtm/users/%s/channel_messages";
+    private final static String TERMINAL_REQUEST_URL = "https://api.agora.io/dev/v2/project/" + APP_ID + "/rtm/users/%s/peer_messages";
     private final static RedissonClient redissonClient = SpringContextUtil.getBean(RedissonClient.class);
 
 
@@ -44,26 +45,61 @@ public class RtmTokenBuilderSample {
         return token;
     }
 
+    /**
+     * 频道消息推送   管理员发送
+     *
+     * @param channelName
+     * @param rtmMsgDto
+     */
     public static void sendMsgOfChannel(String channelName, RtmMsgDto rtmMsgDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         headers.set("x-agora-token", buildRtmToken(USER_ID));
         headers.set("x-agora-uid", USER_ID);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(new RtmMsgBody(channelName, JSON.toJSONString(rtmMsgDto)), headers);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(new RtmChannelBody(channelName, JSON.toJSONString(rtmMsgDto)), headers);
         RestTemplate restTemplate = SpringContextUtil.getBean(RestTemplate.class);
-        log.info(restTemplate.exchange(String.format(REQUEST_URL, USER_ID), HttpMethod.POST, httpEntity, String.class).getBody());
+        log.info(restTemplate.exchange(String.format(CHANNEL_REQUEST_URL, USER_ID), HttpMethod.POST, httpEntity, String.class).getBody());
+    }
+
+    /**
+     * 终端消息发送
+     *
+     * @param userId     是谁发
+     * @param terminalId 给谁发
+     * @param rtmMsgDto  消息
+     */
+    public static void sendMsgOfTerminal(String userId, String terminalId, RtmMsgDto rtmMsgDto) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("x-agora-token", buildRtmToken(userId));
+        headers.set("x-agora-uid", userId);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(new RtmTerminalBody(terminalId, JSON.toJSONString(rtmMsgDto)), headers);
+        RestTemplate restTemplate = SpringContextUtil.getBean(RestTemplate.class);
+        log.info(restTemplate.exchange(String.format(TERMINAL_REQUEST_URL, userId), HttpMethod.POST, httpEntity, String.class).getBody());
     }
 
     @Data
-    static class RtmMsgBody {
+    static class RtmChannelBody {
         private String channel_name;
         private Boolean enable_historical_messaging = false;
         private String payload;
 
-        public RtmMsgBody(String channel_name, String payload) {
+        public RtmChannelBody(String channel_name, String payload) {
             this.channel_name = channel_name;
             this.payload = payload;
         }
     }
 
+    @Data
+    static class RtmTerminalBody {
+        private String destination;
+        private Boolean enable_offline_messaging = true;
+        private Boolean enable_historical_messaging = false;
+        private String payload;
+
+        public RtmTerminalBody(String destination, String payload) {
+            this.destination = destination;
+            this.payload = payload;
+        }
+    }
 }
