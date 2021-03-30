@@ -110,7 +110,7 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "直播事件")
     @PostMapping(value = "/event/{eventName}")
-    public APIResult<Void> maiEvent(@ApiParam(name = "type", value = "消息类型")
+    public APIResult<Void> maiEvent(@ApiParam(name = "eventName", value = "消息类型")
                                     @PathVariable("eventName") String eventName,
                                     @RequestBody @Validated MaiEventParam param) throws ServiceException {
         LiveEventCls event = LiveEventFactory.getByKey(eventName);
