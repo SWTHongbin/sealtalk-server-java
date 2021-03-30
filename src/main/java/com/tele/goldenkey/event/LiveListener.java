@@ -23,12 +23,13 @@ public class LiveListener {
     public void leave(LiveEvent event) {
         RtmMsgDto rtmMsgDto = new RtmMsgDto();
         rtmMsgDto.setType(event.getMsgType().code);
-        rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getToTerminalId()) + event.getMsgType().desc);
         switch (event.getMsgType().passageway) {
             case terminal:
+                rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getToTerminalId()) + event.getMsgType().desc);
                 sendMsgOfTerminal(String.valueOf(event.getFromUserId()), String.valueOf(event.getToTerminalId()), rtmMsgDto);
                 break;
             case broadcast:
+                rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getFromUserId()) + event.getMsgType().desc);
                 sendMsgOfBroadcast(AGORA_CHANNEL_PREFIX + event.getFromUserId(), rtmMsgDto);
                 break;
         }
