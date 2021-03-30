@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.services.ivs.model.Channel;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
@@ -36,7 +38,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public String getPushUrl(Integer livedId) throws ServiceException {
         liveUserMapper.deleteByLivedId(livedId);
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
-
         if (liveStatuses != null) {
             liveStatusesMapper.openById(livedId);
         } else {
@@ -77,13 +78,13 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public void initRoom(LiveParam liveParam, Integer livedId) {
-        boolean flag = liveStatusesMapper.findById(livedId) == null;
         LiveStatuses liveStatuses = new LiveStatuses();
         liveStatuses.setLiveId(livedId);
         liveStatuses.setType(liveParam.getType());
         liveStatuses.setTheme(liveParam.getTheme());
+        liveStatuses.setStartTime(new Date());
         liveStatuses.setLinkMai(liveParam.getLinkMai());
-        if (flag) {
+        if (liveStatusesMapper.findById(livedId) == null) {
             liveStatusesMapper.insertSelective(liveStatuses);
         } else {
             liveStatusesMapper.updateByPrimaryKeySelective(liveStatuses);
