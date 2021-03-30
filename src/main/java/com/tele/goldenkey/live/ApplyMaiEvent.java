@@ -25,7 +25,7 @@ public class ApplyMaiEvent extends LiveEventCls {
 
     @Override
     public LiveEventDto getLiveEventDto(Integer livedId, Integer userId, Integer terminalId) {
-        return new LiveEventDto(livedId,terminalId);
+        return new LiveEventDto(livedId, terminalId, userId);
     }
 
     @Override
@@ -35,6 +35,6 @@ public class ApplyMaiEvent extends LiveEventCls {
         if (liveStatuses.getLinkMai() != 1) {
             throw new ServiceException(ErrorCode.PARAM_ERROR, "不允许开麦");
         }
-        return new LiveEvent(EventType.apply_mai, liveEventDto.getLivedId(), liveEventDto.getTerminalId());
+        return new LiveEvent(EventType.apply_mai, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
     }
 }

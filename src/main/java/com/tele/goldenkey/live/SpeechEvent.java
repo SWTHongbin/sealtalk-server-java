@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class AgreeMaiMaiEvent extends LiveEventCls {
-    private final LiveUserMapper liveUserMapper;
+public class SpeechEvent extends LiveEventCls {
+    private final LiveUserMapper userMapper;
 
     @Override
     String getEventName() {
-        return EventType.agree_mai.name();
+        return EventType.cancel_speech.name();
     }
 
     @Override
@@ -28,7 +28,7 @@ public class AgreeMaiMaiEvent extends LiveEventCls {
 
     @Override
     public LiveEvent execute(LiveEventDto liveEventDto) {
-        liveUserMapper.updateMai(1, liveEventDto.getToTerminalId());
-        return new LiveEvent(EventType.agree_mai, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
+        userMapper.updateSpeak(1, liveEventDto.getToTerminalId());
+        return new LiveEvent(EventType.cancel_speech, liveEventDto.getLivedId(), liveEventDto.getToTerminalId());
     }
 }

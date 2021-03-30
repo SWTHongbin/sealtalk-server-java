@@ -28,4 +28,7 @@ public class LiveParam {
     @ApiParam(name = "linkMai", required = true, value = "是否允许连麦")
     @NonNull
     private Integer linkMai;
+
+    public LiveParam() {
+    }
 }
