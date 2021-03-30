@@ -46,6 +46,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         }
         LiveUser liveUser = convertLiveUser(getUserById(livedId), livedId);
         liveUser.setMaiPower(1);
+        liveUser.setMaiStatus(1);
         liveUserMapper.insertSelective(liveUser);
         return liveStatuses.getPushUrl();
     }
