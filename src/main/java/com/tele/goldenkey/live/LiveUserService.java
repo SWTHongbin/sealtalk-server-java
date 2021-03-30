@@ -1,7 +1,10 @@
 package com.tele.goldenkey.live;
 
+import com.tele.goldenkey.constant.ErrorCode;
 import com.tele.goldenkey.controller.param.LiveUserParam;
+import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.dao.LiveUserMapper;
+import com.tele.goldenkey.domain.LiveStatuses;
 import com.tele.goldenkey.domain.LiveUser;
 import com.tele.goldenkey.dto.LiveUserDto;
 import com.tele.goldenkey.event.type.LiveEvent;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
     private final LiveUserMapper liveUserMapper;
+    private final LiveStatusesMapper statusesMapper;
 
     @Override
     protected Mapper<LiveUser> getMapper() {
@@ -56,7 +60,15 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
     public LiveEvent optionMai(Integer userId, EventType eventType) throws ServiceException {
         LiveUserDto user = getUser(userId);
         ValidateUtils.notNull(user);
-        liveUserMapper.updateMai(eventType == EventType.up_mai ? 1 : 0, userId);
+        int code = 0;
+        if (eventType == EventType.up_mai) {
+            LiveStatuses liveStatuses = statusesMapper.findById(user.getLivedId());
+            ValidateUtils.notNull(liveStatuses);
+            if (liveStatuses.getLinkMai() != 1) {
+                throw new ServiceException(ErrorCode.PARAM_ERROR, "不允许开麦");
+            }
+        }
+        liveUserMapper.updateMai(code, userId);
         return new LiveEvent(eventType, user.getLivedId(), null);
     }
 }
