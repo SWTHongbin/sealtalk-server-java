@@ -15,7 +15,6 @@ import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 import software.amazon.awssdk.services.ivs.model.Channel;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -27,7 +26,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     private final LiveStatusesMapper liveStatusesMapper;
     private final IVSClient ivsClient;
     private final LiveUserMapper liveUserMapper;
-    private final TransactionTemplate transactionTemplate;
     private final UsersMapper usersMapper;
 
     @Override
@@ -36,25 +34,20 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public String getPushUrl(Integer livedId) throws ServiceException {
+        liveUserMapper.deleteByLivedId(livedId);
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
-        LiveUser liveUser = convertLiveUser(getUserById(livedId), livedId);
+
         if (liveStatuses != null) {
-            transactionTemplate.execute(status -> {
-                liveStatusesMapper.openById(livedId);
-                liveUserMapper.insertSelective(liveUser);
-                return true;
-            });
-            return liveStatuses.getPushUrl();
+            liveStatusesMapper.openById(livedId);
         } else {
-            LiveStatuses newPo = buildLiveStatus(livedId);
-            ValidateUtils.notNull(newPo);
-            transactionTemplate.execute(status -> {
-                this.saveSelective(newPo);
-                liveUserMapper.insertSelective(liveUser);
-                return true;
-            });
-            return newPo.getPushUrl();
+            liveStatuses = buildLiveStatus(livedId);
+            ValidateUtils.notNull(liveStatuses);
+            this.saveSelective(liveStatuses);
         }
+        LiveUser liveUser = convertLiveUser(getUserById(livedId), livedId);
+        liveUser.setMaiPower(1);
+        liveUserMapper.insertSelective(liveUser);
+        return liveStatuses.getPushUrl();
     }
 
 
@@ -68,11 +61,8 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         if (liveStatuses != null) {
             ivsClient.stopStream(liveStatuses.getCode());
         }
-        transactionTemplate.execute(status -> {
-            liveStatusesMapper.closeById(livedId);
-            liveUserMapper.deleteByLivedId(livedId);
-            return true;
-        });
+        liveStatusesMapper.closeById(livedId);
+        liveUserMapper.deleteByLivedId(livedId);
         return true;
     }
 
@@ -107,6 +97,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public void join(Integer userId, Integer livedId) {
+        liveUserMapper.deleteByUserId(userId);
         liveUserMapper.insertSelective(convertLiveUser(getUserById(userId), livedId));
     }
 
