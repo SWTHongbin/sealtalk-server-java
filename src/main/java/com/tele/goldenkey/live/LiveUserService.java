@@ -7,6 +7,7 @@ import com.tele.goldenkey.dto.LiveUserDto;
 import com.tele.goldenkey.service.AbstractBaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
@@ -33,8 +34,17 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
                     dto.setPhone(x.getPhone());
                     dto.setPortraitUri(x.getPortraitUri());
                     dto.setMaiStatus(x.getMaiStatus());
+                    dto.setPermissionSpeak(x.getPermissionSpeak());
                     dto.setName(x.getName());
                     return dto;
                 }).collect(Collectors.toList());
+    }
+
+    public LiveUserDto getUser(Integer userId) {
+        LiveUserParam param = new LiveUserParam();
+        param.setUserId(userId);
+        List<LiveUserDto> users = getUsers(param, null);
+        if (CollectionUtils.isEmpty(users)) return null;
+        return users.get(0);
     }
 }

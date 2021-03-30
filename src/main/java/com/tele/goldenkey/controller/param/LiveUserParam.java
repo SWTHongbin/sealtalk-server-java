@@ -11,4 +11,6 @@ public class LiveUserParam {
      */
     @ApiParam(name = "maiStatus", value = "连麦状态")
     private Integer maiStatus;
+
+    private Integer userId;
 }

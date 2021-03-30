@@ -61,7 +61,8 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "是否开播")
     @PostMapping(value = "/is-open/{livedId}")
-    public APIResult<HashMap<String, Boolean>> isOpen(@ApiParam(name = "livedId", value = "直播id") @PathVariable("livedId") Integer livedId) {
+    public APIResult<HashMap<String, Boolean>> isOpen(@ApiParam(name = "livedId", value = "直播id")
+                                                      @PathVariable("livedId") Integer livedId) {
         HashMap<String, Boolean> hashMap = Maps.newHashMap();
         hashMap.put("isOpen", liveService.isOpen(livedId));
         return APIResultWrap.ok(hashMap);
@@ -78,8 +79,9 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "查询直播间用户")
     @PostMapping(value = "/user/{livedId}")
-    public APIResult<List<LiveUserDto>> user(@RequestBody LiveUserParam param,
-                                             @ApiParam(name = "livedId", value = "直播id") @PathVariable("livedId") Integer livedId) {
+    public APIResult<List<LiveUserDto>> user(@ApiParam(name = "livedId", value = "直播id")
+                                             @PathVariable("livedId") Integer livedId,
+                                             @RequestBody LiveUserParam param) {
         return APIResultWrap.ok(userService.getUsers(param, livedId));
     }
 
@@ -91,6 +93,11 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok(null, "操作成功");
     }
 
+    @ApiOperation(value = "直播房间个人信息")
+    @PostMapping(value = "/user")
+    public APIResult<LiveUserDto> user() throws ServiceException {
+        return APIResultWrap.ok(userService.getUser(getCurrentUserId()));
+    }
 
     @ApiOperation(value = "直播事件")
     @PostMapping(value = "/event/{type}")
@@ -107,9 +114,8 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "获取房间信息")
     @PostMapping(value = "/get/live-url/{livedId}")
-    public APIResult<LiveTokenDto> getLiveUrl(
-            @ApiParam(name = "livedId", value = "直播id")
-            @PathVariable("livedId") Integer livedId) {
+    public APIResult<LiveTokenDto> getLiveUrl(@ApiParam(name = "livedId", value = "直播id")
+                                              @PathVariable("livedId") Integer livedId) {
         Integer id = getCurrentUserId();
         liveService.join(id, livedId);
         LiveTokenDto liveTokenDto = new LiveTokenDto();

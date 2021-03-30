@@ -1,6 +1,5 @@
 package com.tele.goldenkey.domain;
 
-import io.swagger.models.auth.In;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -34,6 +33,12 @@ public class LiveUser implements Serializable {
      */
     @Column(name = "maiStatus")
     private Integer maiStatus;
+
+    /**
+     * 是否允许发言 1 开 0 关
+     */
+    @Column(name = "permissionSpeak")
+    private Integer permissionSpeak;
 
     @Column(name = "createdAt")
     private Date createdAt;
