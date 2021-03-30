@@ -44,6 +44,7 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
                     dto.setMaiStatus(x.getMaiStatus());
                     dto.setPermissionSpeak(x.getPermissionSpeak());
                     dto.setName(x.getName());
+                    dto.setMaiPower(x.getMaiPower());
                     dto.setLivedId(x.getLiveId());
                     return dto;
                 }).collect(Collectors.toList());
@@ -66,6 +67,9 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
             ValidateUtils.notNull(liveStatuses);
             if (liveStatuses.getLinkMai() != 1) {
                 throw new ServiceException(ErrorCode.PARAM_ERROR, "不允许开麦");
+            }
+            if (user.getMaiPower() != 1) {
+                throw new ServiceException(ErrorCode.PARAM_ERROR, "请先申请连麦");
             }
         }
         liveUserMapper.updateMai(code, userId);

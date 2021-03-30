@@ -20,4 +20,7 @@ public class MaiEventParam {
      */
     @ApiParam(name = "terminalId", value = "用户id")
     private Integer terminalId;
+
+    public MaiEventParam() {
+    }
 }

@@ -8,6 +8,7 @@ import com.tele.goldenkey.spi.agora.eums.EventType;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
@@ -26,9 +27,11 @@ public class AgreeMaiMaiEvent extends LiveEventCls {
         return new LiveEventDto(livedId, userId, terminalId);
     }
 
+    @Transactional
     @Override
     public LiveEvent execute(LiveEventDto liveEventDto) {
         liveUserMapper.updateMai(1, liveEventDto.getToTerminalId());
+        liveUserMapper.updateMaiPower(1, liveEventDto.getToTerminalId());
         return new LiveEvent(EventType.agree_mai, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
     }
 }

@@ -55,7 +55,7 @@ public class LiveController extends BaseController {
         liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + livedId, String.valueOf(livedId), RtcTokenBuilder.Role.Role_Publisher));
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
         liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(livedId)));
-        applicationContext.publishEvent(new LiveEvent(EventType.open, livedId, livedId));
+        applicationContext.publishEvent(new LiveEvent(EventType.open, livedId, null));
         return APIResultWrap.ok(liveTokenDto);
     }
 
@@ -71,9 +71,9 @@ public class LiveController extends BaseController {
     @ApiOperation(value = "关闭直播")
     @PostMapping(value = "/close")
     public APIResult<Void> close() {
-        Integer id = getCurrentUserId();
-        liveService.close(id);
-        applicationContext.publishEvent(new LiveEvent(EventType.close, id, id));
+        Integer livedId = getCurrentUserId();
+        liveService.close(livedId);
+        applicationContext.publishEvent(new LiveEvent(EventType.close, livedId, null));
         return APIResultWrap.ok(null, "关闭成功");
     }
 
@@ -89,7 +89,7 @@ public class LiveController extends BaseController {
     @PostMapping(value = "/leave")
     public APIResult<Void> leave() throws ServiceException {
         Integer id = getCurrentUserId();
-        applicationContext.publishEvent(new LiveEvent(EventType.leave, liveService.leave(id), id));
+        applicationContext.publishEvent(new LiveEvent(EventType.leave, liveService.leave(id), null));
         return APIResultWrap.ok(null, "操作成功");
     }
 
@@ -133,7 +133,7 @@ public class LiveController extends BaseController {
         liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(id)));
         liveTokenDto.setUrl(liveService.getLiveUrl(livedId));
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
-        applicationContext.publishEvent(new LiveEvent(EventType.join, livedId, id));
+        applicationContext.publishEvent(new LiveEvent(EventType.join, livedId, null));
         return APIResultWrap.ok(liveTokenDto);
     }
 }

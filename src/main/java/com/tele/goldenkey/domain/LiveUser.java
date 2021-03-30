@@ -34,6 +34,9 @@ public class LiveUser implements Serializable {
     @Column(name = "maiStatus")
     private Integer maiStatus;
 
+    @Column(name = "maiPower")
+    private Integer maiPower;
+
     /**
      * 是否允许发言 1 开 0 关
      */

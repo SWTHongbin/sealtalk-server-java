@@ -13,4 +13,7 @@ public class LiveUserParam {
     private Integer maiStatus;
 
     private Integer userId;
+
+    public LiveUserParam() {
+    }
 }

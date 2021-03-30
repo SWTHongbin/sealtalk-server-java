@@ -29,5 +29,6 @@ public class LiveParam {
     @NonNull
     private Integer linkMai;
 
-
+    public LiveParam() {
+    }
 }
