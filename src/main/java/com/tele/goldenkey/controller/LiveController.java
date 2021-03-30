@@ -3,11 +3,13 @@ package com.tele.goldenkey.controller;
 import com.google.common.collect.Maps;
 import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.controller.param.LiveUserParam;
+import com.tele.goldenkey.controller.param.MaiEventParam;
 import com.tele.goldenkey.dto.LiveEventDto;
 import com.tele.goldenkey.dto.LiveTokenDto;
 import com.tele.goldenkey.dto.LiveUserDto;
 import com.tele.goldenkey.event.type.LiveEvent;
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.live.LiveEventCls;
 import com.tele.goldenkey.live.LiveEventFactory;
 import com.tele.goldenkey.live.LiveService;
 import com.tele.goldenkey.live.LiveUserService;
@@ -17,12 +19,14 @@ import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.RtmTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.eums.EventType;
 import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
+import com.tele.goldenkey.util.ValidateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -41,7 +45,7 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "获取直播流推送地址")
     @PostMapping(value = "/get/push-url")
-    public APIResult<LiveTokenDto> getPushUrl(@RequestBody LiveParam liveParam) throws ServiceException {
+    public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) throws ServiceException {
         Integer livedId = getCurrentUserId();
         liveService.initRoom(liveParam, livedId);
         LiveTokenDto liveTokenDto = new LiveTokenDto();
@@ -89,12 +93,14 @@ public class LiveController extends BaseController {
 
 
     @ApiOperation(value = "直播事件")
-    @PostMapping(value = "/event/{type}/{livedId}")
+    @PostMapping(value = "/event/{type}")
     public APIResult<Void> maiEvent(@ApiParam(name = "type", value = "消息类型")
                                     @PathVariable("type") String eventType,
-                                    @ApiParam(name = "livedId", value = "直播id")
-                                    @PathVariable("livedId") Integer livedId) throws ServiceException {
-        LiveEvent liveEvent = LiveEventFactory.getByKey(eventType).execute(new LiveEventDto(livedId, getCurrentUserId()));
+                                    @RequestBody @Validated MaiEventParam param) throws ServiceException {
+        LiveEventCls event = LiveEventFactory.getByKey(eventType);
+        ValidateUtils.notNull(event);
+        LiveEventDto liveEventDto = event.getLiveEventDto(param.getLivedId(), getCurrentUserId(), param.getTerminalId());
+        LiveEvent liveEvent = event.execute(liveEventDto);
         applicationContext.publishEvent(liveEvent);
         return APIResultWrap.ok(null, "操作成功");
     }

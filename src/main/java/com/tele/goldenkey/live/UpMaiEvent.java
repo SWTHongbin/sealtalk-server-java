@@ -25,6 +25,11 @@ public class UpMaiEvent extends LiveEventCls {
     }
 
     @Override
+    public LiveEventDto getLiveEventDto(Integer livedId, Integer userId, Integer terminalId) {
+        return null;
+    }
+
+    @Override
     public LiveEvent execute(LiveEventDto liveEventDto) throws ServiceException {
         LiveStatuses liveStatuses = statusesMapper.findById(liveEventDto.getLivedId());
         ValidateUtils.notNull(liveStatuses);

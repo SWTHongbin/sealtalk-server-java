@@ -15,6 +15,7 @@ import static com.tele.goldenkey.spi.agora.RtmTokenBuilderSample.sendMsgOfTermin
 @Component
 @RequiredArgsConstructor
 public class LiveListener {
+
     private final UsersService usersService;
 
     @Async
@@ -22,13 +23,13 @@ public class LiveListener {
     public void leave(LiveEvent event) {
         RtmMsgDto rtmMsgDto = new RtmMsgDto();
         rtmMsgDto.setType(event.getMsgType().code);
-        rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getTerminalId()) + event.getMsgType().desc);
+        rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getToTerminalId()) + event.getMsgType().desc);
         switch (event.getMsgType().passageway) {
             case terminal:
-                sendMsgOfTerminal(String.valueOf(event.getLivedId()), String.valueOf(event.getTerminalId()), rtmMsgDto);
+                sendMsgOfTerminal(String.valueOf(event.getFromUserId()), String.valueOf(event.getToTerminalId()), rtmMsgDto);
                 break;
             case broadcast:
-                sendMsgOfBroadcast(AGORA_CHANNEL_PREFIX + event.getLivedId(), rtmMsgDto);
+                sendMsgOfBroadcast(AGORA_CHANNEL_PREFIX + event.getFromUserId(), rtmMsgDto);
                 break;
         }
 

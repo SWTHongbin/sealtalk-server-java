@@ -24,7 +24,12 @@ public class ApplyMaiEvent extends LiveEventCls {
     }
 
     @Override
-   public LiveEvent execute(LiveEventDto liveEventDto) throws ServiceException {
+    public LiveEventDto getLiveEventDto(Integer livedId, Integer userId, Integer terminalId) {
+        return new LiveEventDto(livedId,terminalId);
+    }
+
+    @Override
+    public LiveEvent execute(LiveEventDto liveEventDto) throws ServiceException {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(liveEventDto.getLivedId());
         ValidateUtils.notNull(liveStatuses);
         if (liveStatuses.getLinkMai() != 1) {

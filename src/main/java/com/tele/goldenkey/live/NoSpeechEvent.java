@@ -12,7 +12,10 @@ public class NoSpeechEvent extends LiveEventCls {
     String getEventName() {
         return EventType.no_speech.name();
     }
-
+    @Override
+    public LiveEventDto getLiveEventDto(Integer livedId, Integer userId, Integer terminalId) {
+        return null;
+    }
     @Override
     public LiveEvent execute(LiveEventDto liveEventDto) {
         return new LiveEvent(EventType.no_speech, liveEventDto.getLivedId(), liveEventDto.getTerminalId());

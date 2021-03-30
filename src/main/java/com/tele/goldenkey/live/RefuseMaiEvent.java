@@ -14,7 +14,10 @@ public class RefuseMaiEvent extends LiveEventCls {
     String getEventName() {
         return EventType.refuse_mai.name();
     }
-
+    @Override
+    public LiveEventDto getLiveEventDto(Integer livedId, Integer userId, Integer terminalId) {
+        return null;
+    }
     @Override
     public LiveEvent execute(LiveEventDto liveEventDto) {
         return new LiveEvent(EventType.refuse_mai, liveEventDto.getLivedId(), liveEventDto.getTerminalId());

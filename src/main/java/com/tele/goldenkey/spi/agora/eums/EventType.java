@@ -17,7 +17,7 @@ public enum EventType {
     apply_mai(8, "申请连麦", Passageway.terminal),
     refuse_mai(9, "拒绝连麦", Passageway.terminal),
     agree_mai(10, "同意连麦", Passageway.terminal),
-    no_speech(11, "禁言", Passageway.broadcast);
+    no_speech(11, "禁言", Passageway.terminal);
 
     public Integer code;
 
