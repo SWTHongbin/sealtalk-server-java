@@ -19,6 +19,6 @@ public class LiveRoomDto {
     private Long timestamp;
 
     @ApiParam(name = "linkMai", value = "是否允许连麦")
-    private Boolean linkMai;
+    private Integer linkMai;
 
 }

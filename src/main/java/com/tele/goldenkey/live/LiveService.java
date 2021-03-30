@@ -88,7 +88,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public void initRoom(LiveParam liveParam, Integer livedId) {
         boolean flag = liveStatusesMapper.findById(livedId) == null;
         LiveStatuses liveStatuses = new LiveStatuses();
-        liveStatuses.setLiveId(liveStatuses.getLiveId());
+        liveStatuses.setLiveId(livedId);
         liveStatuses.setType(liveParam.getType());
         liveStatuses.setTheme(liveParam.getTheme());
         liveStatuses.setLinkMai(liveParam.getLinkMai());
@@ -118,7 +118,8 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
             liveRoomDto.setTimestamp(System.currentTimeMillis() - liveStatuses.getStartTime().getTime());
         }
         liveRoomDto.setTheme(liveStatuses.getTheme());
-        liveRoomDto.setLinkMai(liveStatuses.getLinkMai() == 1);
+        liveRoomDto.setLinkMai(liveStatuses.getLinkMai());
+        liveRoomDto.setCount(liveUserMapper.countByLiveId(livedId));
         return liveRoomDto;
     }
 

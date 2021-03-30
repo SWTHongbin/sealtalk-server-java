@@ -21,7 +21,9 @@ public interface LiveUserMapper extends Mapper<LiveUser> {
     @Update(" UPDATE  live_user  SET maiStatus =#{status} WHERE userId =#{userId} ")
     Integer updateMai(@Param("status") Integer status, @Param("userId") Integer userId);
 
-
     @Update(" UPDATE  live_user  SET permissionSpeak =#{status} WHERE userId =#{userId} ")
     Integer updateSpeak(@Param("status") Integer status, @Param("userId") Integer userId);
+
+    @Select(" select count(id)  from  live_user  WHERE  liveId =#{livedId} ")
+    Integer countByLiveId(@Param("livedId") Integer livedId);
 }
