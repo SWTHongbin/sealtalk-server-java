@@ -107,9 +107,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         LiveRoomDto liveRoomDto = new LiveRoomDto();
         liveRoomDto.setType(liveStatuses.getType());
-        if (liveStatuses.getStartTime() != null) {
-            liveRoomDto.setTimestamp(System.currentTimeMillis() - liveStatuses.getStartTime().getTime());
-        }
+        liveRoomDto.setTimestamp(liveStatuses.getStartTime().getTime());
         liveRoomDto.setTheme(liveStatuses.getTheme());
         liveRoomDto.setLinkMai(liveStatuses.getLinkMai());
         liveRoomDto.setCount(liveUserMapper.countByLiveId(livedId));
