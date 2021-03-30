@@ -52,7 +52,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatuses.getPushUrl();
     }
 
-
     public Boolean isOpen(Integer livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         return liveStatuses != null && liveStatuses.getStatus() == 1;
@@ -68,7 +67,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return true;
     }
 
-    @Transactional
     public String getLiveUrl(Integer livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses == null || liveStatuses.getStatus() == 0) {
