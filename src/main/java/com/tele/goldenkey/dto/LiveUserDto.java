@@ -33,4 +33,6 @@ public class LiveUserDto {
     private Integer permissionSpeak;
 
     private String name;
+
+    private Integer livedId;
 }

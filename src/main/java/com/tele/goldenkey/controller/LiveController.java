@@ -99,6 +99,15 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok(userService.getUser(getCurrentUserId()));
     }
 
+    @ApiOperation(value = "个人开关麦")
+    @PostMapping(value = "/mai/{eventName}")
+    public APIResult<Void> optionMai(@ApiParam(name = "status", value = "消息类型  up_mai 开 down_mai 关")
+                                     @PathVariable("eventName") String eventName) throws ServiceException {
+        LiveEvent liveEvent = userService.optionMai(getCurrentUserId(), EventType.valueOf(eventName));
+        applicationContext.publishEvent(liveEvent);
+        return APIResultWrap.ok(null, "操作成功");
+    }
+
     @ApiOperation(value = "直播事件")
     @PostMapping(value = "/event/{type}")
     public APIResult<Void> maiEvent(@ApiParam(name = "type", value = "消息类型")

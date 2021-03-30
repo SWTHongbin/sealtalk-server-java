@@ -36,7 +36,7 @@ public class UpMaiEvent extends LiveEventCls {
         if (liveStatuses.getLinkMai() != 1) {
             throw new ServiceException(ErrorCode.PARAM_ERROR, "不允许开麦");
         }
-        userMapper.updateMai(1, liveEventDto.getLivedId(), liveEventDto.getTerminalId());
+        userMapper.updateMai(1, liveEventDto.getTerminalId());
         return new LiveEvent(EventType.up_mai, liveEventDto.getLivedId(), liveEventDto.getTerminalId());
     }
 }

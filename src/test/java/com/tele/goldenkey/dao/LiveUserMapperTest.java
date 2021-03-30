@@ -29,6 +29,6 @@ class LiveUserMapperTest {
 
     @Test
     void updateMai() {
-        liveUserMapper.updateMai(1, 1, 1);
+        liveUserMapper.updateMai(1, 1);
     }
 }

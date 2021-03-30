@@ -18,6 +18,6 @@ public interface LiveUserMapper extends Mapper<LiveUser> {
     @Select(" select *  FROM  live_user WHERE  userId =#{userId} ")
     LiveUser selectByUserId(@Param("userId") Integer userId);
 
-    @Update(" UPDATE  live_user  SET maiStatus =#{status} WHERE liveId =#{livedId} AND userId =#{userId} ")
-    Integer updateMai(@Param("status") Integer status, @Param("livedId") Integer livedId, @Param("userId") Integer userId);
+    @Update(" UPDATE  live_user  SET maiStatus =#{status} WHERE userId =#{userId} ")
+    Integer updateMai(@Param("status") Integer status, @Param("userId") Integer userId);
 }
