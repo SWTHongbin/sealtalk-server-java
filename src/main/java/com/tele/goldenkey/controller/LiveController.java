@@ -47,10 +47,10 @@ public class LiveController extends BaseController {
     @PostMapping(value = "/get/push-url")
     public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) throws ServiceException {
         Integer livedId = getCurrentUserId();
-        liveService.initRoom(liveParam, livedId);
         LiveTokenDto liveTokenDto = new LiveTokenDto();
-        liveTokenDto.setRoomDto(liveService.room(livedId));
+        liveService.initRoom(liveParam, livedId);
         liveTokenDto.setUrl(liveService.getPushUrl(livedId));
+        liveTokenDto.setRoomDto(liveService.room(livedId));
         liveTokenDto.setLivedId(livedId);
         liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + livedId, String.valueOf(livedId), RtcTokenBuilder.Role.Role_Publisher));
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
