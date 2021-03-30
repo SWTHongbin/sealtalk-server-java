@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,10 +33,10 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
     }
 
     public List<LiveUserDto> getUsers(LiveUserParam param, Integer livedId) {
-        LiveUser liveUser = new LiveUser();
-        liveUser.setMaiStatus(param.getMaiStatus());
-        liveUser.setLiveId(livedId);
-        return liveUserMapper.selectByExample(liveUser).stream()
+        Example userExample = new Example(LiveUser.class);
+        userExample.createCriteria().andEqualTo("maiStatus", param.getMaiStatus())
+                .andEqualTo("liveId", livedId);
+        return liveUserMapper.selectByExample(userExample).stream()
                 .map(x -> {
                     LiveUserDto dto = new LiveUserDto();
                     dto.setUserId(x.getUserId());
