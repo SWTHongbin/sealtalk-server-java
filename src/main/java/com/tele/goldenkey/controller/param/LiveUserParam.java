@@ -14,6 +14,8 @@ public class LiveUserParam {
 
     private Integer userId;
 
+    private Integer livedId;
+
     public LiveUserParam() {
     }
 }

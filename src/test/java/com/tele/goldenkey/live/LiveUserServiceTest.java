@@ -16,9 +16,9 @@ class LiveUserServiceTest {
 
     @Test
     void getUsers() {
-        LiveUserParam param  =new LiveUserParam();
-        param.setMaiStatus(null);
-        System.out.println(JSON.toJSONString(userService.getUsers(param,5)));
+        LiveUserParam param = new LiveUserParam();
+        param.setUserId(7);
+        System.out.println(JSON.toJSONString(userService.getUsers(param)));
     }
 
     @Test

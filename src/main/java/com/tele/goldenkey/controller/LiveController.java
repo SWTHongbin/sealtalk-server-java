@@ -83,7 +83,8 @@ public class LiveController extends BaseController {
     public APIResult<List<LiveUserDto>> user(@ApiParam(name = "livedId", value = "直播id")
                                              @PathVariable("livedId") Integer livedId,
                                              @RequestBody LiveUserParam param) {
-        return APIResultWrap.ok(userService.getUsers(param, livedId));
+        param.setLivedId(livedId);
+        return APIResultWrap.ok(userService.getUsers(param));
     }
 
     @ApiOperation(value = "用户离开房间")

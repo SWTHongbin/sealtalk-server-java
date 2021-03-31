@@ -1,11 +1,14 @@
 package com.tele.goldenkey.dao;
 
+import com.tele.goldenkey.controller.param.LiveUserParam;
 import com.tele.goldenkey.domain.LiveUser;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import tk.mybatis.mapper.common.Mapper;
+
+import java.util.List;
 
 public interface LiveUserMapper extends Mapper<LiveUser> {
 
@@ -29,4 +32,21 @@ public interface LiveUserMapper extends Mapper<LiveUser> {
 
     @Select(" select count(id)  from  live_user  WHERE  liveId =#{livedId} ")
     Integer countByLiveId(@Param("livedId") Integer livedId);
+
+    @Select({"<script>",
+            " SELECT  *  FROM live_user  ",
+            " <where> ",
+            "<if test=\"param.maiStatus != null\">",
+            " AND maiStatus = #{param.maiStatus}",
+            "</if>",
+            "<if test=\"param.userId != null\">",
+            " AND userId = #{param.userId}",
+            "</if>",
+            "<if test=\"param.livedId != null\">",
+            " AND liveId = #{param.livedId}",
+            "</if>",
+            " </where> ",
+            " ORDER BY createdAt asc ",
+            "</script>"})
+    List<LiveUser> selectByUserParam(@Param("param") LiveUserParam param);
 }
