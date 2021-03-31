@@ -36,6 +36,7 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
         Example userExample = new Example(LiveUser.class);
         userExample.createCriteria().andEqualTo("maiStatus", param.getMaiStatus())
                 .andEqualTo("liveId", livedId);
+        userExample.orderBy("createdAt").asc();
         return liveUserMapper.selectByExample(userExample).stream()
                 .map(x -> {
                     LiveUserDto dto = new LiveUserDto();
