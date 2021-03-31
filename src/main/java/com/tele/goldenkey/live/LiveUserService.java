@@ -38,19 +38,9 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
                 .andEqualTo("liveId", livedId);
         userExample.orderBy("createdAt").asc();
         return liveUserMapper.selectByExample(userExample).stream()
-                .map(x -> {
-                    LiveUserDto dto = new LiveUserDto();
-                    dto.setUserId(x.getUserId());
-                    dto.setPhone(x.getPhone());
-                    dto.setPortraitUri(x.getPortraitUri());
-                    dto.setMaiStatus(x.getMaiStatus());
-                    dto.setPermissionSpeak(x.getPermissionSpeak());
-                    dto.setName(x.getName());
-                    dto.setMaiPower(x.getMaiPower());
-                    dto.setLivedId(x.getLiveId());
-                    return dto;
-                }).collect(Collectors.toList());
+                .map(this::getLiveUserDto).collect(Collectors.toList());
     }
+
 
     public LiveUserDto getUser(Integer userId) {
         LiveUserParam param = new LiveUserParam();
@@ -76,5 +66,18 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
         }
         liveUserMapper.updateMai(code, userId);
         return new LiveEvent(eventType, user.getLivedId(), null);
+    }
+
+    private LiveUserDto getLiveUserDto(LiveUser x) {
+        LiveUserDto dto = new LiveUserDto();
+        dto.setUserId(x.getUserId());
+        dto.setPhone(x.getPhone());
+        dto.setPortraitUri(x.getPortraitUri());
+        dto.setMaiStatus(x.getMaiStatus());
+        dto.setPermissionSpeak(x.getPermissionSpeak());
+        dto.setName(x.getName());
+        dto.setMaiPower(x.getMaiPower());
+        dto.setLivedId(x.getLiveId());
+        return dto;
     }
 }
