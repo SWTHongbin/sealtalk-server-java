@@ -52,6 +52,7 @@ public class LiveController extends BaseController {
         liveTokenDto.setUrl(liveService.getPushUrl(livedId));
         liveTokenDto.setRoomDto(liveService.room(livedId));
         liveTokenDto.setLivedId(livedId);
+        liveTokenDto.setUserId(livedId);
         liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + livedId, String.valueOf(livedId), RtcTokenBuilder.Role.Role_Publisher));
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
         liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(livedId)));
