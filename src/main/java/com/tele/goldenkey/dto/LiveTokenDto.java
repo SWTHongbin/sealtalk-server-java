@@ -19,4 +19,6 @@ public class LiveTokenDto {
     private String channelId;
 
     private String rtmToken;
+
+    private Integer userId;
 }
