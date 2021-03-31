@@ -39,7 +39,7 @@ class IVSServiceTest {
     @Test
     void hello() {
         RtmMsgDto rtmMsgDto = new RtmMsgDto();
-        rtmMsgDto.setType(1);
+        rtmMsgDto.setCode(1);
         rtmMsgDto.setMessage("hello");
         RtmTokenBuilderSample.sendMsgOfBroadcast("admin_123", rtmMsgDto);
     }

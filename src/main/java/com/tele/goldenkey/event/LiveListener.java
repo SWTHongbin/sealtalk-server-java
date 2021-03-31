@@ -21,8 +21,8 @@ public class LiveListener {
     @Async
     @EventListener
     public void leave(LiveEvent event) {
-        RtmMsgDto rtmMsgDto = new RtmMsgDto();
-        rtmMsgDto.setType(event.getMsgType().code);
+        RtmMsgDto<Void> rtmMsgDto = new RtmMsgDto();
+        rtmMsgDto.setCode(event.getMsgType().code);
         switch (event.getMsgType().passageway) {
             case terminal:
                 rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getToTerminalId()) + event.getMsgType().desc);
