@@ -13,8 +13,8 @@ import com.tele.goldenkey.service.AbstractBaseService;
 import com.tele.goldenkey.spi.live.IVSClient;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.services.ivs.model.Channel;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -36,19 +36,12 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public String getPushUrl(Integer livedId) throws ServiceException {
-        liveUserMapper.deleteByLivedId(livedId);
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
-        if (liveStatuses != null) {
-            liveStatusesMapper.openById(livedId);
-        } else {
+        if (StringUtils.isBlank(liveStatuses.getPushUrl())) {
             liveStatuses = buildLiveStatus(livedId);
             ValidateUtils.notNull(liveStatuses);
-            this.saveSelective(liveStatuses);
+            this.updateByPrimaryKeySelective(liveStatuses);
         }
-        LiveUser liveUser = convertLiveUser(getUserById(livedId), livedId);
-        liveUser.setMaiPower(1);
-        liveUser.setMaiStatus(1);
-        liveUserMapper.insertSelective(liveUser);
         return liveStatuses.getPushUrl();
     }
 
@@ -76,17 +69,23 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public void initRoom(LiveParam liveParam, Integer livedId) {
+        liveUserMapper.deleteByLivedId(livedId);
         LiveStatuses liveStatuses = new LiveStatuses();
         liveStatuses.setLiveId(livedId);
         liveStatuses.setType(liveParam.getType());
         liveStatuses.setTheme(liveParam.getTheme());
         liveStatuses.setStartTime(new Date());
+        liveStatuses.setStatus(1);
         liveStatuses.setLinkMai(liveParam.getLinkMai());
         if (liveStatusesMapper.findById(livedId) == null) {
             liveStatusesMapper.insertSelective(liveStatuses);
         } else {
             liveStatusesMapper.updateByPrimaryKeySelective(liveStatuses);
         }
+        LiveUser liveUser = convertLiveUser(getUserById(livedId), livedId);
+        liveUser.setMaiPower(1);
+        liveUser.setMaiStatus(1);
+        liveUserMapper.insertSelective(liveUser);
     }
 
     public Integer leave(Integer userId) throws ServiceException {
