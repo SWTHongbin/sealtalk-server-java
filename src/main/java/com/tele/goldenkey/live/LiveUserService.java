@@ -56,10 +56,25 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
                 throw new ServiceException(ErrorCode.PARAM_ERROR, "不允许开麦");
             }
             if (user.getMaiPower() != 1) {
-                throw new ServiceException(ErrorCode.PARAM_ERROR, "请先申请连麦");
+                throw new ServiceException(ErrorCode.PARAM_ERROR, "请先申请开麦权限");
             }
+            code = 1;
         }
         liveUserMapper.updateMai(code, userId);
+        return new LiveEvent(eventType, user.getLivedId(), null);
+    }
+
+    public LiveEvent optionSpeech(Integer userId, EventType eventType) throws ServiceException {
+        LiveUserDto user = getUser(userId);
+        ValidateUtils.notNull(user);
+        int code = 0;
+        if (eventType == EventType.open_speech) {
+            if (user.getSpeakPower() != 1) {
+                throw new ServiceException(ErrorCode.PARAM_ERROR, "请先申请语音权限");
+            }
+            code = 1;
+        }
+        liveUserMapper.updateSpeech(code, userId);
         return new LiveEvent(eventType, user.getLivedId(), null);
     }
 
@@ -68,10 +83,11 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
         dto.setUserId(x.getUserId());
         dto.setPhone(x.getPhone());
         dto.setPortraitUri(x.getPortraitUri());
-        dto.setMaiStatus(x.getMaiStatus());
-        dto.setPermissionSpeak(x.getPermissionSpeak());
-        dto.setName(x.getName());
         dto.setMaiPower(x.getMaiPower());
+        dto.setMaiStatus(x.getMaiStatus());
+        dto.setSpeakPower(x.getSpeakPower());
+        dto.setSpeakStatus(x.getSpeakStatus());
+        dto.setName(x.getName());
         dto.setLivedId(x.getLiveId());
         return dto;
     }

@@ -34,14 +34,24 @@ public class LiveUser implements Serializable {
     @Column(name = "maiStatus")
     private Integer maiStatus;
 
+    /**
+     * 麦功能是否打开  由群主控制
+     */
     @Column(name = "maiPower")
     private Integer maiPower;
 
     /**
-     * 是否允许发言 1 开 0 关
+     * 是否允许发言 1 开 0 关 由群主控制
      */
-    @Column(name = "permissionSpeak")
-    private Integer permissionSpeak;
+    @Column(name = "speakPower")
+    private Integer speakPower;
+
+
+    /**
+     * 语音状态 1 开 0 关
+     */
+    @Column(name = "speakStatus")
+    private Integer speakStatus;
 
     @Column(name = "createdAt")
     private Date createdAt;

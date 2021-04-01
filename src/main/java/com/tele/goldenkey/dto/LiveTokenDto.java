@@ -14,6 +14,9 @@ public class LiveTokenDto {
     @ApiParam(name = "livedId", value = "房间id")
     private Integer livedId;
 
+    @ApiParam(name = "anchorId", value = "主播id")
+    private Integer anchorId;
+
     private String rtcToken;
 
     private String channelId;

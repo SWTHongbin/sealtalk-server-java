@@ -29,6 +29,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
@@ -101,14 +103,17 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok(userService.getUser(getCurrentUserId()));
     }
 
-    @ApiOperation(value = "个人开关麦")
+    @ApiOperation(value = "个人操作-(开关麦) (开关语音)")
     @PostMapping(value = "/mai/{eventName}")
-    public APIResult<Void> optionMai(@ApiParam(name = "status", value = "消息类型  up_mai 开 down_mai 关")
-                                     @PathVariable("eventName") String eventName) throws ServiceException {
-        LiveEvent liveEvent = userService.optionMai(getCurrentUserId(), EventType.valueOf(eventName));
-        applicationContext.publishEvent(liveEvent);
+    public APIResult<Void> optionMai(@ApiParam(name = "eventName", value = "消息类型  up_mai 开 down_mai 关")
+                                     @PathVariable("eventName") String eventName) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ServiceException {
+        EventType eventType = EventType.valueOf(eventName);
+        ValidateUtils.notNull(eventType.method);
+        Method method = LiveUserService.class.getMethod(eventType.method.name(), Integer.class, EventType.class);
+        applicationContext.publishEvent(method.invoke(userService, getCurrentUserId(), eventType));
         return APIResultWrap.ok(null, "操作成功");
     }
+
 
     @ApiOperation(value = "直播事件")
     @PostMapping(value = "/event/{eventName}")
@@ -135,6 +140,7 @@ public class LiveController extends BaseController {
         liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(id)));
         liveTokenDto.setUrl(liveService.getLiveUrl(livedId));
         liveTokenDto.setUserId(id);
+        liveTokenDto.setAnchorId(livedId);
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
         applicationContext.publishEvent(new LiveEvent(EventType.join, livedId, null));
         return APIResultWrap.ok(liveTokenDto);
