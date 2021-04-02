@@ -27,8 +27,8 @@ public class SpeechEvent extends LiveEventCls {
     }
 
     @Override
-    public LiveEvent execute(LiveEventDto liveEventDto) {
+    public LiveEvent<Void> execute(LiveEventDto liveEventDto) {
         userMapper.openSpeakPower(liveEventDto.getToTerminalId());
-        return new LiveEvent(EventType.cancel_speech, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
+        return new LiveEvent<>(EventType.cancel_speech, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
     }
 }

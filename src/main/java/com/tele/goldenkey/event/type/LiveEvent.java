@@ -3,7 +3,7 @@ package com.tele.goldenkey.event.type;
 import com.tele.goldenkey.spi.agora.eums.EventType;
 import org.springframework.context.ApplicationEvent;
 
-public class LiveEvent extends ApplicationEvent {
+public class LiveEvent<T> extends ApplicationEvent {
 
     private EventType msgType;
 
@@ -11,12 +11,22 @@ public class LiveEvent extends ApplicationEvent {
 
     private Integer toTerminalId;
 
+    private T data;
 
-    public LiveEvent( EventType msgType, Integer fromUserId, Integer toTerminalId) {
+
+    public LiveEvent(EventType msgType, Integer fromUserId, Integer toTerminalId) {
         super(msgType);
         this.msgType = msgType;
         this.fromUserId = fromUserId;
         this.toTerminalId = toTerminalId;
+    }
+
+    public LiveEvent(EventType msgType, Integer fromUserId, Integer toTerminalId, T data) {
+        super(msgType);
+        this.msgType = msgType;
+        this.fromUserId = fromUserId;
+        this.toTerminalId = toTerminalId;
+        this.data = data;
     }
 
     public EventType getMsgType() {
