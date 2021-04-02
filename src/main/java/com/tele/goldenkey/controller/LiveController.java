@@ -94,7 +94,7 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok(null, "操作成功");
     }
 
-    @ApiOperation(value = "直播房间个人信息")
+    @ApiOperation(value = "直播房间我的个人信息")
     @PostMapping(value = "/my")
     public APIResult<LiveUserDto> user() throws ServiceException {
         return APIResultWrap.ok(userService.getUser(getCurrentUserId()));
