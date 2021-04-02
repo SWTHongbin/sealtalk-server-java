@@ -101,7 +101,7 @@ public class LiveController extends BaseController {
     }
 
     @ApiOperation(value = "个人操作-(开关麦) (开关语音)")
-    @PostMapping(value = "/mai/{eventName}")
+    @PostMapping(value = "/my/{eventName}")
     public APIResult<Void> optionMai(@ApiParam(name = "eventName", value = "消息类型  up_mai 开 down_mai 关")
                                      @PathVariable("eventName") String eventName) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ServiceException {
         EventType eventType = EventType.valueOf(eventName);
