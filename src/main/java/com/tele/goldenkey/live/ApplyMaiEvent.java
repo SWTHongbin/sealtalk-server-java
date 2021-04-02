@@ -25,7 +25,7 @@ public class ApplyMaiEvent extends LiveEventCls {
 
     @Override
     public LiveEventDto getLiveEventDto(Integer livedId, Integer userId, Integer terminalId) {
-        return new LiveEventDto(livedId, terminalId, userId);
+        return new LiveEventDto(livedId, userId, livedId);
     }
 
     @Override
