@@ -20,8 +20,8 @@ public enum EventType {
     open_speech(13, "开语音", optionSpeech, Passageway.broadcast),
     close_speech(14, "关语音", optionSpeech, Passageway.broadcast),
 
-    kick(7, "T出", Passageway.broadcast),
 
+    kick(7, "T出", Passageway.broadcast),
     apply_mai(8, "申请连麦", Passageway.terminal),
     refuse_mai(9, "拒绝连麦", Passageway.terminal),
     agree_mai(10, "同意连麦", Passageway.terminal),
