@@ -52,5 +52,13 @@ public class LiveEvent<T> extends ApplicationEvent {
     public void setToTerminalId(Integer toTerminalId) {
         this.toTerminalId = toTerminalId;
     }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
 }
 
