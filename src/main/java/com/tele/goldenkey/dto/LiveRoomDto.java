@@ -21,6 +21,7 @@ public class LiveRoomDto {
     @ApiParam(name = "linkMai", value = "是否允许连麦")
     private Integer linkMai;
 
-    private Integer userId;
+    @ApiParam(name = "anchorId", value = "主播id")
+    private Integer anchorId;
 
 }

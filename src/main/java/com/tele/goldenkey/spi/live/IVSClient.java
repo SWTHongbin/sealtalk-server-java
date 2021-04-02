@@ -41,8 +41,7 @@ public class IVSClient {
     public Boolean stopStream(String arn) {
         try {
             return IVS_CLIENT.stopStream((request) -> request.channelArn(arn)).sdkHttpResponse().isSuccessful();
-        } catch (Exception e) {
-            log.error("stop stream err", e);
+        } catch (Exception ignored) {
         }
         return false;
     }
@@ -57,7 +56,6 @@ public class IVSClient {
         try {
             return IVS_CLIENT.deleteStreamKey((request) -> request.arn(arn)).sdkHttpResponse().isSuccessful();
         } catch (Exception e) {
-            log.error("del stream err", e);
             return false;
         }
     }

@@ -81,11 +81,8 @@ public class LiveController extends BaseController {
     }
 
     @ApiOperation(value = "查询直播间用户")
-    @PostMapping(value = "/user/{livedId}")
-    public APIResult<List<LiveUserDto>> user(@ApiParam(name = "livedId", value = "直播id")
-                                             @PathVariable("livedId") Integer livedId,
-                                             @RequestBody LiveUserParam param) {
-        param.setLivedId(livedId);
+    @PostMapping(value = "/user")
+    public APIResult<List<LiveUserDto>> user(@RequestBody LiveUserParam param) {
         return APIResultWrap.ok(userService.getUsers(param));
     }
 
@@ -140,7 +137,6 @@ public class LiveController extends BaseController {
         liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(id)));
         liveTokenDto.setUrl(liveService.getLiveUrl(livedId));
         liveTokenDto.setUserId(id);
-        liveTokenDto.setAnchorId(livedId);
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
         applicationContext.publishEvent(new LiveEvent(EventType.join, livedId, null));
         return APIResultWrap.ok(liveTokenDto);
