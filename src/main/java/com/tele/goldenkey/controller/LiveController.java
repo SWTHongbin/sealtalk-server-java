@@ -95,7 +95,7 @@ public class LiveController extends BaseController {
     }
 
     @ApiOperation(value = "直播房间个人信息")
-    @PostMapping(value = "/user")
+    @PostMapping(value = "/my")
     public APIResult<LiveUserDto> user() throws ServiceException {
         return APIResultWrap.ok(userService.getUser(getCurrentUserId()));
     }
