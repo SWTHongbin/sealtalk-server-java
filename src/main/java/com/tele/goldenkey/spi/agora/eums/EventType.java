@@ -14,10 +14,12 @@ public enum EventType {
     leave(2, "离开", Passageway.broadcast),
     open(3, "开播", Passageway.broadcast),
     close(4, "关播", Passageway.broadcast),
+
     up_mai(5, "上麦", optionMai, Passageway.broadcast),
     down_mai(6, "下麦", optionMai, Passageway.broadcast),
     open_speech(13, "开语音", optionSpeech, Passageway.broadcast),
     close_speech(14, "关语音", optionSpeech, Passageway.broadcast),
+
     kick(7, "T出", Passageway.broadcast),
 
     apply_mai(8, "申请连麦", Passageway.terminal),
