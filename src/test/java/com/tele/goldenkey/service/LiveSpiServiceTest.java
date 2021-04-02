@@ -41,6 +41,6 @@ public class LiveSpiServiceTest {
 
     @Test
     public void getLiveUrl() {
-        System.out.println(liveSpiService.getLiveUrl(12233));
+        System.out.println(liveSpiService.getLiveUrl(8));
     }
 }
