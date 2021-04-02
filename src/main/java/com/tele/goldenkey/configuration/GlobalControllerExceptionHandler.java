@@ -54,20 +54,11 @@ public class GlobalControllerExceptionHandler {
 
 
     @ExceptionHandler(value = ServiceException.class)
-    public void serviceAPIExceptionHandler(HttpServletRequest request, HttpServletResponse response, ServiceException e) throws Exception {
+    public APIResult serviceAPIExceptionHandler(HttpServletRequest request, HttpServletResponse response, ServiceException e) throws Exception {
         String url = request.getRequestURI();
         String errorInfo = String.format("Error found: url:[%s],traceId:[%s],uid=[%s] ", url, ServerApiParamHolder.getTraceId(), ServerApiParamHolder.getEncodedCurrentUserId());
         log.error(errorInfo, e);
-        String contentType = "application/json;charset=" + CHARSET;
-        response.addHeader("Content-Type", contentType);
-
-        if (!HttpStatusCode.CODE_200.getCode().equals(e.getHttpStatusCode())) {
-            response.setStatus(e.getHttpStatusCode());
-            response.getWriter().write(e.getMessage());
-        } else {
-            response.setStatus(HttpStatusCode.CODE_200.getCode());
-            response.getWriter().write(JacksonUtil.toJson(APIResultWrap.error(e)));
-        }
+        return APIResultWrap.error(ErrorCode.PARAM_ERROR.getErrorCode(), e.getMessage());
     }
 
     /**

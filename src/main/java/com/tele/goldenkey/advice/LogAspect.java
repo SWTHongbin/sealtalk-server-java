@@ -29,14 +29,6 @@ import java.util.Map;
 @Slf4j
 public class LogAspect {
 
-    private final static ObjectMapper objectMapper;
-
-    static {
-        objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    }
-
-
     // 定义切点Pointcut
     @Pointcut("execution(* com.tele.goldenkey.controller..*Controller.*(..))")
     public void executeService() {
@@ -44,43 +36,33 @@ public class LogAspect {
 
     @Before("executeService()")
     public void doBefore(JoinPoint joinPoint) {
+        String target = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
 
-        try {
-            String target = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
+        Object[] args = joinPoint.getArgs();
+        String[] paramsName = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
 
-            Object[] args = joinPoint.getArgs();
-            String[] paramsName = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
-
-            Map<String, Object> paramMap = new HashMap<>();
-            if (args != null && paramsName != null && args.length > 0 && paramsName.length > 0) {
-                for (int i = 0; i < paramsName.length; i++) {
-                    String paramName = paramsName[i];
-                    Object paramVal = args[i];
-                    if (!(paramVal instanceof HttpServletResponse) && !(paramVal instanceof HttpServletRequest)) {
-                        paramMap.put(paramName, args[i]);
-                    }
+        Map<String, Object> paramMap = new HashMap<>();
+        if (args != null && paramsName != null && args.length > 0 && paramsName.length > 0) {
+            for (int i = 0; i < paramsName.length; i++) {
+                String paramName = paramsName[i];
+                Object paramVal = args[i];
+                if (!(paramVal instanceof HttpServletResponse) && !(paramVal instanceof HttpServletRequest)) {
+                    paramMap.put(paramName, args[i]);
                 }
             }
-
-            String uri = ServerApiParamHolder.getURI();
-            String traceId = ServerApiParamHolder.getTraceId();
-            String uid = ServerApiParamHolder.getEncodedCurrentUserId();
-            log.info("请求: traceId={},uri={},target={},params=[{}],uid={}", traceId, uri, target, objectMapper.writeValueAsString(paramMap), uid);
-        } catch (Throwable e) {
-            log.error(e.getMessage(), e);
         }
+        String uri = ServerApiParamHolder.getURI();
+        String traceId = ServerApiParamHolder.getTraceId();
+        String uid = ServerApiParamHolder.getEncodedCurrentUserId();
+        log.info("请求: traceId={},uri={},target={},params=[{}],uid={}", traceId, uri, target, JSON.toJSONString(paramMap), uid);
     }
 
     @AfterReturning(value = "executeService()", returning = "returnValue")
     public void doAfter(Object returnValue) {
-        try {
-            log.info("响应: traceId={},uri={},uid={},return value={}",
-                    ServerApiParamHolder.getTraceId(),
-                    ServerApiParamHolder.getURI(),
-                    ServerApiParamHolder.getEncodedCurrentUserId(),
-                    JSON.toJSONString(returnValue));
-        } catch (Throwable e) {
-            log.error(e.getMessage(), e);
-        }
+        log.info("响应: traceId={},uri={},uid={},return value={}",
+                ServerApiParamHolder.getTraceId(),
+                ServerApiParamHolder.getURI(),
+                ServerApiParamHolder.getEncodedCurrentUserId(),
+                JSON.toJSONString(returnValue));
     }
 }

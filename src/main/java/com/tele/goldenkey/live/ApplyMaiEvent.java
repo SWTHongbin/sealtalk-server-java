@@ -33,7 +33,7 @@ public class ApplyMaiEvent extends LiveEventCls {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(liveEventDto.getLivedId());
         ValidateUtils.notNull(liveStatuses);
         if (liveStatuses.getLinkMai() != 1) {
-            throw new ServiceException(ErrorCode.PARAM_ERROR, "不允许开麦");
+            throw new ServiceException(ErrorCode.SERVER_ERROR, "房间设置不允许连麦");
         }
         return new LiveEvent(EventType.apply_mai, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
     }

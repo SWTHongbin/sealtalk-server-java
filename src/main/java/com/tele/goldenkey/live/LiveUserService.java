@@ -53,10 +53,10 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
             LiveStatuses liveStatuses = statusesMapper.findById(user.getLivedId());
             ValidateUtils.notNull(liveStatuses);
             if (liveStatuses.getLinkMai() != 1) {
-                throw new ServiceException(ErrorCode.PARAM_ERROR, "不允许开麦");
+                throw new ServiceException(ErrorCode.SERVER_ERROR, "房间设置不允许连麦");
             }
             if (user.getMaiPower() != 1) {
-                throw new ServiceException(ErrorCode.PARAM_ERROR, "请先申请开麦权限");
+                throw new ServiceException(ErrorCode.SERVER_ERROR, "请先申请开麦权限");
             }
             code = 1;
         }
