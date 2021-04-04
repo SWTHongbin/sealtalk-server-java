@@ -105,8 +105,8 @@ public class LiveController extends BaseController {
     public APIResult<Void> optionMai(@ApiParam(name = "eventName", value = "消息类型  up_mai 开 down_mai 关")
                                      @PathVariable("eventName") String eventName) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ServiceException {
         EventType eventType = EventType.valueOf(eventName);
-        ValidateUtils.notNull(eventType.method);
-        Method method = LiveUserService.class.getMethod(eventType.method.name(), Integer.class, EventType.class);
+        ValidateUtils.notNull(eventType.personalFunction);
+        Method method = LiveUserService.class.getMethod(eventType.personalFunction.name(), Integer.class, EventType.class);
         applicationContext.publishEvent(method.invoke(userService, getCurrentUserId(), eventType));
         return APIResultWrap.ok(null, "操作成功");
     }
