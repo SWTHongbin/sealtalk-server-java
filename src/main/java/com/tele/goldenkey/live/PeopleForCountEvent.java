@@ -20,7 +20,7 @@ public class PeopleForCountEvent extends LiveEventCls {
 
     @Override
     String getEventName() {
-        return EventType.count_people.name();
+        return EventType.live_count_people.name();
     }
 
     @Override
@@ -30,10 +30,10 @@ public class PeopleForCountEvent extends LiveEventCls {
     }
 
     @Override
-    public LiveEvent<Map> execute(LiveEventDto liveEventDto) {
+    public LiveEvent<Map<String, Object>> execute(LiveEventDto liveEventDto) {
         Integer count = userMapper.countByLiveId(liveEventDto.getLivedId());
         Map<String, Object> map = Maps.newHashMap();
         map.put("count", count);
-        return new LiveEvent<>(EventType.count_people, liveEventDto.getLivedId(), null, null, map);
+        return new LiveEvent<>(EventType.live_count_people, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId(), map);
     }
 }

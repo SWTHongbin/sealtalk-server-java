@@ -10,21 +10,22 @@ import static com.tele.goldenkey.spi.agora.eums.EventType.PersonalFunction.optio
  */
 @AllArgsConstructor
 public enum EventType {
-    count_people(15, "人数统计", null, null, Passageway.broadcast),
-    count_mai(16, "麦位统计", null, null, Passageway.broadcast),
+
+    live_count_people(15, "人数统计", null, null, Passageway.broadcast),
+    live_mai_infos(16, "麦位列表信息", null, null, Passageway.broadcast),
 
     //个人事件
-    join(1, "加入", new EventType[]{count_people}, null, Passageway.broadcast),
-    leave(2, "离开", new EventType[]{count_people}, null, Passageway.broadcast),
+    join(1, "加入", new EventType[]{live_count_people}, null, Passageway.broadcast),
+    leave(2, "离开", new EventType[]{live_count_people}, null, Passageway.broadcast),
     open(3, "开播", null, null, Passageway.broadcast),
     close(4, "关播", null, null, Passageway.broadcast),
-    up_mai(5, "上麦", new EventType[]{count_mai}, optionMai, Passageway.broadcast),
-    down_mai(6, "下麦", new EventType[]{count_mai}, optionMai, Passageway.broadcast),
+    up_mai(5, "上麦", new EventType[]{live_mai_infos}, optionMai, Passageway.broadcast),
+    down_mai(6, "下麦", new EventType[]{live_mai_infos}, optionMai, Passageway.broadcast),
     open_speech(13, "开语音", null, optionSpeech, Passageway.broadcast),
     close_speech(14, "关语音", null, optionSpeech, Passageway.broadcast),
 
     // 群事件
-    kick(7, "T出", new EventType[]{count_people, count_mai}, null, Passageway.broadcast),
+    kick(7, "T出", new EventType[]{live_count_people, live_mai_infos}, null, Passageway.broadcast),
     apply_mai(8, "申请连麦", null, null, Passageway.terminal),
     refuse_mai(9, "拒绝连麦", null, null, Passageway.terminal),
     agree_mai(10, "同意连麦", null, null, Passageway.terminal),
