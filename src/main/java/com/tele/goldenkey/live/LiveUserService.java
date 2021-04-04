@@ -33,7 +33,7 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
 
     public List<LiveUserDto> getUsers(LiveUserParam param) {
         return liveUserMapper.selectByUserParam(param).stream()
-                .map(this::getLiveUserDto).collect(Collectors.toList());
+                .map(LiveUserService::getLiveUserDto).collect(Collectors.toList());
     }
 
 
@@ -75,10 +75,10 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
             code = 1;
         }
         liveUserMapper.updateSpeech(code, userId);
-        return new LiveEvent(eventType, user.getLivedId(), null);
+        return new LiveEvent<Void>(eventType, user.getLivedId(), null);
     }
 
-    private LiveUserDto getLiveUserDto(LiveUser x) {
+    public static LiveUserDto getLiveUserDto(LiveUser x) {
         LiveUserDto dto = new LiveUserDto();
         dto.setUserId(x.getUserId());
         dto.setPhone(x.getPhone());

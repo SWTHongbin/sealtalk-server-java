@@ -34,6 +34,5 @@ public class LiveListener {
                 sendMsgOfBroadcast(AGORA_CHANNEL_PREFIX + event.getFromUserId(), rtmMsgDto);
                 break;
         }
-
     }
 }
