@@ -61,7 +61,7 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
             code = 1;
         }
         liveUserMapper.updateMai(code, userId);
-        return new LiveEvent<Void>(eventType, user.getLivedId(), null);
+        return new LiveEvent<Void>(eventType, user.getLivedId(), userId, null);
     }
 
     public LiveEvent optionSpeech(Integer userId, EventType eventType) throws ServiceException {
@@ -75,7 +75,7 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
             code = 1;
         }
         liveUserMapper.updateSpeech(code, userId);
-        return new LiveEvent<Void>(eventType, user.getLivedId(), null);
+        return new LiveEvent<Void>(eventType, user.getLivedId(),userId, null);
     }
 
     public static LiveUserDto getLiveUserDto(LiveUser x) {

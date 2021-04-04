@@ -7,6 +7,8 @@ public class LiveEvent<T> extends ApplicationEvent {
 
     private EventType msgType;
 
+    private Integer liveId;
+
     private Integer fromUserId;
 
     private Integer toTerminalId;
@@ -14,16 +16,18 @@ public class LiveEvent<T> extends ApplicationEvent {
     private T data;
 
 
-    public LiveEvent(EventType msgType, Integer fromUserId, Integer toTerminalId) {
+    public LiveEvent(EventType msgType, Integer liveId, Integer fromUserId, Integer toTerminalId) {
         super(msgType);
         this.msgType = msgType;
+        this.liveId = liveId;
         this.fromUserId = fromUserId;
         this.toTerminalId = toTerminalId;
     }
 
-    public LiveEvent(EventType msgType, Integer fromUserId, Integer toTerminalId, T data) {
+    public LiveEvent(EventType msgType, Integer liveId, Integer fromUserId, Integer toTerminalId, T data) {
         super(msgType);
         this.msgType = msgType;
+        this.liveId = liveId;
         this.fromUserId = fromUserId;
         this.toTerminalId = toTerminalId;
         this.data = data;
@@ -59,6 +63,14 @@ public class LiveEvent<T> extends ApplicationEvent {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public Integer getLiveId() {
+        return liveId;
+    }
+
+    public void setLiveId(Integer liveId) {
+        this.liveId = liveId;
     }
 }
 

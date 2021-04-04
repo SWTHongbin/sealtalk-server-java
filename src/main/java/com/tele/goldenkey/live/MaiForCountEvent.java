@@ -28,7 +28,7 @@ public class MaiForCountEvent extends LiveEventCls {
     @Override
     public LiveEventDto getLiveEventDto(Integer livedId, Integer userId, Integer terminalId) throws ServiceException {
         ValidateUtils.notNull(livedId);
-        return new LiveEventDto(livedId, userId, terminalId);
+        return new LiveEventDto(livedId, null, null);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class MaiForCountEvent extends LiveEventCls {
         List<LiveUserDto> userDos = userMapper.selectByUserParam(param).stream()
                 .map(LiveUserService::getLiveUserDto)
                 .collect(Collectors.toList());
-        return new LiveEvent<>(EventType.live_mai_infos, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId(), userDos);
+        return new LiveEvent<>(EventType.live_mai_infos, liveEventDto.getLivedId(), null, null, userDos);
     }
 }

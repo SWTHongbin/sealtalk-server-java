@@ -34,6 +34,6 @@ public class PeopleForCountEvent extends LiveEventCls {
         Integer count = userMapper.countByLiveId(liveEventDto.getLivedId());
         Map<String, Object> map = Maps.newHashMap();
         map.put("count", count);
-        return new LiveEvent<>(EventType.live_count_people, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId(), map);
+        return new LiveEvent<>(EventType.live_count_people, liveEventDto.getLivedId(),liveEventDto.getFromUserId(), liveEventDto.getToTerminalId(), map);
     }
 }

@@ -29,6 +29,6 @@ public class NoSpeechEvent extends LiveEventCls {
     @Override
     public LiveEvent<Void> execute(LiveEventDto liveEventDto) {
         userMapper.closeSpeakPower(liveEventDto.getToTerminalId());
-        return new LiveEvent<>(EventType.no_speech, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
+        return new LiveEvent<>(EventType.no_speech, liveEventDto.getLivedId(), liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
     }
 }

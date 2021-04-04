@@ -29,6 +29,6 @@ public class KickEvent extends LiveEventCls {
     @Override
     public LiveEvent<Void> execute(LiveEventDto liveEventDto) {
         userMapper.deleteByUserId(liveEventDto.getToTerminalId());
-        return new LiveEvent<>(EventType.kick, liveEventDto.getLivedId(), null);
+        return new LiveEvent<>(EventType.kick, liveEventDto.getLivedId(), liveEventDto.getFromUserId(), null);
     }
 }

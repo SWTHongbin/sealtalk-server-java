@@ -46,6 +46,6 @@ public class ApplyMaiEvent extends LiveEventCls {
         map.put("name", liveUser.getName());
         map.put("portraitUri", liveUser.getPortraitUri());
         map.put("userId", liveUser.getUserId().toString());
-        return new LiveEvent<>(EventType.apply_mai, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId(), map);
+        return new LiveEvent<>(EventType.apply_mai, liveEventDto.getLivedId(), liveEventDto.getFromUserId(), liveEventDto.getToTerminalId(), map);
     }
 }

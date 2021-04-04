@@ -58,7 +58,7 @@ public class LiveController extends BaseController {
         liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + livedId, String.valueOf(livedId), RtcTokenBuilder.Role.Role_Publisher));
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
         liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(livedId)));
-        applicationContext.publishEvent(new LiveEvent(EventType.open, livedId, null));
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.open, livedId, livedId, null));
         return APIResultWrap.ok(liveTokenDto);
     }
 
@@ -76,7 +76,7 @@ public class LiveController extends BaseController {
     public APIResult<Void> close() {
         Integer livedId = getCurrentUserId();
         liveService.close(livedId);
-        applicationContext.publishEvent(new LiveEvent(EventType.close, livedId, null));
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.close, livedId, livedId, null));
         return APIResultWrap.ok(null, "关闭成功");
     }
 
@@ -90,7 +90,7 @@ public class LiveController extends BaseController {
     @PostMapping(value = "/leave")
     public APIResult<Void> leave() throws ServiceException {
         Integer id = getCurrentUserId();
-        applicationContext.publishEvent(new LiveEvent(EventType.leave, liveService.leave(id), null));
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.leave, liveService.leave(id), id, null));
         return APIResultWrap.ok(null, "操作成功");
     }
 
@@ -120,8 +120,7 @@ public class LiveController extends BaseController {
         LiveEventCls event = LiveEventFactory.getByKey(eventName);
         ValidateUtils.notNull(event);
         LiveEventDto liveEventDto = event.getLiveEventDto(param.getLivedId(), getCurrentUserId(), param.getTerminalId());
-        LiveEvent liveEvent = event.execute(liveEventDto);
-        applicationContext.publishEvent(liveEvent);
+        applicationContext.publishEvent( event.execute(liveEventDto));
         return APIResultWrap.ok(null, "操作成功");
     }
 
@@ -138,7 +137,7 @@ public class LiveController extends BaseController {
         liveTokenDto.setUrl(liveService.getLiveUrl(livedId));
         liveTokenDto.setUserId(id);
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
-        applicationContext.publishEvent(new LiveEvent(EventType.join, livedId, null));
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.join, livedId, id, null));
         return APIResultWrap.ok(liveTokenDto);
     }
 }

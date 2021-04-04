@@ -31,6 +31,6 @@ public class AgreeMaiMaiEvent extends LiveEventCls {
     @Override
     public LiveEvent<Void> execute(LiveEventDto liveEventDto) {
         liveUserMapper.openMaiPower(liveEventDto.getToTerminalId());
-        return new LiveEvent<>(EventType.agree_mai, liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
+        return new LiveEvent<>(EventType.agree_mai, liveEventDto.getLivedId(), liveEventDto.getFromUserId(), liveEventDto.getToTerminalId());
     }
 }
