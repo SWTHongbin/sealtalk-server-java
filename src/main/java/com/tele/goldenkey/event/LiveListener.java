@@ -53,7 +53,7 @@ public class LiveListener implements ApplicationContextAware {
 
     @Async
     @EventListener
-    public void leave(LiveEvent event) {
+    public void notice(LiveEvent event) {
         RtmMsgDto rtmMsgDto = new RtmMsgDto();
         rtmMsgDto.setCode(event.getMsgType().code);
         rtmMsgDto.setData(event.getData());

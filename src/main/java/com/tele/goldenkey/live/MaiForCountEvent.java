@@ -35,6 +35,7 @@ public class MaiForCountEvent extends LiveEventCls {
     public LiveEvent<List<LiveUserDto>> execute(LiveEventDto liveEventDto) {
         LiveUserParam param = new LiveUserParam();
         param.setLivedId(liveEventDto.getLivedId());
+        param.setMaiStatus(1);
         List<LiveUserDto> userDos = userMapper.selectByUserParam(param).stream()
                 .map(LiveUserService::getLiveUserDto)
                 .collect(Collectors.toList());
