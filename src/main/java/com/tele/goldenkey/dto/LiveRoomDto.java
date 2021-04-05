@@ -24,4 +24,6 @@ public class LiveRoomDto {
     @ApiParam(name = "anchorId", value = "主播id")
     private Integer anchorId;
 
+    private Boolean isOpen;
+
 }
