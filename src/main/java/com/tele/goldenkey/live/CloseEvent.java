@@ -29,6 +29,9 @@ public class CloseEvent extends LiveEventCls {
     @Override
     public LiveEvent<LiveRoomDto> execute(LiveEventDto liveEventDto) {
         LiveRoomDto room = liveService.room(liveEventDto.getLivedId());
+        if (room != null) {
+            room.setTimestamp(System.currentTimeMillis() - room.getTimestamp());
+        }
         return new LiveEvent<>(EventType.close, liveEventDto.getLivedId(), null, null, room);
     }
 }
