@@ -21,8 +21,8 @@ public enum EventType {
     close(4, "关播", null, null, Passageway.broadcast),
     up_mai(5, "上麦", new EventType[]{live_mai_infos}, optionMai, Passageway.broadcast),
     down_mai(6, "下麦", new EventType[]{live_mai_infos}, optionMai, Passageway.broadcast),
-    open_speech(13, "开语音", null, optionSpeech, Passageway.broadcast),
-    close_speech(14, "关语音", null, optionSpeech, Passageway.broadcast),
+    open_speech(13, "开语音", new EventType[]{live_mai_infos}, optionSpeech, Passageway.broadcast),
+    close_speech(14, "关语音", new EventType[]{live_mai_infos}, optionSpeech, Passageway.broadcast),
 
     // 群事件
     kick(7, "T出", new EventType[]{live_count_people, live_mai_infos}, null, Passageway.broadcast),
