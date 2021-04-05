@@ -1,12 +1,15 @@
 package com.tele.goldenkey.service;
 
+import com.tele.goldenkey.event.type.LiveEvent;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.live.LiveService;
+import com.tele.goldenkey.spi.agora.eums.EventType;
 import com.tele.goldenkey.util.N3d;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import software.amazon.awssdk.core.SdkSystemSetting;
 
@@ -17,6 +20,9 @@ public class LiveSpiServiceTest {
 
     @Autowired
     private LiveService liveSpiService;
+    @Autowired
+    private ApplicationContext applicationContext;
+
 
     @Test
     public void getPushUrl() throws ServiceException {
@@ -42,5 +48,29 @@ public class LiveSpiServiceTest {
     @Test
     public void getLiveUrl() {
         System.out.println(liveSpiService.getLiveUrl(8));
+    }
+
+    @Test
+    public void eventJoin() throws InterruptedException {
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.join, 8, 1, null));
+        Thread.sleep(100000);
+    }
+
+    @Test
+    public void eventLeave() throws InterruptedException {
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.leave, 8, 1, null));
+        Thread.sleep(100000);
+    }
+
+    @Test
+    public void eventUpMai() throws InterruptedException {
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.up_mai, 8, 1, null));
+        Thread.sleep(100000);
+    }
+
+    @Test
+    public void eventDownMai() throws InterruptedException {
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.down_mai, 8, 1, null));
+        Thread.sleep(100000);
     }
 }

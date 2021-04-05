@@ -1,5 +1,6 @@
 package com.tele.goldenkey.event;
 
+import com.alibaba.fastjson.JSON;
 import com.tele.goldenkey.dto.LiveEventDto;
 import com.tele.goldenkey.event.type.LiveEvent;
 import com.tele.goldenkey.live.LiveEventCls;
@@ -62,13 +63,15 @@ public class LiveListener implements ApplicationContextAware {
                 if (event.getToTerminalId() != null) {
                     rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getToTerminalId()) + event.getMsgType().desc);
                 }
+                log.info("单播消息推送:{}", JSON.toJSONString(rtmMsgDto));
                 sendMsgOfTerminal(String.valueOf(event.getFromUserId()), String.valueOf(event.getToTerminalId()), rtmMsgDto);
                 break;
             case broadcast:
                 if (event.getFromUserId() != null) {
                     rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getFromUserId()) + event.getMsgType().desc);
                 }
-                sendMsgOfBroadcast(AGORA_CHANNEL_PREFIX + event.getFromUserId(), rtmMsgDto);
+                log.info("广播消息推送:{}", JSON.toJSONString(rtmMsgDto));
+                sendMsgOfBroadcast(AGORA_CHANNEL_PREFIX + event.getLiveId(), rtmMsgDto);
                 break;
         }
     }

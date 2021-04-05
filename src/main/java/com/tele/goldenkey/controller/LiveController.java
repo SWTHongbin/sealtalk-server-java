@@ -73,10 +73,12 @@ public class LiveController extends BaseController {
 
     @ApiOperation(value = "关闭直播")
     @PostMapping(value = "/close")
-    public APIResult<Void> close() {
+    public APIResult<Void> close() throws ServiceException {
         Integer livedId = getCurrentUserId();
         liveService.close(livedId);
-        applicationContext.publishEvent(new LiveEvent<Void>(EventType.close, livedId, livedId, null));
+        LiveEventCls event = LiveEventFactory.getByKey(EventType.close.name());
+        LiveEventDto liveEventDto = event.getLiveEventDto(livedId, getCurrentUserId(), null);
+        applicationContext.publishEvent(event.execute(liveEventDto));
         return APIResultWrap.ok(null, "关闭成功");
     }
 
@@ -120,7 +122,7 @@ public class LiveController extends BaseController {
         LiveEventCls event = LiveEventFactory.getByKey(eventName);
         ValidateUtils.notNull(event);
         LiveEventDto liveEventDto = event.getLiveEventDto(param.getLivedId(), getCurrentUserId(), param.getTerminalId());
-        applicationContext.publishEvent( event.execute(liveEventDto));
+        applicationContext.publishEvent(event.execute(liveEventDto));
         return APIResultWrap.ok(null, "操作成功");
     }
 
