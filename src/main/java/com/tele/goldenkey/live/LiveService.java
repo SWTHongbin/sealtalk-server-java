@@ -56,7 +56,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
             ivsClient.stopStream(liveStatuses.getCode());
         }
         liveStatusesMapper.closeById(livedId);
-        liveUserMapper.deleteByLivedId(livedId);
         return true;
     }
 
