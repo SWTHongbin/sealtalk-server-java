@@ -75,6 +75,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveStatuses.setType(liveParam.getType());
         liveStatuses.setTheme(liveParam.getTheme());
         liveStatuses.setStartTime(new Date());
+        liveStatuses.setStatus(1);
         liveStatuses.setLinkMai(liveParam.getLinkMai());
         if (liveStatusesMapper.findById(livedId) == null) {
             liveStatusesMapper.insertSelective(liveStatuses);
