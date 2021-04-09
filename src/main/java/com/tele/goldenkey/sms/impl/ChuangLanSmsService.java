@@ -41,11 +41,12 @@ public class ChuangLanSmsService implements SmsService {
         if (region.startsWith("86") || region.startsWith("0086")) {
             flag = sendSmsByChuanglanToChina(phone, code);
         } else {
-            flag = sendSmsByChuanglanToAbroad(phone, code);
+            flag = sendSmsByChuanglanToAbroad(region + phone, code);
         }
         if (flag) return code;
         throw new ServiceException(ErrorCode.CHUANGLAN_SMS_FAILD);
     }
+
 
     private static String CHINA_ACCOUNT = "YZM2064149";
     private static String CHINA_PSWD = "rDza791ps";
