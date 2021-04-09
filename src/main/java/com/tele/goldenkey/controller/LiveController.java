@@ -129,7 +129,7 @@ public class LiveController extends BaseController {
     @ApiOperation(value = "获取房间信息")
     @PostMapping(value = "/get/live-url/{livedId}")
     public APIResult<LiveTokenDto> getLiveUrl(@ApiParam(name = "livedId", value = "直播id")
-                                              @PathVariable("livedId") Integer livedId) {
+                                              @PathVariable("livedId") Integer livedId) throws ServiceException {
         Integer id = getCurrentUserId();
         liveService.join(id, livedId);
         LiveTokenDto liveTokenDto = new LiveTokenDto();
@@ -139,7 +139,7 @@ public class LiveController extends BaseController {
         liveTokenDto.setUrl(liveService.getLiveUrl(livedId));
         liveTokenDto.setUserId(id);
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
-        applicationContext.publishEvent(new LiveEvent<Void>(EventType.join, livedId, id, null));
+        applicationContext.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, id, livedId)));
         return APIResultWrap.ok(liveTokenDto);
     }
 }
