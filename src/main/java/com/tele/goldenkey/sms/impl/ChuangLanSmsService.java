@@ -59,7 +59,7 @@ public class ChuangLanSmsService implements SmsService {
      * @param validateNum
      * @return
      */
-    private boolean sendSmsByChuanglanToChina(String mobile, String validateNum) {
+    private static boolean sendSmsByChuanglanToChina(String mobile, String validateNum) {
         String msg = String.format("【Telepathy】您的验证码是%s。请不要泄露你的密码", validateNum);
         SmsSendRequest smsSingleRequest = new SmsSendRequest(CHINA_ACCOUNT, CHINA_PSWD, msg, mobile, "true");
         String requestJson = JSON.toJSONString(smsSingleRequest);
