@@ -488,11 +488,6 @@ public class UserController extends BaseController {
                                                      @RequestParam(value = "phone", required = false) String phone,
                                                      @ApiParam(name = "st_account", value = "account", type = "String", example = "xxx")
                                                      @RequestParam(value = "st_account", required = false) String account) throws ServiceException {
-
-        if ((!Constants.REGION_NUM.equals(region) || !RegexUtils.checkMobile(phone)) && StringUtils.isEmpty(account)) {
-            throw new ServiceException(ErrorCode.EMPTY_PARAMETER);
-        }
-
         Map<String, Object> map = new HashMap<>();
         if (Constants.REGION_NUM.equals(region) && RegexUtils.checkMobile(phone)) {
             Users users = userManager.getUser(region, phone);
