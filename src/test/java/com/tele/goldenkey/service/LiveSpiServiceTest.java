@@ -30,7 +30,7 @@ public class LiveSpiServiceTest {
 
         System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
         System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
-        System.out.println(liveSpiService.getPushUrl(12233));
+        System.out.println(liveSpiService.anchor(12233));
     }
 
     @Test
