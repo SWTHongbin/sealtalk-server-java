@@ -22,6 +22,9 @@ public class LiveStatuses implements Serializable {
     @Column(name = "liveUrl")
     private String liveUrl;
 
+    @Column(name = "streamKey")
+    private String streamKey;
+
     /**
      * 1 开播  0未开播
      */

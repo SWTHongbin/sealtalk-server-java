@@ -21,4 +21,6 @@ public class LiveTokenDto {
     private String rtmToken;
 
     private Integer userId;
+
+    private String streamKey;
 }

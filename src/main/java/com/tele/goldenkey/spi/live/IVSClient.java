@@ -19,13 +19,13 @@ public class IVSClient {
             .credentialsProvider(SystemPropertyCredentialsProvider.create())
             .build();
 
-    public Channel createChannel(String channelName) {
+    public CreateChannelResponse createChannel(String channelName) {
         CreateChannelResponse channelResponse = IVS_CLIENT.createChannel((builder -> builder.name(channelName)));
         SdkHttpResponse sdkHttpResponse = channelResponse.sdkHttpResponse();
         if (!sdkHttpResponse.isSuccessful()) {
             return null;
         }
-        return channelResponse.channel();
+        return channelResponse;
     }
 
     public Channel getChannel(String arn) {
@@ -36,7 +36,6 @@ public class IVSClient {
         }
         return channelResponse.channel();
     }
-
 
     public Boolean stopStream(String arn) {
         try {

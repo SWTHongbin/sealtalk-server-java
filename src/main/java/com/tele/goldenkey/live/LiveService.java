@@ -8,6 +8,7 @@ import com.tele.goldenkey.domain.LiveStatuses;
 import com.tele.goldenkey.domain.LiveUser;
 import com.tele.goldenkey.domain.Users;
 import com.tele.goldenkey.dto.LiveRoomDto;
+import com.tele.goldenkey.dto.LiveTokenDto;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.service.AbstractBaseService;
 import com.tele.goldenkey.spi.live.IVSClient;
@@ -15,7 +16,7 @@ import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.ivs.model.Channel;
+import software.amazon.awssdk.services.ivs.model.CreateChannelResponse;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.Date;
@@ -35,14 +36,21 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper;
     }
 
-    public String getPushUrl(Integer livedId) throws ServiceException {
+
+    public LiveTokenDto anchor(Integer livedId) throws ServiceException {
+        LiveTokenDto liveTokenDto = new LiveTokenDto();
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (StringUtils.isBlank(liveStatuses.getPushUrl())) {
             liveStatuses = buildLiveStatus(livedId);
             ValidateUtils.notNull(liveStatuses);
             this.updateByPrimaryKeySelective(liveStatuses);
         }
-        return liveStatuses.getPushUrl();
+        liveTokenDto.setUrl(liveStatuses.getPushUrl());
+        liveTokenDto.setRoomDto(room(livedId));
+        liveTokenDto.setLivedId(livedId);
+        liveTokenDto.setStreamKey(liveStatuses.getStreamKey());
+        liveTokenDto.setUserId(livedId);
+        return liveTokenDto;
     }
 
     public Boolean isOpen(Integer livedId) {
@@ -129,13 +137,16 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     private LiveStatuses buildLiveStatus(Integer livedId) {
-        Channel channel = ivsClient.createChannel(CHANNEL_KEY + livedId);
-        if (channel == null) return null;
+        CreateChannelResponse createChannel = ivsClient.createChannel(CHANNEL_KEY + livedId);
+        if (createChannel == null) return null;
         LiveStatuses liveStatuses = new LiveStatuses();
-        liveStatuses.setPushUrl(channel.ingestEndpoint());
-        liveStatuses.setLiveUrl(channel.playbackUrl());
-        liveStatuses.setCode(channel.arn());
+        liveStatuses.setPushUrl(createChannel.channel().ingestEndpoint());
+        liveStatuses.setLiveUrl(createChannel.channel().playbackUrl());
+        liveStatuses.setCode(createChannel.channel().arn());
         liveStatuses.setLiveId(livedId);
+        liveStatuses.setStreamKey(createChannel.streamKey().value());
         return liveStatuses;
     }
+
+
 }

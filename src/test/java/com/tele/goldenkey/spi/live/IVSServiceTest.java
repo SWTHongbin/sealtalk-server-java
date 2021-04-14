@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import software.amazon.awssdk.core.SdkSystemSetting;
 import software.amazon.awssdk.services.ivs.model.Channel;
+import software.amazon.awssdk.services.ivs.model.CreateChannelResponse;
 
 @SpringBootTest
 class IVSServiceTest {
@@ -25,9 +26,18 @@ class IVSServiceTest {
     void createChannel() {
         System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
         System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
-        Channel tanyue = ivsClient.createChannel("tanyue");
+        CreateChannelResponse tanyue = ivsClient.createChannel("tanyue");
         System.out.println(JSON.toJSONString(tanyue));
     }
+
+    @Test
+    void getChannel() {
+        System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
+        System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
+        Channel tanyue = ivsClient.getChannel("arn:aws:ivs:us-east-1:339989653424:channel/Ir8Ia6hudwgR");
+        System.out.println(JSON.toJSONString(tanyue));
+    }
+
 
     @Test
     void stopStream() {
