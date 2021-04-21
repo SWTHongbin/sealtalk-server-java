@@ -20,6 +20,7 @@ public class H5Service {
 
 
     public String query(Integer groupId, Integer userId) {
+        if (groupId == null || userId == null) return "";
         LiveUser liveUser = liveUserMapper.selectByUserId(userId);
         LiveStatuses liveStatuses = liveStatusesMapper.findById(groupId);
         return String.format(INNER_TXT, liveUser.getName(), liveStatuses.getTheme());
