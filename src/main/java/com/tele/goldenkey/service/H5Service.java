@@ -22,7 +22,9 @@ public class H5Service {
     public String query(Integer groupId, Integer userId) {
         if (groupId == null || userId == null) return "";
         LiveUser liveUser = liveUserMapper.selectByUserId(userId);
+        if (liveUser == null) return "";
         LiveStatuses liveStatuses = liveStatusesMapper.findById(groupId);
+        if (liveStatuses == null) return "";
         return String.format(INNER_TXT, liveUser.getName(), liveStatuses.getTheme());
     }
 }
