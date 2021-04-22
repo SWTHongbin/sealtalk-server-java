@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
@@ -25,6 +26,12 @@ import java.io.IOException;
 public class H5Controller {
 
     private final H5Service h5Service;
+    private static BufferedImage bufferedImage;
+
+    @PostConstruct
+    public void initImage() throws IOException {
+        bufferedImage = ImageIO.read(this.getClass().getResourceAsStream("/img/logo.png"));
+    }
 
     @GetMapping("/query")
     public String query(String groupId, String userId) throws ServiceException {
@@ -34,7 +41,6 @@ public class H5Controller {
     @GetMapping("/default-header")
     public void image(HttpServletResponse response) throws IOException {
         response.setContentType("image/jpeg");
-        BufferedImage read = ImageIO.read(this.getClass().getResourceAsStream("/img/logo.png"));
-        ImageIO.write(read, "png", response.getOutputStream());
+        ImageIO.write(bufferedImage, "png", response.getOutputStream());
     }
 }
