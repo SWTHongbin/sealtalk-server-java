@@ -31,7 +31,7 @@ public class H5Controller {
         return h5Service.query(N3d.decode(groupId), N3d.decode(userId));
     }
 
-    @GetMapping("/image")
+    @GetMapping("/default-header")
     public void image(HttpServletResponse response) throws IOException {
         response.setContentType("image/jpeg");
         BufferedImage read = ImageIO.read(this.getClass().getResourceAsStream("/img/logo.png"));

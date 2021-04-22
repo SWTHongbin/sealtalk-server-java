@@ -3,7 +3,7 @@ server:
   tomcat:
     uri-encoding: UTF-8
   servlet:
-    encoding:             #解决中文乱码问题，同一使用UTF-8编码
+    encoding: #解决中文乱码问题，同一使用UTF-8编码
       charset: UTF-8
       force: true
       enabled: true
@@ -112,7 +112,7 @@ sealtalk-config:
   rongcloud_app_key: c9kqb3rdc6q9j
   rongcloud_app_secret: iWXmOn5k5cjZWM
   rongcloud_api_url: api-cn.ronghub.com  # rongcloud api_url
-  rongcloud_default_portrait_url: http://www.rongcloud.cn/images/icon-57.png        #登录注册默认头像地址
+  rongcloud_default_portrait_url: http://www.telepathytech.com/api-tele/h5/default-header        #登录注册默认头像地址
   qiniu_access_key: ctk1VIyQlx5CFr_EQMqrQkF5c1PKGuqC2SNTR749
   qiniu_secret_key: MRuJJ6AcBkFQrgm16ayDtv_4L0M2jsQe-QuMBfiw
   qiniu_bucket_name: dev-sealtalk
@@ -123,7 +123,7 @@ sealtalk-config:
   n3d_key: telestudio123qaz
   auth_cookie_domain:
   cors_hosts:
-  exclude_url: /misc/demo_square,/misc/latest_update,/h5/query,/h5/image, /user/verify_code_yp_t,/misc/client_version,/misc/mobile_version,/user/login,/user/register,/user/reset_password, /user/send_code, /user/send_code_yp,/user/verify_code, /user/verify_code_yp, /user/delete, /user/get_sms_img_code,/user/check_username_available,/user/check_phone_available,/user/regionlist,/ping
+  exclude_url: /misc/demo_square,/misc/latest_update,/h5/query,/h5/default-header, /user/verify_code_yp_t,/misc/client_version,/misc/mobile_version,/user/login,/user/register,/user/reset_password, /user/send_code, /user/send_code_yp,/user/verify_code, /user/verify_code_yp, /user/delete, /user/get_sms_img_code,/user/check_username_available,/user/check_phone_available,/user/regionlist,/ping
   server_port: 9097
   db_name: telestudio
   db_user: root
