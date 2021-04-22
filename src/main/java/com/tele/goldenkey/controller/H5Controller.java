@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
 /**
  * @author lihongbin
  * @date 2021年04月20日 23:32
@@ -23,6 +28,13 @@ public class H5Controller {
 
     @GetMapping("/query")
     public String query(String groupId, String userId) throws ServiceException {
-            return h5Service.query(N3d.decode(groupId), N3d.decode(userId));
+        return h5Service.query(N3d.decode(groupId), N3d.decode(userId));
+    }
+
+    @GetMapping("/image")
+    public void image(HttpServletResponse response) throws IOException {
+        response.setContentType("image/jpeg");
+        BufferedImage read = ImageIO.read(this.getClass().getResourceAsStream("/img/logo.png"));
+        ImageIO.write(read, "png", response.getOutputStream());
     }
 }
