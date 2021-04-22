@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class H5Service {
     private final static String INNER_TXT = "%s邀请您加入%s群聊";
+    private final static String SHARE_TXT = "%s邀请你试玩TelePathy,赶快来下载";
+
     private final LiveUserMapper liveUserMapper;
     private final LiveStatusesMapper liveStatusesMapper;
 
@@ -26,5 +28,11 @@ public class H5Service {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(groupId);
         if (liveStatuses == null) return "";
         return String.format(INNER_TXT, liveUser.getName(), liveStatuses.getTheme());
+    }
+
+    public String share(int userId) {
+        LiveUser liveUser = liveUserMapper.selectByUserId(userId);
+        if (liveUser == null) return "";
+        return String.format(SHARE_TXT, liveUser.getName());
     }
 }

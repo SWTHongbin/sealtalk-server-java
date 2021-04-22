@@ -38,6 +38,11 @@ public class H5Controller {
         return h5Service.query(N3d.decode(groupId), N3d.decode(userId));
     }
 
+    @GetMapping("/share")
+    public String share(String userId) throws ServiceException {
+        return h5Service.share(N3d.decode(userId));
+    }
+
     @GetMapping("/default-header")
     public void image(HttpServletResponse response) throws IOException {
         response.setContentType("image/jpeg");
