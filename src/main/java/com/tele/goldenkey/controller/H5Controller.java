@@ -35,7 +35,7 @@ public class H5Controller {
     }
 
     @GetMapping("/query")
-    public String query(String userId, String groupId) throws ServiceException {
+    public String query(String groupId, String userId) throws ServiceException {
         return h5Service.query(N3d.decode(userId), StringUtils.isNotEmpty(groupId) ? N3d.decode(groupId) : null);
     }
 
