@@ -2,6 +2,8 @@ package com.tele.goldenkey.live;
 
 import com.alibaba.fastjson.JSON;
 import com.tele.goldenkey.controller.param.LiveUserParam;
+import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.util.N3d;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +27,10 @@ class LiveUserServiceTest {
     @Test
     void getUser() {
         System.out.println(JSON.toJSONString(userService.getUser(5)));
+    }
+
+    @Test
+    void decode() throws ServiceException {
+        System.out.println(N3d.decode("iiq6ugIY2"));
     }
 }

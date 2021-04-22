@@ -4,6 +4,7 @@ import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.service.H5Service;
 import com.tele.goldenkey.util.N3d;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,13 +35,8 @@ public class H5Controller {
     }
 
     @GetMapping("/query")
-    public String query(String groupId, String userId) throws ServiceException {
-        return h5Service.query(N3d.decode(groupId), N3d.decode(userId));
-    }
-
-    @GetMapping("/share")
-    public String share(String userId) throws ServiceException {
-        return h5Service.share(N3d.decode(userId));
+    public String query(String userId, String groupId) throws ServiceException {
+        return h5Service.query(N3d.decode(userId), StringUtils.isNotEmpty(groupId) ? N3d.decode(groupId) : null);
     }
 
     @GetMapping("/default-header")
