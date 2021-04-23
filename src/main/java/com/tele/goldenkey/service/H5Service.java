@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class H5Service {
-    private final static String USER_GROUP_TXT = "%s邀请您加入%s群聊";
-    private final static String USER_TXT = "%s邀请你试玩TelePathy,赶快来下载";
+    private final static String USER_GROUP_TXT = "%s invites you to join the %s group chat";
+    private final static String USER_TXT = "%s invites you to try Telepathy, hurry up and download";
 
     private final UsersMapper usersMapper;
     private final GroupsMapper groupsMapper;
