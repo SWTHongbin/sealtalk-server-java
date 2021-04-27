@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.tele.goldenkey.constant.ErrorCode.SERVER_ERROR;
+
 /**
  * @Author: xiuwei.nie
  * @Author: Jianlu.Yu
@@ -432,7 +434,7 @@ public class UserController extends BaseController {
             resultMap.put("verifyId", jsonNode.get("verifyId"));
             return APIResultWrap.ok(resultMap);
         } else {
-            throw new ServiceException(ErrorCode.SERVER_ERROR, "RongCloud Server API Error Code: " + jsonNode.get("code"));
+            throw new ServiceException(SERVER_ERROR, "RongCloud Server API Error Code: " + jsonNode.get("code"));
         }
     }
 
@@ -511,7 +513,7 @@ public class UserController extends BaseController {
             }
         }
 
-        return APIResultWrap.ok(MiscUtils.encodeResults(map), "查无此人");
+        return APIResultWrap.error(SERVER_ERROR.getErrorCode(), "查无此人");
     }
 
     @ApiOperation(value = "获取用户信息")
