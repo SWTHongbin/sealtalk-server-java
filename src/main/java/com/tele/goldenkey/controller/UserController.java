@@ -491,7 +491,7 @@ public class UserController extends BaseController {
                                                      @ApiParam(name = "st_account", value = "account", type = "String", example = "xxx")
                                                      @RequestParam(value = "st_account", required = false) String account) throws ServiceException {
         Map<String, Object> map = new HashMap<>();
-        if (Constants.REGION_NUM.equals(region) && RegexUtils.checkMobile(phone)) {
+        if (StringUtils.isNotEmpty(region) && StringUtils.isNotEmpty(phone)) {
             Users users = userManager.getUser(region, phone);
             if (users != null && Users.PHONE_VERIFY_NO_NEED.equals(users.getPhoneVerify())) {
                 //用户存在，并且用户允许通过手机号搜索到我
