@@ -13,6 +13,7 @@ import com.tele.goldenkey.live.LiveEventCls;
 import com.tele.goldenkey.live.LiveEventFactory;
 import com.tele.goldenkey.live.LiveService;
 import com.tele.goldenkey.live.LiveUserService;
+import com.tele.goldenkey.model.dto.MyLiveDto;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
@@ -42,6 +43,15 @@ public class LiveController extends BaseController {
     private final LiveUserService userService;
     public final static String AGORA_CHANNEL_PREFIX = "agora_";
 
+    /**
+     * 我的直播列表
+     *
+     * @return
+     */
+    @GetMapping("my-list")
+    public APIResult<Void> myList(MyLiveDto myLiveDto) {
+        return null;
+    }
 
     /**
      * 获取直播流推送地址  或者开播接口
