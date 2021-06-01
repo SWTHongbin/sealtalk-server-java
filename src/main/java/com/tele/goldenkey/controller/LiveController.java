@@ -20,9 +20,6 @@ import com.tele.goldenkey.spi.agora.RtmTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.eums.EventType;
 import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
 import com.tele.goldenkey.util.ValidateUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.validation.annotation.Validated;
@@ -33,7 +30,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
-@Api(tags = "直播相关")
+/**
+ * 直播相关
+ */
 @RestController
 @RequestMapping("/live")
 @RequiredArgsConstructor
@@ -44,9 +43,12 @@ public class LiveController extends BaseController {
     public final static String AGORA_CHANNEL_PREFIX = "agora_";
 
 
-
-
-    @ApiOperation(value = "获取直播流推送地址")
+    /**
+     * 获取直播流推送地址  或者开播接口
+     *
+     * @param liveParam
+     * @return
+     */
     @PostMapping(value = "/get/push-url")
     public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) {
         Integer userId = getCurrentUserId();
@@ -59,16 +61,26 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok(liveTokenDto);
     }
 
-    @ApiOperation(value = "是否开播")
+    /**
+     * 是否开播
+     *
+     * @param livedId 直播id
+     * @return
+     */
     @PostMapping(value = "/is-open/{livedId}")
-    public APIResult<HashMap<String, Boolean>> isOpen(@ApiParam(name = "livedId", value = "直播id")
-                                                      @PathVariable("livedId") Long livedId) {
+    public APIResult<HashMap<String, Boolean>> isOpen(@PathVariable("livedId") Long livedId) {
         HashMap<String, Boolean> hashMap = Maps.newHashMap();
         hashMap.put("isOpen", liveService.isOpen(livedId));
         return APIResultWrap.ok(hashMap);
     }
 
-    @ApiOperation(value = "关闭直播")
+    /**
+     * 关闭直播
+     *
+     * @param livedId 直播id
+     * @return
+     * @throws ServiceException
+     */
     @PostMapping(value = "/close/{livedId}")
     public APIResult<Void> close(@PathVariable("livedId") Long livedId) throws ServiceException {
         liveService.close(livedId);
@@ -78,13 +90,23 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok(null, "关闭成功");
     }
 
-    @ApiOperation(value = "查询直播间用户")
+    /**
+     * 查询直播间用户
+     *
+     * @param param
+     * @return
+     */
     @PostMapping(value = "/user")
     public APIResult<List<LiveUserDto>> user(@RequestBody LiveUserParam param) {
         return APIResultWrap.ok(userService.getUsers(param));
     }
 
-    @ApiOperation(value = "用户离开房间")
+    /**
+     * 用户离开房间
+     *
+     * @return
+     * @throws ServiceException
+     */
     @PostMapping(value = "/leave")
     public APIResult<Void> leave() throws ServiceException {
         Integer id = getCurrentUserId();
@@ -92,16 +114,30 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok(null, "操作成功");
     }
 
-    @ApiOperation(value = "直播房间我的个人信息")
+    /**
+     * 直播房间我的个人信息
+     *
+     * @return
+     * @throws ServiceException
+     */
     @PostMapping(value = "/my")
     public APIResult<LiveUserDto> user() throws ServiceException {
         return APIResultWrap.ok(userService.getUser(getCurrentUserId()));
     }
 
-    @ApiOperation(value = "个人操作-(开关麦) (开关语音)")
+    /**
+     * 个人操作-(开关麦) (开关语音)
+     *
+     * @param eventName
+     * @return
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     * @throws NoSuchMethodException
+     * @throws ServiceException
+     * @see com.tele.goldenkey.spi.agora.eums.EventType
+     */
     @PostMapping(value = "/my/{eventName}")
-    public APIResult<Void> optionMai(@ApiParam(name = "eventName", value = "消息类型  up_mai 开 down_mai 关")
-                                     @PathVariable("eventName") String eventName) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ServiceException {
+    public APIResult<Void> optionMai(@PathVariable("eventName") String eventName) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ServiceException {
         EventType eventType = EventType.valueOf(eventName);
         ValidateUtils.notNull(eventType.personalFunction);
         Method method = LiveUserService.class.getMethod(eventType.personalFunction.name(), Integer.class, EventType.class);
@@ -110,10 +146,17 @@ public class LiveController extends BaseController {
     }
 
 
-    @ApiOperation(value = "直播事件")
+    /**
+     * 直播事件
+     *
+     * @param eventName 消息类型
+     * @param param
+     * @return
+     * @throws ServiceException
+     * @see com.tele.goldenkey.spi.agora.eums.EventType
+     */
     @PostMapping(value = "/event/{eventName}")
-    public APIResult<Void> maiEvent(@ApiParam(name = "eventName", value = "消息类型")
-                                    @PathVariable("eventName") String eventName,
+    public APIResult<Void> maiEvent(@PathVariable("eventName") String eventName,
                                     @RequestBody @Validated MaiEventParam param) throws ServiceException {
         LiveEventCls event = LiveEventFactory.getByKey(eventName);
         ValidateUtils.notNull(event);
@@ -122,10 +165,15 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok(null, "操作成功");
     }
 
-    @ApiOperation(value = "获取房间信息")
+    /**
+     * 获取房间信息
+     *
+     * @param livedId 直播id
+     * @return
+     * @throws ServiceException
+     */
     @PostMapping(value = "/get/live-url/{livedId}")
-    public APIResult<LiveTokenDto> getLiveUrl(@ApiParam(name = "livedId", value = "直播id")
-                                              @PathVariable("livedId") Long livedId) throws ServiceException {
+    public APIResult<LiveTokenDto> getLiveUrl(@PathVariable("livedId") Long livedId) throws ServiceException {
         Integer userId = getCurrentUserId();
         liveService.join(userId, livedId);
         LiveTokenDto liveTokenDto = new LiveTokenDto();

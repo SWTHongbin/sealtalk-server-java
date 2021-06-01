@@ -1,7 +1,6 @@
 package com.tele.goldenkey.dto;
 
 import com.tele.goldenkey.controller.param.LiveParam;
-import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 import java.util.List;
@@ -9,26 +8,41 @@ import java.util.List;
 @Data
 public class LiveRoomDto {
 
-    @ApiParam(name = "type", value = "语音类型")
+    /**
+     * 语音类型语音类型
+     */
     private Integer type;
 
-    @ApiParam(name = "theme", value = "主题")
+    /**
+     * 主题
+     */
     private String theme;
 
-    @ApiParam(name = "count", value = "总人数")
+    /**
+     * 总人数
+     */
     private Integer count;
 
-    @ApiParam(name = "timestamp", value = "时间戳")
+    /**
+     * 时间戳
+     */
     private Long timestamp;
 
-    @ApiParam(name = "linkMai", value = "是否允许连麦")
+    /**
+     * 是否允许连麦
+     */
     private Integer linkMai;
 
-    @ApiParam(name = "anchorId", value = "主播id")
+    /**
+     * 主播id
+     */
     private Integer anchorId;
 
     private Boolean isOpen;
 
+    /**
+     * 封面url
+     */
     private String fmLink;
 
     private List<LiveParam.Goods> goods;
