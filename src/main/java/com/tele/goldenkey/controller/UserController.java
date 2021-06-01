@@ -16,9 +16,6 @@ import com.tele.goldenkey.model.dto.sync.SyncInfoDTO;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.util.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -37,13 +34,15 @@ import java.util.Map;
 import static com.tele.goldenkey.constant.ErrorCode.SERVER_ERROR;
 
 /**
+ * 用户相关
+ *
  * @Author: xiuwei.nie
  * @Author: Jianlu.Yu
  * @Date: 2020/7/6
  * @Description:
  * @Copyright (c) 2020, rongcloud.cn All Rights Reserved
  */
-@Api(tags = "用户相关")
+
 @RestController
 @RequestMapping("/user")
 @Slf4j
@@ -53,7 +52,13 @@ public class UserController extends BaseController {
     private UserManager userManager;
 
 
-    @ApiOperation(value = "向手机发送验证码(创蓝)")
+    /**
+     * 向手机发送验证码(创蓝)
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/send_code", method = RequestMethod.POST)
     public APIResult<Object> sendCode(@RequestBody UserParam userParam) throws ServiceException {
 
@@ -63,7 +68,13 @@ public class UserController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "向手机发送验证码(云片服务)")
+    /**
+     * 向手机发送验证码(云片服务)
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/send_code_yp", method = RequestMethod.POST)
     public APIResult<Object> sendCodeYp(@RequestBody UserParam userParam) throws ServiceException {
 
@@ -85,7 +96,7 @@ public class UserController extends BaseController {
 
 
     /**
-     * 校验验证码(融云)
+     * 校验验证码(融云,创蓝)
      * 1、根据region ,phone 查询验证码
      * -》如果没查询到，返回404，Unknown phone number
      * -》获取当前时间然后减去2分钟，和token的updateAt修改时间比较，判断是否在2分钟有效期内
@@ -98,7 +109,6 @@ public class UserController extends BaseController {
      * -》如果返回码不等于200，返回融云内部错误码和错误信息
      * -》如果返回码等于200，说明校验成功，返回token
      */
-    @ApiOperation(value = "校验验证码(创蓝)")
     @RequestMapping(value = "/verify_code", method = RequestMethod.POST)
     public APIResult<Object> verifyCode(@RequestBody UserParam userParam) throws ServiceException {
 
@@ -124,7 +134,6 @@ public class UserController extends BaseController {
      * -》正确，返回200，token verification.token
      * -》错误，返回1000，Invalid verification code.
      */
-    @ApiOperation(value = "校验验证码(云片服务)")
     @RequestMapping(value = "/verify_code_yp", method = RequestMethod.POST)
     public APIResult<Object> verifyCodeYP(@RequestBody UserParam userParam) throws ServiceException {
         String region = userParam.getRegion();
@@ -142,7 +151,12 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取所有区域信息")
+    /**
+     * 获取所有区域信息
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/regionlist", method = RequestMethod.GET)
     public APIResult<Object> regionlist() throws ServiceException {
         JsonNode jsonNode = userManager.getRegionList();
@@ -150,7 +164,13 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "检查手机号是否可以注册")
+    /**
+     * 检查手机号是否可以注册
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/check_phone_available", method = RequestMethod.POST)
     public APIResult<Boolean> checkPhoneAvailable(@RequestBody UserParam userParam) throws ServiceException {
 
@@ -170,6 +190,7 @@ public class UserController extends BaseController {
 
 
     /**
+     * 注册新用户
      * 0、xss 转义处理 昵称字段
      * 1、密码不能有空格
      * 2、昵称长度[1,32]
@@ -182,7 +203,6 @@ public class UserController extends BaseController {
      * 9、然后上报管理后台
      * 10、返回注册成功，200，用户主键Id编码
      */
-    @ApiOperation(value = "注册新用户")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public APIResult<Object> register(@RequestBody UserParam userParam, HttpServletResponse response) throws ServiceException {
         String nickname = userParam.getNickname();
@@ -208,6 +228,7 @@ public class UserController extends BaseController {
     }
 
     /**
+     * 用户登录
      * 1、 判断phone、regionName合法性，不合法返回400
      * 2、 根据phone、region查询用户，查询不到返回1000，提示phone不存在
      * 3、 对明文密码加盐hash，验证密码是否正确，密码错误返回1001，提示错误的密码
@@ -216,7 +237,6 @@ public class UserController extends BaseController {
      * 6、 将登录用户的userid、groupIdName信息同步到融云
      * 7、 如果融云token为空，从融云获取token，如果融云token不为空，将userid、融云token返回给前端
      */
-    @ApiOperation(value = "用户登录")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public APIResult<Object> login(@RequestBody UserParam userParam, HttpServletResponse response) throws ServiceException {
         String region = userParam.getRegion();
@@ -246,7 +266,12 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "用户注销")
+    /**
+     * 用户注销
+     *
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public APIResult<Object> logout(HttpServletResponse response) {
 
@@ -258,7 +283,13 @@ public class UserController extends BaseController {
 
     }
 
-    @ApiOperation(value = "重置密码")
+    /**
+     * 重置密码
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/reset_password", method = RequestMethod.POST)
     public APIResult<Object> resetPassword(@RequestBody UserParam userParam) throws ServiceException {
         String password = userParam.getPassword();
@@ -271,7 +302,13 @@ public class UserController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "修改密码")
+    /**
+     * 修改密码
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/change_password", method = RequestMethod.POST)
     public APIResult<Object> changePassword(@RequestBody UserParam userParam) throws ServiceException {
 
@@ -304,7 +341,6 @@ public class UserController extends BaseController {
      * 10、成功后返回200
      */
 
-    @ApiOperation(value = "设置昵称")
     @RequestMapping(value = "/set_nickname", method = RequestMethod.POST)
     public APIResult<Object> setNickName(@RequestBody UserParam userParam) throws ServiceException {
         String nickname = userParam.getNickname();
@@ -317,7 +353,13 @@ public class UserController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "设置头像")
+    /**
+     * 设置头像
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_portrait_uri", method = RequestMethod.POST)
     public APIResult<Object> setPortraitUri(@RequestBody UserParam userParam) throws ServiceException {
         String portraitUri = userParam.getPortraitUri();
@@ -333,7 +375,12 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取融云token")
+    /**
+     * 获取融云token
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_token", method = RequestMethod.GET)
     public APIResult<Object> getToken() throws ServiceException {
 
@@ -348,7 +395,12 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取当前用户黑名单列表")
+    /**
+     * 获取当前用户黑名单列表
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/blacklist", method = RequestMethod.GET)
     public APIResult<Object> blacklist() throws ServiceException {
 
@@ -382,7 +434,13 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "将好友加入黑名单")
+    /**
+     * 将好友加入黑名单
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/add_to_blacklist", method = RequestMethod.POST)
     public APIResult<Object> addBlackList(@RequestBody UserParam userParam) throws ServiceException {
         String friendId = userParam.getFriendId();
@@ -394,7 +452,13 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "将好友移除黑名单")
+    /**
+     * 将好友移除黑名单
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "check_phone_availableremove_from_blacklist", method = RequestMethod.POST)
     public APIResult<Object> removeBlacklist(@RequestBody UserParam userParam) throws ServiceException {
         String friendId = userParam.getFriendId();
@@ -406,9 +470,13 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取七牛云存储token")
+    /**
+     * 获取七牛云存储token
+     *
+     * @return
+     */
     @RequestMapping(value = "/get_image_token", method = RequestMethod.GET)
-    public APIResult<Object> getImageToken() throws ServiceException {
+    public APIResult<Object> getImageToken() {
 
         String token = userManager.getImageToken();
 
@@ -420,7 +488,12 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取短信图片验证码")
+    /**
+     * 获取短信图片验证码
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_sms_img_code", method = RequestMethod.POST)
     public APIResult<Object> getSmsImgCode() throws ServiceException {
 
@@ -438,7 +511,12 @@ public class UserController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "获取当前用户所属群组")
+    /**
+     * 获取当前用户所属群组
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/groups", method = RequestMethod.GET)
     public APIResult<Object> getGroups() throws ServiceException {
 
@@ -448,10 +526,15 @@ public class UserController extends BaseController {
         return APIResultWrap.ok(MiscUtils.encodeResults(groupsList, "id", "creatorId"));
     }
 
-    @ApiOperation(value = "同步用户的好友、黑名单、群组、群组成员数据")
+    /**
+     * 同步用户的好友、黑名单、群组、群组成员数据
+     *
+     * @param version = "请求的版本号(时间戳)
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/sync/{version}", method = RequestMethod.GET)
-    public APIResult<Object> syncInfo(@ApiParam(name = "version", value = "请求的版本号(时间戳)", required = true, type = "String", example = "xxx")
-                                      @PathVariable("version") String version) throws ServiceException {
+    public APIResult<Object> syncInfo(@PathVariable("version") String version) throws ServiceException {
 
         ValidateUtils.checkTimeStamp(version);
 
@@ -461,11 +544,16 @@ public class UserController extends BaseController {
         return APIResultWrap.ok(syncInfoDTO);
     }
 
-    @ApiOperation(value = "根据手机号查找用户信息")
+    /**
+     * 根据手机号查找用户信息
+     *
+     * @param region
+     * @param phone
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/find/{region}/{phone}", method = RequestMethod.GET)
-    public APIResult<Object> getUserByPhone(@ApiParam(name = "region", value = "region", required = true, type = "String", example = "xxx")
-                                            @PathVariable("region") String region,
-                                            @ApiParam(name = "phone", value = "phone", required = true, type = "String", example = "xxx")
+    public APIResult<Object> getUserByPhone(@PathVariable("region") String region,
                                             @PathVariable("phone") String phone) throws ServiceException {
         ValidateUtils.notEmpty(region);
         ValidateUtils.notEmpty(phone);
@@ -482,13 +570,18 @@ public class UserController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "根据手机号查找用户信息")
+    /**
+     * 根据手机号查找用户信息
+     *
+     * @param region
+     * @param phone
+     * @param account
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/find_user", method = RequestMethod.GET)
-    public APIResult<Object> getUserByPhoneOrAccount(@ApiParam(name = "region", value = "region", type = "String", example = "xxx")
-                                                     @RequestParam(value = "region", required = false) String region,
-                                                     @ApiParam(name = "phone", value = "phone", type = "String", example = "xxx")
+    public APIResult<Object> getUserByPhoneOrAccount(@RequestParam(value = "region", required = false) String region,
                                                      @RequestParam(value = "phone", required = false) String phone,
-                                                     @ApiParam(name = "st_account", value = "account", type = "String", example = "xxx")
                                                      @RequestParam(value = "st_account", required = false) String account) throws ServiceException {
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isNotEmpty(region) && StringUtils.isNotEmpty(phone)) {
@@ -516,10 +609,15 @@ public class UserController extends BaseController {
         return APIResultWrap.error(SERVER_ERROR.getErrorCode(), "查无此人");
     }
 
-    @ApiOperation(value = "获取用户信息")
+    /**
+     * 获取用户信息
+     *
+     * @param id
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public APIResult<Object> getUserInfo(@ApiParam(name = "id", value = "用户ID", required = true, type = "Integer", example = "xxx")
-                                         @PathVariable("id") String id) throws ServiceException {
+    public APIResult<Object> getUserInfo(@PathVariable("id") String id) throws ServiceException {
 
         Integer userId = N3d.decode(id);
         Users users = userManager.getUser(userId);
@@ -538,11 +636,16 @@ public class UserController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "获取通讯录群组")
+    /**
+     * 获取通讯录群组
+     *
+     * @param limit
+     * @param offset
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/favgroups", method = RequestMethod.GET)
-    public APIResult<Object> getFavGroups(@ApiParam(name = "limit", value = "limit", required = false, type = "Integer", example = "xxx")
-                                          @RequestParam(value = "limit", required = false) Integer limit,
-                                          @ApiParam(name = "offset", value = "offset", required = false, type = "Integer", example = "xxx")
+    public APIResult<Object> getFavGroups(@RequestParam(value = "limit", required = false) Integer limit,
                                           @RequestParam(value = "offset", required = false) Integer offset) throws ServiceException {
 
 
@@ -589,7 +692,13 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "设置 SealTalk 号")
+    /**
+     * 设置 SealTalk 号
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_st_account", method = RequestMethod.POST)
     public APIResult<Object> setStAccount(@RequestBody UserParam userParam) throws ServiceException {
         String stAccount = userParam.getStAccount();
@@ -602,7 +711,13 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "设置性别")
+    /**
+     * 设置性别
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_gender", method = RequestMethod.POST)
     public APIResult<Object> setGender(@RequestBody UserParam userParam) throws ServiceException {
         String gender = userParam.getGender();
@@ -617,7 +732,13 @@ public class UserController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "设置个人隐私设置")
+    /**
+     * 设置个人隐私设置
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_privacy", method = RequestMethod.POST)
     public APIResult<Object> setPrivacy(@RequestBody UserParam userParam) throws ServiceException {
 
@@ -641,7 +762,12 @@ public class UserController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "获取个人隐私设置")
+    /**
+     * 获取个人隐私设置
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_privacy", method = RequestMethod.GET)
     public APIResult<Object> getPrivacy() throws ServiceException {
 
@@ -657,7 +783,13 @@ public class UserController extends BaseController {
         return APIResultWrap.ok(MiscUtils.encodeResults(result));
     }
 
-    @ApiOperation(value = "设置接收戳一下消息状态")
+    /**
+     * 设置接收戳一下消息状态
+     *
+     * @param userParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_poke", method = RequestMethod.POST)
     public APIResult<Object> setPokeStatus(@RequestBody UserParam userParam) throws ServiceException {
 
@@ -672,7 +804,12 @@ public class UserController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "获取接收戳一下消息状态")
+    /**
+     * 获取接收戳一下消息状态
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_poke", method = RequestMethod.GET)
     public APIResult<Object> getPokeStatus() throws ServiceException {
 
@@ -708,7 +845,6 @@ public class UserController extends BaseController {
      * @return
      * @throws ServiceException
      */
-    @ApiOperation(value = "batch")
     @RequestMapping(value = "/batch", method = RequestMethod.GET)
     public APIResult<Object> batch(@RequestParam("id") String[] id) throws ServiceException {
 

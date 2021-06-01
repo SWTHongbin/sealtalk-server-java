@@ -13,9 +13,6 @@ import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.util.MiscUtils;
 import com.tele.goldenkey.util.N3d;
 import com.tele.goldenkey.util.ValidateUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -29,13 +26,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 好友相关
+ *
  * @Author: xiuwei.nie
  * @Author: Jianlu.Yu
  * @Date: 2020/7/6
  * @Description:
  * @Copyright (c) 2020, rongcloud.cn All Rights Reserved
  */
-@Api(tags = "好友相关")
 @RestController
 @RequestMapping("/friendship")
 @Slf4j
@@ -44,7 +42,13 @@ public class FriendshipController extends BaseController {
     @Resource
     private FriendShipManager friendShipManager;
 
-    @ApiOperation(value = "发起添加好友")
+    /**
+     * 发起添加好友
+     *
+     * @param inviteFriendParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/invite", method = RequestMethod.POST)
     public APIResult<Object> invite(@RequestBody InviteFriendParam inviteFriendParam) throws ServiceException {
 
@@ -60,16 +64,21 @@ public class FriendshipController extends BaseController {
         String message = inviteFriendParam.getMessage();
 
         message = MiscUtils.xss(message, ValidateUtils.FRIEND_REQUEST_MESSAGE_MAX_LENGTH);
-         //去掉邀请好友的提示信息
+        //去掉邀请好友的提示信息
         ValidateUtils.checkInviteMessage(message);
         Integer currentUserId = getCurrentUserId();
-        
+
         InviteDTO inviteResponse = friendShipManager.invite(currentUserId, N3d.decode(friendId), message);
         return APIResultWrap.ok(inviteResponse);
     }
 
-
-    @ApiOperation(value = "同意添加好友")
+    /**
+     * 同意添加好友
+     *
+     * @param friendshipParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/agree", method = RequestMethod.POST)
     public APIResult<Object> agree(@RequestBody FriendshipParam friendshipParam) throws ServiceException {
 
@@ -80,7 +89,13 @@ public class FriendshipController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "忽略好友请求")
+    /**
+     * 忽略好友请求
+     *
+     * @param friendshipParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/ignore", method = RequestMethod.POST)
     public APIResult<Object> ignore(@RequestBody FriendshipParam friendshipParam) throws ServiceException {
         String friendId = friendshipParam.getFriendId();
@@ -91,7 +106,13 @@ public class FriendshipController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "删除好友")
+    /**
+     * 删除好友
+     *
+     * @param friendshipParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public APIResult<Object> delete(@RequestBody FriendshipParam friendshipParam) throws ServiceException {
 
@@ -103,7 +124,13 @@ public class FriendshipController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "设置好友备注名")
+    /**
+     * 设置好友备注名
+     *
+     * @param friendshipParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_display_name", method = RequestMethod.POST)
     public APIResult<Object> setDisplayName(@RequestBody FriendshipParam friendshipParam) throws ServiceException {
 
@@ -118,7 +145,12 @@ public class FriendshipController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "获取好友列表")
+    /**
+     * 获取好友列表
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public APIResult<Object> friendList() throws ServiceException {
 
@@ -158,11 +190,15 @@ public class FriendshipController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取好友信息")
+    /**
+     * 获取好友信息
+     *
+     * @param friendId 好友 Id
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/{friendId}/profile", method = RequestMethod.GET)
-    public APIResult<Object> getFriendProfile(
-            @ApiParam(name = "friendId", value = "好友 Id", required = true, type = "String", example = "xxx")
-            @PathVariable String friendId) throws ServiceException {
+    public APIResult<Object> getFriendProfile(@PathVariable String friendId) throws ServiceException {
 
         Integer currentUserId = getCurrentUserId();
 
@@ -188,11 +224,17 @@ public class FriendshipController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取通讯录朋友信息列表")
+    /**
+     * 获取通讯录朋友信息列表
+     *
+     * @param friendshipParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_contacts_info", method = RequestMethod.POST)
     public APIResult<?> getContactsInfo(@RequestBody FriendshipParam friendshipParam) throws ServiceException {
         String[] contactList = friendshipParam.getContactList();
-        if(contactList==null || contactList.length==0){
+        if (contactList == null || contactList.length == 0) {
             throw new ServiceException(ErrorCode.EMPTY_ContactList);
         }
 
@@ -201,7 +243,13 @@ public class FriendshipController extends BaseController {
         return APIResultWrap.ok(contractInfoDTOList);
     }
 
-    @ApiOperation(value = "批量删除好友")
+    /**
+     * 批量删除好友
+     *
+     * @param friendshipParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/batch_delete", method = RequestMethod.POST)
     public APIResult<Object> batchDelete(@RequestBody FriendshipParam friendshipParam) throws ServiceException {
         String[] friendIds = friendshipParam.getFriendIds();
@@ -227,7 +275,6 @@ public class FriendshipController extends BaseController {
      * @return
      * @throws ServiceException
      */
-    @ApiOperation(value = "设置朋友备注和描述")
     @RequestMapping(value = "/set_friend_description", method = RequestMethod.POST)
     public APIResult<Object> setFriendDescription(@RequestBody FriendshipParam friendshipParam) throws ServiceException {
 
@@ -250,8 +297,13 @@ public class FriendshipController extends BaseController {
         return APIResultWrap.ok();
     }
 
-
-    @ApiOperation(value = "获取朋友备注和描述")
+    /**
+     * 获取朋友备注和描述
+     *
+     * @param friendshipParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_friend_description", method = RequestMethod.POST)
     public APIResult<?> getFriendDescription(@RequestBody FriendshipParam friendshipParam) throws ServiceException {
         String friendId = friendshipParam.getFriendId();

@@ -1,6 +1,5 @@
 package com.tele.goldenkey.model.dto;
 
-import io.swagger.models.auth.In;
 import lombok.Data;
 
 /**
@@ -19,7 +18,6 @@ public class UserDTO {
     private String portraitUri;
     private String gender;
     private String stAccount;
-
 
 
 }

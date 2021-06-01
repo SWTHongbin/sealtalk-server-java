@@ -16,9 +16,6 @@ import com.tele.goldenkey.util.JacksonUtil;
 import com.tele.goldenkey.util.MiscUtils;
 import com.tele.goldenkey.util.N3d;
 import com.tele.goldenkey.util.ValidateUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
@@ -33,13 +30,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 群组相关
+ *
  * @Author: xiuwei.nie
  * @Author: Jianlu.Yu
  * @Date: 2020/7/6
  * @Description:
  * @Copyright (c) 2020, rongcloud.cn All Rights Reserved
  */
-@Api(tags = "群组相关")
 @RestController
 @RequestMapping("/group")
 @Slf4j
@@ -49,7 +47,13 @@ public class GroupController extends BaseController {
     private GroupManager groupManager;
 
 
-    @ApiOperation(value = "创建群组")
+    /**
+     * 创建群组
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public APIResult<Object> create(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -75,7 +79,13 @@ public class GroupController extends BaseController {
     }
 
 
-    @ApiOperation(value = "添加群成员")
+    /**
+     * 添加群成员
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public APIResult<Object> addMember(@RequestBody GroupParam groupParam) throws ServiceException {
         String groupId = groupParam.getGroupId();
@@ -91,7 +101,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok(userStatusDTOList);
     }
 
-    @ApiOperation(value = "用户加入群组")
+    /**
+     * 用户加入群组
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/join", method = RequestMethod.POST)
     public APIResult<Object> joinGroup(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -105,7 +121,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "群主或群管理将群成员移出群组")
+    /**
+     * 群主或群管理将群成员移出群组
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/kick", method = RequestMethod.POST)
     public APIResult<Object> kickMember(@RequestBody GroupParam groupParam) throws ServiceException {
         String groupId = groupParam.getGroupId();
@@ -120,7 +142,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "退出群组")
+    /**
+     * 退出群组
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/quit", method = RequestMethod.POST)
     public APIResult<?> quitGroup(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -130,11 +158,17 @@ public class GroupController extends BaseController {
         Integer currentUserId = getCurrentUserId();
 
         String resultMessage = groupManager.quitGroup(currentUserId, N3d.decode(groupId), groupId);
-        return APIResultWrap.ok(null,resultMessage);
+        return APIResultWrap.ok(null, resultMessage);
     }
 
 
-    @ApiOperation(value = "解散群组")
+    /**
+     * 解散群组
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/dismiss", method = RequestMethod.POST)
     public APIResult<Object> dismiss(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -148,7 +182,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "转让群主")
+    /**
+     * 转让群主
+     *
+     * @param transferGroupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/transfer", method = RequestMethod.POST)
     public APIResult<Object> transfer(@RequestBody TransferGroupParam transferGroupParam) throws ServiceException {
 
@@ -164,7 +204,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "批量增加管理员")
+    /**
+     * 批量增加管理员
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_manager", method = RequestMethod.POST)
     public APIResult<Object> batchSetManager(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -179,7 +225,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "批量删除管理员")
+    /**
+     * 批量删除管理员
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/remove_manager", method = RequestMethod.POST)
     public APIResult<Object> batchRemoveManager(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -196,7 +248,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "群组重命名")
+    /**
+     * 群组重命名
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/rename", method = RequestMethod.POST)
     public APIResult<Object> rename(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -212,13 +270,19 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "保存群组至通讯录")
+    /**
+     * 保存群组至通讯录
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/fav", method = RequestMethod.POST)
     public APIResult<Object> fav(@RequestBody GroupParam groupParam) throws ServiceException {
 
         String groupId = groupParam.getGroupId();
 
-        if(StringUtils.isEmpty(groupId)){
+        if (StringUtils.isEmpty(groupId)) {
             throw new ServiceException(ErrorCode.GROUPID_NULL);
         }
 
@@ -227,7 +291,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "删除群组通讯录")
+    /**
+     * 删除群组通讯录
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/fav", method = RequestMethod.DELETE)
     public APIResult<Object> deleteGroupFav(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -239,13 +309,19 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "发布群公告")
+    /**
+     * 发布群公告
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_bulletin", method = RequestMethod.POST)
     public APIResult<Object> setBulletin(@RequestBody GroupParam groupParam) throws ServiceException {
 
         String groupId = groupParam.getGroupId();
 
-        if(groupId==null || StringUtils.isEmpty(groupId.trim())){
+        if (groupId == null || StringUtils.isEmpty(groupId.trim())) {
             throw new ServiceException(ErrorCode.GROUPID_NULL);
         }
         String bulletin = groupParam.getBulletin();
@@ -263,11 +339,15 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "获取群公告")
+    /**
+     * 获取群公告
+     *
+     * @param groupId
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_bulletin", method = RequestMethod.GET)
-    public APIResult<?> getBulletin(
-            @ApiParam(name = "groupId", value = "群组ID", required = true, type = "String", example = "86")
-            @RequestParam String groupId) throws ServiceException {
+    public APIResult<?> getBulletin(@RequestParam String groupId) throws ServiceException {
 
         ValidateUtils.notEmpty(groupId);
 
@@ -287,7 +367,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok(groupBulletinsDTO);
     }
 
-    @ApiOperation(value = "设置群头像")
+    /**
+     * 设置群头像
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_portrait_uri", method = RequestMethod.POST)
     public APIResult<Object> setGroupPortraitUri(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -307,7 +393,13 @@ public class GroupController extends BaseController {
     }
 
 
-    @ApiOperation(value = "设置自己的群名片")
+    /**
+     * 设置自己的群名片
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_display_name", method = RequestMethod.POST)
     public APIResult<Object> setDisplayName(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -326,11 +418,15 @@ public class GroupController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取群信息")
+    /**
+     * 获取群信息
+     *
+     * @param groupId 群组ID
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public APIResult<?> getGroupInfo(
-            @ApiParam(name = "groupId", value = "群组ID", required = true, type = "String", example = "86")
-            @PathVariable("id") String groupId) throws ServiceException {
+    public APIResult<?> getGroupInfo(@PathVariable("id") String groupId) throws ServiceException {
         ValidateUtils.notEmpty(groupId);
 
         Groups group = groupManager.getGroupInfo(N3d.decode(groupId));
@@ -353,11 +449,15 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok(groupDTO);
     }
 
-    @ApiOperation(value = "获取群成员列表")
-    @RequestMapping(value = "/{id}/members", method = RequestMethod.GET)
-    public APIResult<?> getGroupMembers(
-            @ApiParam(name = "groupId", value = "群组ID", required = true, type = "String", example = "86")
-            @PathVariable("id") String groupId) throws ServiceException {
+    /**
+     * 获取群成员列表
+     *
+     * @param groupId 群组ID
+     * @return
+     * @throws ServiceException
+     */
+    @GetMapping(value = "/{id}/members")
+    public APIResult<?> getGroupMembers(@PathVariable("id") String groupId) throws ServiceException {
 
         ValidateUtils.notEmpty(groupId);
 
@@ -400,7 +500,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok(memberDTOList);
     }
 
-    @ApiOperation(value = "设置群认证")
+    /**
+     * 设置群认证
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_certification", method = RequestMethod.POST)
     public APIResult<Object> setCertification(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -415,7 +521,12 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok("");
     }
 
-    @ApiOperation(value = "获取群验证通知消息")
+    /**
+     * 获取群验证通知消息
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/notice_info", method = RequestMethod.GET)
     public APIResult<?> getNoticeInfo() throws ServiceException {
 
@@ -461,7 +572,12 @@ public class GroupController extends BaseController {
     }
 
 
-    @ApiOperation(value = "清空群验证通知消息")
+    /**
+     * 清空群验证通知消息
+     *
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/clear_notice", method = RequestMethod.POST)
     public APIResult<Object> clearNotice() throws ServiceException {
 
@@ -473,7 +589,13 @@ public class GroupController extends BaseController {
     }
 
 
-    @ApiOperation(value = "设置/取消 全员禁言")
+    /**
+     * 设置/取消 全员禁言
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/mute_all", method = RequestMethod.POST)
     public APIResult<Object> setMuteAll(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -492,7 +614,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok("全员禁言成功");
     }
 
-    @ApiOperation(value = "设置群定时清理状态")
+    /**
+     * 设置群定时清理状态
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_regular_clear", method = RequestMethod.POST)
     public APIResult<Object> setRegularClear(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -510,7 +638,13 @@ public class GroupController extends BaseController {
         return APIResultWrap.ok();
     }
 
-    @ApiOperation(value = "获取群定时清理状态")
+    /**
+     * 获取群定时清理状态
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_regular_clear", method = RequestMethod.POST)
     public APIResult<?> getRegularClear(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -519,17 +653,23 @@ public class GroupController extends BaseController {
 
         Groups groups = groupManager.getGroup(N3d.decode(groupId));
 
-        if(groups!=null){
+        if (groups != null) {
             Integer clearStatus = groups.getClearStatus();
             Map<String, Integer> result = new HashMap<>();
             result.put("clearStatus", clearStatus);
             return APIResultWrap.ok(clearStatus);
-        }else {
+        } else {
             return APIResultWrap.ok();
         }
     }
 
-    @ApiOperation(value = "设置群成员信息")
+    /**
+     * 设置群成员信息
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_member_info", method = RequestMethod.POST)
     public APIResult<Object> setMemberInfo(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -552,7 +692,13 @@ public class GroupController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取群成员信息")
+    /**
+     * 获取群成员信息
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_member_info", method = RequestMethod.POST)
     public APIResult<?> getMemberInfo(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -593,7 +739,13 @@ public class GroupController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取退群列表")
+    /**
+     * 获取退群列表
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/exited_list", method = RequestMethod.POST)
     public APIResult<?> getExitedList(@RequestBody GroupParam groupParam) throws ServiceException {
 
@@ -610,17 +762,23 @@ public class GroupController extends BaseController {
                 groupExitedListDTOList.add(dto);
             }
         }
-        return APIResultWrap.ok(MiscUtils.encodeResults(groupExitedListDTOList,"quitUserId","operatorId"));
+        return APIResultWrap.ok(MiscUtils.encodeResults(groupExitedListDTOList, "quitUserId", "operatorId"));
     }
 
-    @ApiOperation(value = "设置群成员保护模式")
+    /**
+     * 设置群成员保护模式
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_member_protection", method = RequestMethod.POST)
     public APIResult<Object> setMemberProtection(@RequestBody GroupParam groupParam) throws ServiceException {
 
         String groupId = groupParam.getGroupId();
         Integer memberProtection = groupParam.getMemberProtection();
         ValidateUtils.notEmpty(groupId);
-        if(memberProtection==null){
+        if (memberProtection == null) {
             throw new ServiceException(ErrorCode.MemberProtection_NULL);
         }
         ValidateUtils.valueOf(memberProtection, ImmutableList.of(0, 1));
@@ -632,7 +790,13 @@ public class GroupController extends BaseController {
     }
 
 
-    @ApiOperation(value = "复制群组")
+    /**
+     * 复制群组
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/copy_group", method = RequestMethod.POST)
     public APIResult<GroupAddStatusDTO> copyGroup(@RequestBody GroupParam groupParam) throws ServiceException {
         String groupId = groupParam.getGroupId();
@@ -651,7 +815,13 @@ public class GroupController extends BaseController {
     }
 
 
-    @ApiOperation(value = "同意群邀请")
+    /**
+     * 同意群邀请
+     *
+     * @param groupParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/agree", method = RequestMethod.POST)
     public APIResult<GroupAddStatusDTO> agree(@RequestBody GroupParam groupParam) throws ServiceException {
         String groupId = groupParam.getGroupId();

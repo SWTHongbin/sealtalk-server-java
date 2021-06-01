@@ -17,9 +17,6 @@ import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.util.*;
 import io.micrometer.core.instrument.util.IOUtils;
 import io.micrometer.core.instrument.util.StringUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,13 +32,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 其他相关
+ *
  * @Author: xiuwei.nie
  * @Author: Jianlu.Yu
  * @Date: 2020/7/6
  * @Description:
  * @Copyright (c) 2020, rongcloud.cn All Rights Reserved
  */
-@Api(tags = "其他相关")
 @RestController
 @RequestMapping("/misc")
 @Slf4j
@@ -63,12 +61,17 @@ public class MiscController extends BaseController {
     @Autowired
     private MiscManager miscManager;
 
-    @ApiOperation(value = "获取客户端最新版本（ Desktop 使用 ）")
+    /**
+     * 获取客户端最新版本（ Desktop 使用 ）
+     *
+     * @param version
+     * @param response
+     * @throws ServiceException
+     * @throws IOException
+     */
     @RequestMapping(value = "/latest_update", method = RequestMethod.GET)
-    public void getLatestUpdateVersion(
-            @ApiParam(name = "version", value = "版本号", required = true, type = "String", example = "xxx")
-            @RequestParam("version") String version,
-            HttpServletResponse response) throws ServiceException, IOException {
+    public void getLatestUpdateVersion(@RequestParam("version") String version,
+                                       HttpServletResponse response) throws ServiceException, IOException {
 
         try {
             response.setCharacterEncoding("utf8");
@@ -114,9 +117,15 @@ public class MiscController extends BaseController {
     }
 
 
-    @ApiOperation(value = "Android、iOS 获取更新版本")
+    /**
+     * Android、iOS 获取更新版本
+     *
+     * @param response
+     * @throws ServiceException
+     * @throws IOException
+     */
     @RequestMapping(value = "/client_version", method = RequestMethod.GET)
-    public void getClientVersion(HttpServletResponse response) throws ServiceException, IOException {
+    public void getClientVersion(HttpServletResponse response) throws IOException {
         try {
             response.setCharacterEncoding("utf8");
             String result = CacheUtil.get(CacheUtil.CLIENT_VERSION_INFO);
@@ -140,7 +149,6 @@ public class MiscController extends BaseController {
      * @param response
      * @return
      */
-    @ApiOperation(value = "Android、iOS 获取更新版本")
     @RequestMapping(value = "/mobile_version", method = RequestMethod.GET)
     public APIResult<?> getMobileVersion(HttpServletResponse response) {
         try {
@@ -156,13 +164,17 @@ public class MiscController extends BaseController {
 
             return APIResultWrap.ok(JacksonUtil.getJsonNode(result));
         } catch (Exception e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
             return APIResultWrap.error(ErrorCode.SERVER_ERROR);
         }
     }
 
 
-    @ApiOperation(value = "Android、iOS 获取更新版本")
+    /**
+     * Android、iOS 获取更新版本
+     *
+     * @return
+     */
     @RequestMapping(value = "/demo_square", method = RequestMethod.GET)
     public APIResult<?> getDemoSquare() {
         try {
@@ -211,7 +223,13 @@ public class MiscController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "Server API 发送消息")
+    /**
+     * Server API 发送消息
+     *
+     * @param sendMessageParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/send_message", method = RequestMethod.POST)
     public APIResult<Object> sendMessage(@RequestBody SendMessageParam sendMessageParam) throws ServiceException {
 
@@ -232,7 +250,13 @@ public class MiscController extends BaseController {
     }
 
 
-    @ApiOperation(value = "截屏通知状态设置")
+    /**
+     * 截屏通知状态设置
+     *
+     * @param screenCaptureParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/set_screen_capture", method = RequestMethod.POST)
     public APIResult<Object> setScreenCapture(@RequestBody ScreenCaptureParam screenCaptureParam) throws ServiceException {
 
@@ -242,7 +266,7 @@ public class MiscController extends BaseController {
 
         ValidateUtils.notNull(conversationType);
         ValidateUtils.notEmpty(targetId);
-        if(noticeStatus==null){
+        if (noticeStatus == null) {
             throw new ServiceException(ErrorCode.STATUS_NULL);
         }
         ValidateUtils.notNull(noticeStatus);
@@ -254,7 +278,13 @@ public class MiscController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取截屏通知状态")
+    /**
+     * 获取截屏通知状态
+     *
+     * @param screenCaptureParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/get_screen_capture", method = RequestMethod.POST)
     public APIResult<Object> getScreenCapture(@RequestBody ScreenCaptureParam screenCaptureParam) throws ServiceException {
 
@@ -276,7 +306,13 @@ public class MiscController extends BaseController {
         return APIResultWrap.ok(MiscUtils.encodeResults(result));
     }
 
-    @ApiOperation(value = "发送截屏通知消息")
+    /**
+     * 发送截屏通知消息
+     *
+     * @param screenCaptureParam
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping(value = "/send_sc_msg", method = RequestMethod.POST)
     public APIResult<Object> sendScreenCaptureMsg(@RequestBody ScreenCaptureParam screenCaptureParam) throws ServiceException {
 
