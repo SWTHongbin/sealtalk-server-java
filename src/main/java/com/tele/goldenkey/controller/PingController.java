@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * ping
+ *
  * @Author: Jianlu.Yu
  * @Date: 2020/8/20
  * @Description:
