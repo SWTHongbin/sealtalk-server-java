@@ -29,5 +29,5 @@ public class LiveUserDto {
 
     private String name;
 
-    private Integer livedId;
+    private Long livedId;
 }

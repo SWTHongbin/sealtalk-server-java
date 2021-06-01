@@ -12,7 +12,7 @@ public class LiveTokenDto {
     private String url;
 
     @ApiParam(name = "livedId", value = "房间id")
-    private Integer livedId;
+    private Long livedId;
 
     private String rtcToken;
 

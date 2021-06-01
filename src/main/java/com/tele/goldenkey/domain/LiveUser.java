@@ -16,7 +16,7 @@ public class LiveUser implements Serializable {
     private Integer id;
 
     @Column(name = "liveId")
-    private Integer liveId;
+    private Long liveId;
 
     @Column(name = "userId")
     private Integer userId;

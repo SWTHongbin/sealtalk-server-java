@@ -14,7 +14,6 @@
         select *
         from live_statuses
         WHERE liveId = #{livedId}
-        ORDER BY createdAt desc LIMIT 0,1
     </select>
 
     <select id="noLongerUsed" resultMap="BaseResultMap">

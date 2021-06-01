@@ -26,7 +26,7 @@ public class MaiForCountEvent extends LiveEventCls {
     }
 
     @Override
-    public LiveEventDto getLiveEventDto(Integer livedId, Integer userId, Integer terminalId) throws ServiceException {
+    public LiveEventDto getLiveEventDto(Long livedId, Integer userId, Integer terminalId) throws ServiceException {
         ValidateUtils.notNull(livedId);
         return new LiveEventDto(livedId, null, null);
     }

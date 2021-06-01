@@ -24,7 +24,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +33,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
-@Slf4j
 @Api(tags = "直播相关")
 @RestController
 @RequestMapping("/live")
@@ -45,32 +43,34 @@ public class LiveController extends BaseController {
     private final LiveUserService userService;
     public final static String AGORA_CHANNEL_PREFIX = "agora_";
 
+
+
+
     @ApiOperation(value = "获取直播流推送地址")
     @PostMapping(value = "/get/push-url")
-    public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) throws ServiceException {
-        Integer livedId = getCurrentUserId();
-        liveService.initRoom(liveParam, livedId);
-        LiveTokenDto liveTokenDto = liveService.anchor(livedId);
-        liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + livedId, String.valueOf(livedId), RtcTokenBuilder.Role.Role_Publisher));
-        liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
-        liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(livedId)));
-        applicationContext.publishEvent(new LiveEvent<Void>(EventType.open, livedId, livedId, null));
+    public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) {
+        Integer userId = getCurrentUserId();
+        Long liveId = liveService.initRoom(userId, liveParam);
+        LiveTokenDto liveTokenDto = liveService.anchor(liveId);
+        liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher));
+        liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + userId);
+        liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.open, liveId, userId, null));
         return APIResultWrap.ok(liveTokenDto);
     }
 
     @ApiOperation(value = "是否开播")
     @PostMapping(value = "/is-open/{livedId}")
     public APIResult<HashMap<String, Boolean>> isOpen(@ApiParam(name = "livedId", value = "直播id")
-                                                      @PathVariable("livedId") Integer livedId) {
+                                                      @PathVariable("livedId") Long livedId) {
         HashMap<String, Boolean> hashMap = Maps.newHashMap();
         hashMap.put("isOpen", liveService.isOpen(livedId));
         return APIResultWrap.ok(hashMap);
     }
 
     @ApiOperation(value = "关闭直播")
-    @PostMapping(value = "/close")
-    public APIResult<Void> close() throws ServiceException {
-        Integer livedId = getCurrentUserId();
+    @PostMapping(value = "/close/{livedId}")
+    public APIResult<Void> close(@PathVariable("livedId") Long livedId) throws ServiceException {
         liveService.close(livedId);
         LiveEventCls event = LiveEventFactory.getByKey(EventType.close.name());
         LiveEventDto liveEventDto = event.getLiveEventDto(livedId, getCurrentUserId(), null);
@@ -125,17 +125,16 @@ public class LiveController extends BaseController {
     @ApiOperation(value = "获取房间信息")
     @PostMapping(value = "/get/live-url/{livedId}")
     public APIResult<LiveTokenDto> getLiveUrl(@ApiParam(name = "livedId", value = "直播id")
-                                              @PathVariable("livedId") Integer livedId) throws ServiceException {
-        Integer id = getCurrentUserId();
-        liveService.join(id, livedId);
+                                              @PathVariable("livedId") Long livedId) throws ServiceException {
+        Integer userId = getCurrentUserId();
+        liveService.join(userId, livedId);
         LiveTokenDto liveTokenDto = new LiveTokenDto();
         liveTokenDto.setRoomDto(liveService.room(livedId));
-        liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + livedId, String.valueOf(id), RtcTokenBuilder.Role.Role_Subscriber));
-        liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(id)));
-        liveTokenDto.setUrl(liveService.getLiveUrl(livedId));
-        liveTokenDto.setUserId(id);
+        liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber));
+        liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
+        liveTokenDto.setUserId(userId);
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
-        applicationContext.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, id, livedId)));
+        applicationContext.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, userId, liveTokenDto.getRoomDto().getAnchorId())));
         return APIResultWrap.ok(liveTokenDto);
     }
 }

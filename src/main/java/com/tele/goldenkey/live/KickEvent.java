@@ -21,7 +21,7 @@ public class KickEvent extends LiveEventCls {
     }
 
     @Override
-    public LiveEventDto getLiveEventDto(Integer livedId, Integer userId, Integer terminalId) throws ServiceException {
+    public LiveEventDto getLiveEventDto(Long livedId, Integer userId, Integer terminalId) throws ServiceException {
         ValidateUtils.notNull(terminalId);
         return new LiveEventDto(livedId, userId, terminalId);
     }

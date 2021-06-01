@@ -1,5 +1,6 @@
 package com.tele.goldenkey.live;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.dao.LiveUserMapper;
@@ -11,12 +12,9 @@ import com.tele.goldenkey.dto.LiveRoomDto;
 import com.tele.goldenkey.dto.LiveTokenDto;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.service.AbstractBaseService;
-import com.tele.goldenkey.spi.live.IVSClient;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.ivs.model.CreateChannelResponse;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.Date;
@@ -24,10 +22,8 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
-    private final static String CHANNEL_KEY = "tele_tech_";
 
     private final LiveStatusesMapper liveStatusesMapper;
-    private final IVSClient ivsClient;
     private final LiveUserMapper liveUserMapper;
     private final UsersMapper usersMapper;
 
@@ -37,77 +33,54 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
 
-    public LiveTokenDto anchor(Integer livedId) throws ServiceException {
+    public LiveTokenDto anchor(Long livedId) {
         LiveTokenDto liveTokenDto = new LiveTokenDto();
-        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
-        if (StringUtils.isBlank(liveStatuses.getPushUrl())) {
-            liveStatuses = buildLiveStatus(livedId);
-            ValidateUtils.notNull(liveStatuses);
-            this.updateByPrimaryKeySelective(liveStatuses);
-        }
-        liveTokenDto.setUrl(liveStatuses.getPushUrl());
         liveTokenDto.setRoomDto(room(livedId));
         liveTokenDto.setLivedId(livedId);
-        liveTokenDto.setStreamKey(liveStatuses.getStreamKey());
-        liveTokenDto.setUserId(livedId);
+        liveTokenDto.setUserId(liveTokenDto.getRoomDto().getAnchorId());
         return liveTokenDto;
     }
 
-    public Boolean isOpen(Integer livedId) {
+    public Boolean isOpen(Long livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         return liveStatuses != null && liveStatuses.getStatus() == 1;
     }
 
-    public Boolean close(Integer livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
-        if (liveStatuses != null) {
-            ivsClient.stopStream(liveStatuses.getCode());
-        }
-        liveStatusesMapper.closeById(livedId);
-        return true;
+    public Boolean close(Long livedId) {
+        return liveStatusesMapper.closeById(livedId) > 0;
     }
 
-    public String getLiveUrl(Integer livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
-        if (liveStatuses == null || liveStatuses.getStatus() == 0) {
-            return null;
-        }
-        return liveStatuses.getLiveUrl();
-    }
-
-    public void initRoom(LiveParam liveParam, Integer livedId) {
-        liveUserMapper.deleteByLivedId(livedId);
+    public Long initRoom(Integer userId, LiveParam liveParam) {
         LiveStatuses liveStatuses = new LiveStatuses();
-        liveStatuses.setLiveId(livedId);
         liveStatuses.setType(liveParam.getType());
         liveStatuses.setTheme(liveParam.getTheme());
         liveStatuses.setStartTime(new Date());
         liveStatuses.setStatus(1);
+        liveStatuses.setFmLink(liveParam.getFmLink());
+        liveStatuses.setGoods(JSONObject.toJSONString(liveParam.getGoods()));
+        liveStatuses.setAnchorId(userId);
         liveStatuses.setLinkMai(liveParam.getLinkMai());
-        if (liveStatusesMapper.findById(livedId) == null) {
-            liveStatusesMapper.insertSelective(liveStatuses);
-        } else {
-            liveStatusesMapper.updateByPrimaryKeySelective(liveStatuses);
-        }
-        LiveUser liveUser = convertLiveUser(getUserById(livedId), livedId);
+        liveStatusesMapper.insertSelective(liveStatuses);
+        LiveUser liveUser = convertLiveUser(getUserById(userId), liveStatuses.getLiveId());
         liveUser.setMaiPower(1);
         liveUser.setMaiStatus(1);
         liveUserMapper.insertSelective(liveUser);
+        return liveStatuses.getLiveId();
     }
 
-    public Integer leave(Integer userId) throws ServiceException {
+    public Long leave(Integer userId) throws ServiceException {
         LiveUser liveUser = liveUserMapper.selectByUserId(userId);
         ValidateUtils.notNull(liveUser);
         liveUserMapper.deleteByUserId(userId);
         return liveUser.getLiveId();
     }
 
-    public void join(Integer userId, Integer livedId) {
+    public void join(Integer userId, Long livedId) {
         liveUserMapper.deleteByUserId(userId);
         liveUserMapper.insertSelective(convertLiveUser(getUserById(userId), livedId));
     }
 
-    public LiveRoomDto room(Integer livedId) {
+    public LiveRoomDto room(Long livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses == null) return null;
         LiveRoomDto liveRoomDto = new LiveRoomDto();
@@ -117,8 +90,10 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveRoomDto.setTimestamp(timestamp);
         liveRoomDto.setTheme(liveStatuses.getTheme());
         liveRoomDto.setLinkMai(liveStatuses.getLinkMai());
+        liveRoomDto.setFmLink(liveStatuses.getFmLink());
+        liveRoomDto.setGoods(JSONObject.parseArray(liveStatuses.getGoods(), LiveParam.Goods.class));
         liveRoomDto.setCount(liveUserMapper.countByLiveId(livedId));
-        liveRoomDto.setAnchorId(livedId);
+        liveRoomDto.setAnchorId(liveStatuses.getAnchorId());
         return liveRoomDto;
     }
 
@@ -126,7 +101,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return usersMapper.selectByPrimaryKey(id);
     }
 
-    private LiveUser convertLiveUser(Users users, Integer livedId) {
+    private LiveUser convertLiveUser(Users users, Long livedId) {
         LiveUser liveUser = new LiveUser();
         liveUser.setUserId(users.getId());
         liveUser.setPhone(users.getPhone());
@@ -135,18 +110,4 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUser.setPortraitUri(users.getPortraitUri());
         return liveUser;
     }
-
-    private LiveStatuses buildLiveStatus(Integer livedId) {
-        CreateChannelResponse createChannel = ivsClient.createChannel(CHANNEL_KEY + livedId);
-        if (createChannel == null) return null;
-        LiveStatuses liveStatuses = new LiveStatuses();
-        liveStatuses.setPushUrl(createChannel.channel().ingestEndpoint());
-        liveStatuses.setLiveUrl(createChannel.channel().playbackUrl());
-        liveStatuses.setCode(createChannel.channel().arn());
-        liveStatuses.setLiveId(livedId);
-        liveStatuses.setStreamKey(createChannel.streamKey().value());
-        return liveStatuses;
-    }
-
-
 }

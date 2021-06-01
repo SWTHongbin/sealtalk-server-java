@@ -37,7 +37,7 @@ public interface LiveUserMapper extends Mapper<LiveUser> {
     Integer updateSpeech(@Param("status") Integer status, @Param("userId") Integer userId);
 
     @Select(" select count(id)  from  live_user  WHERE  liveId =#{livedId} ")
-    Integer countByLiveId(@Param("livedId") Integer livedId);
+    Integer countByLiveId(@Param("livedId") Long livedId);
 
     @Select({"<script>",
             " SELECT  *  FROM live_user  ",

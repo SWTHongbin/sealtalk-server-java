@@ -2,9 +2,7 @@ package com.tele.goldenkey.domain;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,8 +11,9 @@ import java.util.Date;
 public class LiveStatuses implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "liveId")
-    private Integer liveId;
+    private Long liveId;
 
     @Column(name = "pushUrl")
     private String pushUrl;
@@ -29,6 +28,24 @@ public class LiveStatuses implements Serializable {
      * 1 开播  0未开播
      */
     private Integer status;
+
+    /**
+     * 房主id
+     */
+    @Column(name = "anchorId")
+    private Integer anchorId;
+
+    /**
+     * 封面url
+     */
+    @Column(name = "fmLink")
+    private String fmLink;
+
+    /**
+     * 商品信息
+     */
+    @Column(name = "goods")
+    private String goods;
 
     /**
      * 主题

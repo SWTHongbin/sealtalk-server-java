@@ -7,9 +7,17 @@ import lombok.Data;
 @AllArgsConstructor
 public class LiveEventDto {
 
-    private Integer livedId;
+    /**
+     * livedId
+     */
+    private Long livedId;
 
+    /**
+     * is who
+     */
     private Integer fromUserId;
-
+    /**
+     * to  who
+     */
     private Integer toTerminalId;
 }

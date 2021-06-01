@@ -12,7 +12,7 @@ public class MaiEventParam {
      */
     @ApiParam(name = "livedId", value = "房间id")
     @NonNull
-    private Integer livedId;
+    private Long livedId;
 
 
     /**

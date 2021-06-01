@@ -30,47 +30,43 @@ public class LiveSpiServiceTest {
 
         System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
         System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
-        System.out.println(liveSpiService.anchor(12233));
+        System.out.println(liveSpiService.anchor(12233L));
     }
 
     @Test
     public void isOpen() {
-        System.out.println(liveSpiService.isOpen(12233));
+        System.out.println(liveSpiService.isOpen(12233L));
     }
 
     @Test
     public void close() {
         System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
         System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
-        System.out.println(liveSpiService.close(12233));
+        System.out.println(liveSpiService.close(12233l));
     }
 
-    @Test
-    public void getLiveUrl() {
-        System.out.println(liveSpiService.getLiveUrl(8));
-    }
 
     @Test
     public void eventJoin() throws InterruptedException {
-        applicationContext.publishEvent(new LiveEvent<Void>(EventType.join, 8, 1, null));
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.join, 8L, 1, null));
         Thread.sleep(100000);
     }
 
     @Test
     public void eventLeave() throws InterruptedException {
-        applicationContext.publishEvent(new LiveEvent<Void>(EventType.leave, 8, 1, null));
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.leave, 8L, 1, null));
         Thread.sleep(100000);
     }
 
     @Test
     public void eventUpMai() throws InterruptedException {
-        applicationContext.publishEvent(new LiveEvent<Void>(EventType.up_mai, 8, 1, null));
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.up_mai, 8L, 1, null));
         Thread.sleep(100000);
     }
 
     @Test
     public void eventDownMai() throws InterruptedException {
-        applicationContext.publishEvent(new LiveEvent<Void>(EventType.down_mai, 8, 1, null));
+        applicationContext.publishEvent(new LiveEvent<Void>(EventType.down_mai, 8L, 1, null));
         Thread.sleep(100000);
     }
 }

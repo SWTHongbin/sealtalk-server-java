@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.List;
+
 @Data
 public class LiveParam {
 
@@ -28,6 +30,36 @@ public class LiveParam {
     @ApiParam(name = "linkMai", required = true, value = "是否允许连麦")
     @NonNull
     private Integer linkMai;
+
+    /**
+     * 封面url
+     */
+    private String fmLink;
+
+    /**
+     * 商品信息
+     */
+    private List<Goods> goods;
+
+    @Data
+    public static class Goods {
+
+        /**
+         * 名称
+         */
+        private String name;
+
+        /**
+         * 商品链接
+         */
+        private String goodsLink;
+
+        /**
+         * 图片地址
+         */
+        private String pictureLink;
+
+    }
 
     public LiveParam() {
     }

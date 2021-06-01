@@ -1,7 +1,10 @@
 package com.tele.goldenkey.dto;
 
+import com.tele.goldenkey.controller.param.LiveParam;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class LiveRoomDto {
@@ -25,5 +28,9 @@ public class LiveRoomDto {
     private Integer anchorId;
 
     private Boolean isOpen;
+
+    private String fmLink;
+
+    private List<LiveParam.Goods> goods;
 
 }

@@ -15,17 +15,17 @@ public class LiveStatusesMapperTest {
 
     @Test
     void findByLivedId() {
-        System.out.println(JSON.toJSONString(liveStatusesMapper.findById(12233)));
+        System.out.println(JSON.toJSONString(liveStatusesMapper.findById(12233L)));
     }
 
     @Test
     void closeByLivedId() {
-        System.out.println(liveStatusesMapper.closeById(12233));
+        System.out.println(liveStatusesMapper.closeById(12233L));
     }
 
     @Test
     void openByLivedId() {
-        System.out.println(liveStatusesMapper.openById(12233));
+        System.out.println(liveStatusesMapper.openById(12233L));
     }
 
     @Test

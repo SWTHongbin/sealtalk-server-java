@@ -19,7 +19,7 @@ class LiveUserServiceTest {
     @Test
     void getUsers() {
         LiveUserParam param = new LiveUserParam();
-        param.setLivedId(8);
+        param.setLivedId(8L);
         param.setMaiStatus(1);
         System.out.println(JSON.toJSONString(userService.getUsers(param)));
     }

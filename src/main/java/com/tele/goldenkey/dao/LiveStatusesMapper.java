@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface LiveStatusesMapper extends Mapper<LiveStatuses> {
 
-    LiveStatuses findById(@Param("livedId") Integer livedId);
+    LiveStatuses findById(@Param("livedId") Long livedId);
 
-    Integer closeById(@Param("livedId") Integer livedId);
+    Integer closeById(@Param("livedId") Long livedId);
 
-    Integer openById(@Param("livedId") Integer livedId);
+    Integer openById(@Param("livedId") Long livedId);
 
     List<LiveStatuses> noLongerUsed();
 }
