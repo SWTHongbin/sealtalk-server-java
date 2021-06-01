@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 群组相关
@@ -137,7 +134,7 @@ public class GroupController extends BaseController {
         ValidateUtils.notEmpty(memberIds);
 
         Integer currentUserId = getCurrentUserId();
-        groupManager.kickMember(currentUserId, N3d.decode(groupId), groupId, MiscUtils.decodeIds(memberIds), memberIds);
+        groupManager.kickMember(currentUserId, N3d.decode(groupId), groupId, Objects.requireNonNull(MiscUtils.decodeIds(memberIds)), memberIds);
 
         return APIResultWrap.ok();
     }
@@ -579,7 +576,7 @@ public class GroupController extends BaseController {
      * @throws ServiceException
      */
     @RequestMapping(value = "/clear_notice", method = RequestMethod.POST)
-    public APIResult<Object> clearNotice() throws ServiceException {
+    public APIResult<Object> clearNotice() {
 
         Integer currentUserId = getCurrentUserId();
 
@@ -719,7 +716,7 @@ public class GroupController extends BaseController {
             resultMap.put("phone", groupMembers.getPhone());
             resultMap.put("WeChat", groupMembers.getWeChat());
             resultMap.put("Alipay", groupMembers.getAlipay());
-            if (groupMembers != null && groupMembers.getMemberDesc() != null) {
+            if (groupMembers.getMemberDesc() != null) {
                 //memberDesc 特殊处理
                 resultMap.put("memberDesc", JacksonUtil.getJsonNode(groupMembers.getMemberDesc()));
             } else {

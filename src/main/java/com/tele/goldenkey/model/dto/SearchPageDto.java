@@ -1,5 +1,7 @@
 package com.tele.goldenkey.model.dto;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -10,27 +12,32 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchPageDto {
     /**
-     * 页码
+     * 页码 从1开始
      */
-    private Long pageNo = 1L;
+    private Integer pageNo = 1;
     /**
      * 每页大小
      */
-    private Long pageSize = 20L;
+    private Integer pageSize = 20;
 
-    public Long getPageNo() {
+
+    public Integer getPageNo() {
         return pageNo;
     }
 
-    public void setPageNo(Long pageNo) {
+    public void setPageNo(Integer pageNo) {
         this.pageNo = pageNo;
     }
 
-    public Long getPageSize() {
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(Long pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public <E> Page<E> startPage() {
+        return PageHelper.startPage(this.getPageNo(), this.getPageSize());
     }
 }

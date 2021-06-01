@@ -14,6 +14,7 @@ import com.tele.goldenkey.live.LiveEventFactory;
 import com.tele.goldenkey.live.LiveService;
 import com.tele.goldenkey.live.LiveUserService;
 import com.tele.goldenkey.model.dto.MyLiveDto;
+import com.tele.goldenkey.model.dto.PageDto;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
@@ -49,11 +50,8 @@ public class LiveController extends BaseController {
      * @return
      */
     @GetMapping("my-list")
-    public APIResult<Void> myList(MyLiveDto myLiveDto) {
-        Integer userId = getCurrentUserId();
-        myLiveDto.setUserId(userId);
-        liveService.userLiveList(myLiveDto);
-        return null;
+    public APIResult<PageDto<MyLiveDto.Resp>> myList(MyLiveDto.Rep rep) throws ServiceException {
+        return APIResultWrap.ok(liveService.userLiveList(rep, getCurrentUserId()));
     }
 
     /**

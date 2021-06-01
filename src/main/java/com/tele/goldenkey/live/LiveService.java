@@ -1,17 +1,21 @@
 package com.tele.goldenkey.live;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
 import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.dao.LiveUserMapper;
 import com.tele.goldenkey.dao.UsersMapper;
+import com.tele.goldenkey.domain.Friendships;
 import com.tele.goldenkey.domain.LiveStatuses;
 import com.tele.goldenkey.domain.LiveUser;
 import com.tele.goldenkey.domain.Users;
 import com.tele.goldenkey.dto.LiveRoomDto;
 import com.tele.goldenkey.dto.LiveTokenDto;
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.manager.FriendShipManager;
 import com.tele.goldenkey.model.dto.MyLiveDto;
+import com.tele.goldenkey.model.dto.PageDto;
 import com.tele.goldenkey.service.AbstractBaseService;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,9 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.Date;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +33,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
 
     private final LiveStatusesMapper liveStatusesMapper;
     private final LiveUserMapper liveUserMapper;
+    private final FriendShipManager friendShipManager;
     private final UsersMapper usersMapper;
 
     @Override
@@ -33,7 +41,14 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper;
     }
 
-    public void userLiveList(MyLiveDto myLiveDto) {
+    public PageDto<MyLiveDto.Resp> userLiveList(MyLiveDto.Rep rep, Integer userId) throws ServiceException {
+        List<Friendships> friendList = friendShipManager.getFriendList(userId);
+        List<Integer> userIds = friendList.stream().map(Friendships::getUserId).collect(toList());
+        userIds.add(userId);
+        rep.setUserId(userIds);
+        Page<Object> page = rep.startPage();
+        List<MyLiveDto.Resp> resp = liveUserMapper.userLive(rep);
+        return new PageDto<>(resp, page);
     }
 
     public LiveTokenDto anchor(Long livedId) {

@@ -2,10 +2,8 @@ package com.tele.goldenkey.dao;
 
 import com.tele.goldenkey.controller.param.LiveUserParam;
 import com.tele.goldenkey.domain.LiveUser;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import com.tele.goldenkey.model.dto.MyLiveDto;
+import org.apache.ibatis.annotations.*;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
@@ -55,4 +53,24 @@ public interface LiveUserMapper extends Mapper<LiveUser> {
             " ORDER BY createdAt asc ",
             "</script>"})
     List<LiveUser> selectByUserParam(@Param("param") LiveUserParam param);
+
+    @Select({" <script> ",
+            " SELECT ls.liveId,ls.theme,ls.fmLink,lu.userId,lu.portraitUri,lu.`name`  ",
+            " FROM ",
+            " live_statuses ls,live_user lu WHERE ls.liveId = lu.liveId ",
+            " AND ls.anchorId in ",
+            " <foreach item=\"item\" index=\"index\" collection=\"rep.userId\"",
+            "      open=\"(\" separator=\",\" close=\")\">",
+            "        #{item}",
+            "  </foreach>",
+            "<if test=\"rep.type != null\">",
+            " AND ls.type = #{rep.type}",
+            "</if>",
+            "<if test=\"rep.status != null\">",
+            " AND ls.`status` = #{rep.status}",
+            "</if>",
+            " ORDER BY ls.createdAt DESC ",
+            " </script>"})
+    @ResultType(MyLiveDto.Resp.class)
+    List<MyLiveDto.Resp> userLive(@Param("rep") MyLiveDto.Rep rep);
 }
