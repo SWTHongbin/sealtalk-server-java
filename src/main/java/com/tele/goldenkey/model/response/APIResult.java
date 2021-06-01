@@ -1,7 +1,6 @@
 package com.tele.goldenkey.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -13,10 +12,14 @@ import lombok.Data;
 @Data
 public class APIResult<T> {
 
-    @ApiModelProperty("返回码")
+    /**
+     * 返回码
+     */
     protected Integer code;
 
-    @ApiModelProperty("返回码信息")
+    /**
+     * 返回码信息
+     */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String message;
 
