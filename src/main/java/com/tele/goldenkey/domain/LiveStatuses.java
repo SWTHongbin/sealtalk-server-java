@@ -54,6 +54,8 @@ public class LiveStatuses implements Serializable {
 
     /**
      * 直播方式
+     *
+     * @see com.tele.goldenkey.enums.SkuType
      */
     private Integer type;
 

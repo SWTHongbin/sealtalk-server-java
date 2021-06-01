@@ -16,7 +16,8 @@ public class LiveParam {
 
     /**
      * 直播方式
-     * 1： 语音 2：视频
+     *
+     * @see com.tele.goldenkey.enums.SkuType
      */
     @NonNull
     private Integer type;
