@@ -50,6 +50,9 @@ public class LiveController extends BaseController {
      */
     @GetMapping("my-list")
     public APIResult<Void> myList(MyLiveDto myLiveDto) {
+        Integer userId = getCurrentUserId();
+        myLiveDto.setUserId(userId);
+        liveService.userLiveList(myLiveDto);
         return null;
     }
 

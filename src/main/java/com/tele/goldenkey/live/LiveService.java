@@ -11,6 +11,7 @@ import com.tele.goldenkey.domain.Users;
 import com.tele.goldenkey.dto.LiveRoomDto;
 import com.tele.goldenkey.dto.LiveTokenDto;
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.model.dto.MyLiveDto;
 import com.tele.goldenkey.service.AbstractBaseService;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,8 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper;
     }
 
+    public void userLiveList(MyLiveDto myLiveDto) {
+    }
 
     public LiveTokenDto anchor(Long livedId) {
         LiveTokenDto liveTokenDto = new LiveTokenDto();
@@ -110,4 +113,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUser.setPortraitUri(users.getPortraitUri());
         return liveUser;
     }
+
+
 }

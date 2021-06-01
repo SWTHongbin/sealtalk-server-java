@@ -8,4 +8,8 @@ import lombok.Data;
  */
 @Data
 public class MyLiveDto extends SearchPageDto {
+
+    private Integer type;
+
+    private Integer userId;
 }
