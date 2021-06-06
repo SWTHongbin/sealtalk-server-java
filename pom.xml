@@ -209,6 +209,11 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.73</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>7.0.1.Final</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
