@@ -21,13 +21,13 @@ public class UserPricePackage implements Serializable {
 
 
     /**
-     * 音频剩余
+     * 音频剩余   单位秒
      */
     @Column(name = "audioBalance")
     private BigDecimal audioBalance;
 
     /**
-     * 视频剩余
+     * 视频剩余   单位秒
      */
     @Column(name = "videoBalance")
     private BigDecimal videoBalance;

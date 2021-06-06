@@ -1,14 +1,17 @@
 package com.tele.goldenkey.controller;
 
 import com.tele.goldenkey.controller.param.OptionPriceDto;
-import com.tele.goldenkey.dto.PricePackageDto;
+import com.tele.goldenkey.domain.UserPricePackage;
 import com.tele.goldenkey.enums.SkuType;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
+import com.tele.goldenkey.service.PricePackageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 /**
  * 套餐价格组件
@@ -18,17 +21,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PricePackageController extends BaseController {
 
+    private final PricePackageService pricePackageService;
+
     /**
      * 充值
      *
      * @param code     1音频 ;2视频
      * @param priceDto
-     * @return
+     * @return 剩余  单位秒
      */
     @PostMapping("recharge/{code}")
-    public APIResult<Void> recharge(@PathVariable Integer code, @RequestBody @Validated OptionPriceDto priceDto) throws ServiceException {
+    public APIResult<BigDecimal> recharge(@PathVariable Integer code, @RequestBody @Validated OptionPriceDto priceDto) throws ServiceException {
         SkuType sku = SkuType.byCodeOf(code);
-        return APIResultWrap.ok();
+        return APIResultWrap.ok(pricePackageService.recharge(sku, getCurrentUserId(), priceDto.getSecond()));
     }
 
     /**
@@ -36,12 +41,12 @@ public class PricePackageController extends BaseController {
      *
      * @param code     1音频 ;2视频
      * @param priceDto
-     * @return
+     * @return 剩余  单位秒
      */
     @PostMapping("deduct/{code}")
-    public APIResult<PricePackageDto> deduct(@PathVariable Integer code, @RequestBody @Validated OptionPriceDto priceDto) throws ServiceException {
+    public APIResult<BigDecimal> deduct(@PathVariable Integer code, @RequestBody @Validated OptionPriceDto priceDto) throws ServiceException {
         SkuType sku = SkuType.byCodeOf(code);
-        return APIResultWrap.ok(PricePackageDto.getInstance());
+        return APIResultWrap.ok(pricePackageService.deduct(sku, getCurrentUserId(), priceDto.getSecond()));
     }
 
     /**
@@ -50,7 +55,7 @@ public class PricePackageController extends BaseController {
      * @return
      */
     @GetMapping("balance")
-    public APIResult<PricePackageDto> balance() {
-        return APIResultWrap.ok(PricePackageDto.getInstance());
+    public APIResult<UserPricePackage> balance() {
+        return APIResultWrap.ok(pricePackageService.getPricePackage(getCurrentUserId()));
     }
 }

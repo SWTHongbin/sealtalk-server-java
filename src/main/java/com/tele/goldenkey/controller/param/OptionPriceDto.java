@@ -3,12 +3,14 @@ package com.tele.goldenkey.controller.param;
 import com.sun.istack.internal.NotNull;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 
 @Data
 public class OptionPriceDto {
     /**
-     * 秒数
+     * 数值  单位秒
      */
     @NotNull
-    private Long second;
+    private BigDecimal second;
 }
