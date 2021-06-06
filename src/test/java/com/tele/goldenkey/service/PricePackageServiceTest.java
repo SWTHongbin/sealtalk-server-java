@@ -27,5 +27,6 @@ class PricePackageServiceTest {
 
     @Test
     void getPricePackage() {
+        System.out.println(pricePackageService.getPricePackage(123));
     }
 }

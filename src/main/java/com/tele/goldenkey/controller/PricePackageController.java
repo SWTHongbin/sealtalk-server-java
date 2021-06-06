@@ -32,8 +32,7 @@ public class PricePackageController extends BaseController {
      */
     @PostMapping("recharge/{code}")
     public APIResult<BigDecimal> recharge(@PathVariable Integer code, @RequestBody @Validated OptionPriceDto priceDto) throws ServiceException {
-        SkuType sku = SkuType.byCodeOf(code);
-        return APIResultWrap.ok(pricePackageService.recharge(sku, getCurrentUserId(), priceDto.getSecond()));
+        return APIResultWrap.ok(pricePackageService.recharge(SkuType.byCodeOf(code), getCurrentUserId(), priceDto.getSecond()));
     }
 
     /**
@@ -45,8 +44,7 @@ public class PricePackageController extends BaseController {
      */
     @PostMapping("deduct/{code}")
     public APIResult<BigDecimal> deduct(@PathVariable Integer code, @RequestBody @Validated OptionPriceDto priceDto) throws ServiceException {
-        SkuType sku = SkuType.byCodeOf(code);
-        return APIResultWrap.ok(pricePackageService.deduct(sku, getCurrentUserId(), priceDto.getSecond()));
+        return APIResultWrap.ok(pricePackageService.deduct(SkuType.byCodeOf(code), getCurrentUserId(), priceDto.getSecond()));
     }
 
     /**
