@@ -1,6 +1,7 @@
 package com.tele.goldenkey.service;
 
 import com.tele.goldenkey.enums.SkuType;
+import com.tele.goldenkey.exception.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,12 @@ class PricePackageServiceTest {
     private PricePackageService pricePackageService;
 
     @Test
-    void recharge() {
+    void recharge() throws ServiceException {
         System.out.println(pricePackageService.recharge(SkuType.audio, 123, BigDecimal.valueOf(1000 * 50 * 100)));
     }
 
     @Test
-    void deduct() {
+    void deduct() throws ServiceException {
         System.out.println(pricePackageService.deduct(SkuType.audio, 123, BigDecimal.valueOf(1000 * 50 * 100)));
     }
 

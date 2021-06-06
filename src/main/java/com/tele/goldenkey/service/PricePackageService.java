@@ -3,6 +3,8 @@ package com.tele.goldenkey.service;
 import com.tele.goldenkey.dao.UserPricePackageMapper;
 import com.tele.goldenkey.domain.UserPricePackage;
 import com.tele.goldenkey.enums.SkuType;
+import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
@@ -16,19 +18,19 @@ public class PricePackageService extends AbstractBaseService<UserPricePackage, L
 
     private final UserPricePackageMapper pricePackageMapper;
 
-    public BigDecimal recharge(SkuType sku, Integer userId, BigDecimal second) {
+    public BigDecimal recharge(SkuType sku, Integer userId, BigDecimal second) throws ServiceException {
         UserPricePackage pricePackage = getPricePackage(userId);
         if (pricePackage == null) {
             createPricePackage(sku, userId, second);
             return second;
         }
-        optionBalance(sku, userId, second);
+        ValidateUtils.isTrue(optionBalance(sku, userId, second) > 0);
         return getBalance(sku, pricePackage);
     }
 
 
-    public BigDecimal deduct(SkuType sku, Integer userId, BigDecimal second) {
-        optionBalance(sku, userId, second.negate());
+    public BigDecimal deduct(SkuType sku, Integer userId, BigDecimal second) throws ServiceException {
+        ValidateUtils.isTrue(optionBalance(sku, userId, second.negate()) > 0);
         return getBalance(sku, getPricePackage(userId));
     }
 
@@ -64,13 +66,13 @@ public class PricePackageService extends AbstractBaseService<UserPricePackage, L
         this.saveSelective(pricePackage);
     }
 
-    private void optionBalance(SkuType sku, Integer userId, BigDecimal second) {
+    private Integer optionBalance(SkuType sku, Integer userId, BigDecimal second) {
         switch (sku) {
             case video:
-                pricePackageMapper.optionVideoBalance(userId, second);
-                return;
+                return pricePackageMapper.optionVideoBalance(userId, second);
             case audio:
-                pricePackageMapper.optionAudioBalance(userId, second);
+                return pricePackageMapper.optionAudioBalance(userId, second);
         }
+        return 0;
     }
 }

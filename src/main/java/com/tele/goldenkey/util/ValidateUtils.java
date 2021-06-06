@@ -53,6 +53,12 @@ public class ValidateUtils {
         }
     }
 
+    public static void isTrue(boolean flag) throws ServiceException {
+        if (!flag) {
+            throw new ServiceException(ErrorCode.PARAM_ERROR);
+        }
+    }
+
     public static void notEmpty(String str) throws ServiceException {
         if (str == null || StringUtils.isEmpty(str.trim())) {
             throw new ServiceException(ErrorCode.PARAM_ERROR);
