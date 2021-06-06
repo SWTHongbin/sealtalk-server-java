@@ -196,4 +196,16 @@ public class LiveController extends BaseController {
         applicationContext.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, userId, liveTokenDto.getRoomDto().getAnchorId())));
         return APIResultWrap.ok(liveTokenDto);
     }
+
+    /**
+     * 回放
+     *
+     * @param livedId 房间id
+     * @return
+     */
+    @PostMapping(value = "/playback/{livedId}")
+    public APIResult<String> playback(@PathVariable("livedId") Long livedId) {
+        //todo
+        return APIResultWrap.ok("");
+    }
 }
