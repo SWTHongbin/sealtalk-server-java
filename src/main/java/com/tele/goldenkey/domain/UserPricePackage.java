@@ -8,27 +8,29 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@Table(name = "sku")
-public class Sku implements Serializable {
+@Table(name = "user_price_package")
+public class UserPricePackage implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    
+
     @Column(name = "userId")
     private Integer userId;
 
 
     /**
-     * sku 类型
+     * 音频剩余
      */
-    private Integer type;
+    @Column(name = "audioBalance")
+    private BigDecimal audioBalance;
 
     /**
-     * 剩余套餐
+     * 视频剩余
      */
-    private BigDecimal surplus;
+    @Column(name = "videoBalance")
+    private BigDecimal videoBalance;
 
 
     @Column(name = "createdAt")
