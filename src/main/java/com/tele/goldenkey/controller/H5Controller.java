@@ -17,8 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- * @author lihongbin
- * @date 2021年04月20日 23:32
+ * h5组件
  */
 @CrossOrigin("*")
 @RestController
