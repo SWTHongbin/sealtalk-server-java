@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,6 +28,16 @@ public class RtmTokenBuilderSample {
     private final static String USER_ID = "825034474290024448";
     private final static String CHANNEL_REQUEST_URL = "https://api.agora.io/dev/v2/project/" + APP_ID + "/rtm/users/%s/channel_messages";
     private final static String TERMINAL_REQUEST_URL = "https://api.agora.io/dev/v2/project/" + APP_ID + "/rtm/users/%s/peer_messages";
+
+    private final static String customerKey = "5ab722dae54544eebb2bda85d7f79015";
+    private final static String customerSecret = "6829377f70a245ea96fa4436f88c6a0f";
+    public final static String BASE_AUTHORIZATION;
+
+    static {
+        String plainCredentials = customerKey + ":" + customerSecret;
+        String base64Credentials = new String(Base64.getEncoder().encode(plainCredentials.getBytes()));
+        BASE_AUTHORIZATION = "Basic " + base64Credentials;
+    }
 
 
     /**
