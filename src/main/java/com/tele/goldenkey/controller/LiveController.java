@@ -73,6 +73,26 @@ public class LiveController extends BaseController {
     }
 
     /**
+     * 主播开始录取直播
+     *
+     * @return
+     */
+    @PostMapping(value = "start/recorde")
+    public APIResult<Boolean> startRecorde() {
+        return APIResultWrap.ok(liveService.startRecorde(getCurrentUserId()));
+    }
+
+    /**
+     * 主播关闭录取直播
+     *
+     * @return
+     */
+    @PostMapping(value = "stop/recorde")
+    public APIResult<Boolean> stopRecorde() {
+        return APIResultWrap.ok(liveService.stopRecorde(getCurrentUserId()));
+    }
+
+    /**
      * 是否开播
      *
      * @param livedId 直播id

@@ -98,6 +98,14 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUserMapper.insertSelective(convertLiveUser(getUserById(userId), livedId));
     }
 
+    public Boolean startRecorde(Integer userId) {
+        return true;
+    }
+
+    public Boolean stopRecorde(Integer userId) {
+        return true;
+    }
+
     public LiveRoomDto room(Long livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses == null) return null;
@@ -128,6 +136,5 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUser.setPortraitUri(users.getPortraitUri());
         return liveUser;
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.tele.goldenkey.spi.agora;
 
+import com.tele.goldenkey.exception.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,14 @@ class AgoraRecordingServiceTest {
     }
 
     @Test
-    void startRecording() {
-        service.startRecording("1511", "15");
+    void startRecording() throws ServiceException {
+        System.out.println(service.startRecording("1511", "15"));
     }
+
+    @Test
+    void stopRecording() throws ServiceException {
+        System.out.println(service.stopRecording("1511", "15"));
+    }
+
+
 }

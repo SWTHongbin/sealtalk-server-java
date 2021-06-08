@@ -1,13 +1,14 @@
 package com.tele.goldenkey.spi.agora;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
-import lombok.AllArgsConstructor;
+import com.tele.goldenkey.util.ValidateUtils;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RBucket;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.http.HttpEntity;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
@@ -45,29 +47,30 @@ public class AgoraRecordingService {
      * @param uId
      * @return
      */
-    public String startRecording(String liveId, String uId) {
+    public Boolean startRecording(String liveId, String uId) throws ServiceException {
+        liveId = CNAME_PREFIX.concat(liveId);
         String resourceId = getResourceId(liveId, uId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json;charset=utf-8");
-        headers.set("Authorization", RtmTokenBuilderSample.BASE_AUTHORIZATION);
+        ValidateUtils.notNull(resourceId);
         String token = RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + uId, uId, RtcTokenBuilder.Role.Role_Publisher);
-        RecordeDto recordeDto = new RecordeDto(CNAME_PREFIX.concat(liveId), uId, new RecordeClient(token));
-        log.info("======{}", JSON.toJSONString(recordeDto));
-        HttpEntity<Object> httpEntity = new HttpEntity<>(recordeDto, headers);
-        String body = restTemplate.exchange(String.format(START_CLOUD_RECORDING_URL, resourceId), HttpMethod.POST, httpEntity, String.class).getBody();
-        JSONObject json = JSONObject.parseObject(body);
-        return json.getString("resourceId");
+        HttpEntity<Object> httpEntity = new HttpEntity<>(initStartRecordParam(liveId, uId, token), getHttpBaseHeader());
+        String url = String.format(START_CLOUD_RECORDING_URL, resourceId);
+        String body = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
+        RecordDto recordDto = JSONObject.parseObject(body, RecordDto.class);
+        ValidateUtils.isTrue(recordDto != null && StringUtils.isNotEmpty(recordDto.getSid()));
+        redissonClient.getBucket("recording_" + liveId).set(recordDto, 2, TimeUnit.DAYS);
+        return true;
     }
 
-    public String stopRecording(String liveId, String uId, String sid) {
-        String resourceId = getResourceId(liveId, uId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json;charset=utf-8");
-        headers.set("Authorization", RtmTokenBuilderSample.BASE_AUTHORIZATION);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(null, headers);
-        String body = restTemplate.exchange(String.format(STOP_CLOUD_RECORDING_URL, resourceId, sid), HttpMethod.POST, httpEntity, String.class).getBody();
-        JSONObject json = JSONObject.parseObject(body);
-        return json.getString("resourceId");
+
+    public String stopRecording(String liveId, String uId) throws ServiceException {
+        liveId = CNAME_PREFIX.concat(liveId);
+        RBucket<RecordDto> bucket = redissonClient.getBucket("recording_" + liveId);
+        ValidateUtils.isTrue(bucket.isExists());
+        RecordDto recordDto = bucket.get();
+        //  bucket.deleteAsync();
+        HttpEntity<Object> httpEntity = new HttpEntity<>(JSONObject.toJSONString(new Acquire(liveId, uId)), getHttpBaseHeader());
+        String url = String.format(STOP_CLOUD_RECORDING_URL, recordDto.getResourceId(), recordDto.getSid());
+        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
     }
 
     private String getResourceId(String liveId, String uId) {
@@ -75,15 +78,27 @@ public class AgoraRecordingService {
         String key = liveId.concat(uId), resourceId = rMapCache.get(key);
         if (StringUtils.isNotEmpty(resourceId)) return resourceId;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json;charset=utf-8");
-        headers.set("Authorization", RtmTokenBuilderSample.BASE_AUTHORIZATION);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(new Acquire(CNAME_PREFIX.concat(liveId), uId), headers);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(new Acquire(liveId, uId), getHttpBaseHeader());
         String body = restTemplate.exchange(GET_RESOURCE_URL, HttpMethod.POST, httpEntity, String.class).getBody();
         JSONObject json = JSONObject.parseObject(body);
         resourceId = json.getString("resourceId");
-        rMapCache.put(key, resourceId, 4, TimeUnit.MINUTES);
+        rMapCache.putAsync(key, resourceId, 4, TimeUnit.MINUTES);
         return resourceId;
+    }
+
+    private HttpHeaders getHttpBaseHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json;charset=utf-8");
+        headers.set("Authorization", RtmTokenBuilderSample.BASE_AUTHORIZATION);
+        return headers;
+    }
+
+    @Data
+    private static class RecordDto implements Serializable {
+
+        private String resourceId;
+
+        private String sid;
     }
 
     @Data
@@ -102,55 +117,27 @@ public class AgoraRecordingService {
 
         @Data
         public static class Request {
-            private Integer resourceExpiredHour = 24;
         }
     }
 
-    @Data
-    @AllArgsConstructor
-    private static class RecordeDto {
-
-        private String cname;
-
-        private String uid;
-
-        private RecordeClient clientRequest;
-
-    }
-
-    @Data
-    private static class RecordeClient {
-        public RecordeClient(String token) {
-            this.token = token;
-        }
-
-        private String token;
-
-        private RecordeConfig recordingConfig = new RecordeConfig();
-
-        private StorageDto storageConfig = new StorageDto();
-    }
-
-    @Data
-    private static class RecordeConfig {
-
-        private String streamTypes = "2";
-    }
-
-
-    @Data
-    private static class StorageDto {
-
-        private String accessKey = "IDWmE1z9uVy0Svg8PyrW9w8ebshSTzMU40QXIdVk";
-
-        private String region = "3";
-
-        private String bucket = "tele-live";
-
-        private String secretKey = "-sBKxJdD-t1jq7qEtZdfX2pbvLOfnvORJ5MQXJGl";
-
-        private String vendor = "0";
-
-        private String[] fileNamePrefix = new String[]{"agora", "recorde"};
+    private String initStartRecordParam(String liveId, String uId, String token) {
+        return "{" +
+                "    \"uid\": \"" + uId + "\"," +
+                "    \"cname\": \"" + liveId + "\"," +
+                "    \"clientRequest\": {" +
+                "        \"token\": \"" + token + "\"," +
+                "        \"recordingConfig\": {" +
+                "            \"streamTypes\": 2" +
+                "       }, " +
+                "        \"storageConfig\": {" +
+                "            \"accessKey\": \"IDWmE1z9uVy0Svg8PyrW9w8ebshSTzMU40QXIdVk\"," +
+                "            \"region\": 3," +
+                "            \"bucket\": \"tele-live\"," +
+                "            \"secretKey\": \"-sBKxJdD-t1jq7qEtZdfX2pbvLOfnvORJ5MQXJGl\"," +
+                "            \"vendor\": 0," +
+                "            \"fileNamePrefix\": [\"agora\",\"recorde\"]" +
+                "       }" +
+                "   }" +
+                "}";
     }
 }
