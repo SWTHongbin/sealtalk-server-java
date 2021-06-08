@@ -42,13 +42,6 @@ public class AgoraRecordingService {
     private final RedissonClient redissonClient;
 
 
-    /**
-     * 开始录屏
-     *
-     * @param liveId
-     * @param uId
-     * @return
-     */
     public Boolean startRecording(String liveId, String uId) throws ServiceException {
         liveId = CNAME_PREFIX.concat(liveId);
         String resourceId = getResourceId(liveId, uId);
@@ -57,6 +50,7 @@ public class AgoraRecordingService {
         HttpEntity<Object> httpEntity = new HttpEntity<>(initStartRecordParam(liveId, uId, token), getHttpBaseHeader());
         String url = String.format(START_CLOUD_RECORDING_URL, resourceId);
         String body = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
+        log.info(" liveId:{},uId:{}-start recording  result:{}", liveId, uId, body);
         RecordDto recordDto = JSONObject.parseObject(body, RecordDto.class);
         ValidateUtils.isTrue(recordDto != null && StringUtils.isNotEmpty(recordDto.getSid()));
         redissonClient.getBucket("recording_" + liveId).set(recordDto, 2, TimeUnit.DAYS);
@@ -69,7 +63,8 @@ public class AgoraRecordingService {
         RBucket<RecordDto> bucket = redissonClient.getBucket("recording_" + liveId);
         ValidateUtils.isTrue(bucket.isExists());
         RecordDto recordDto = bucket.get();
-          bucket.deleteAsync();
+        bucket.deleteAsync();
+        log.info(" liveId:{},uId:{}-stop recordeDto :{}", liveId, uId, recordDto);
         HttpEntity<Acquire> httpEntity = new HttpEntity<>(new Acquire(liveId, uId, new Acquire.Request()), getHttpBaseHeader());
         String url = String.format(STOP_CLOUD_RECORDING_URL, recordDto.getResourceId(), recordDto.getSid());
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
