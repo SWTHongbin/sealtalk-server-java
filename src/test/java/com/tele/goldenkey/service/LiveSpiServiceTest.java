@@ -45,11 +45,21 @@ public class LiveSpiServiceTest {
         System.out.println(liveSpiService.close(12233l));
     }
 
+    @Test
+    void startRecorde() throws ServiceException {
+        liveSpiService.startRecorde(5);
+    }
+
+    @Test
+    void stopRecorde() throws ServiceException {
+        liveSpiService.stopRecorde(5);
+    }
 
     @Test
     public void eventJoin() throws InterruptedException {
         applicationContext.publishEvent(new LiveEvent<Void>(EventType.join, 8L, 1, null));
         Thread.sleep(100000);
+
     }
 
     @Test

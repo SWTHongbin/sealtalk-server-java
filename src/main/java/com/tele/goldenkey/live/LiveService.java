@@ -17,6 +17,7 @@ import com.tele.goldenkey.manager.FriendShipManager;
 import com.tele.goldenkey.model.dto.MyLiveDto;
 import com.tele.goldenkey.model.dto.PageDto;
 import com.tele.goldenkey.service.AbstractBaseService;
+import com.tele.goldenkey.spi.agora.AgoraRecordingService;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     private final LiveUserMapper liveUserMapper;
     private final FriendShipManager friendShipManager;
     private final UsersMapper usersMapper;
+    private final AgoraRecordingService agoraRecordingService;
 
     @Override
     protected Mapper<LiveStatuses> getMapper() {
@@ -98,11 +100,16 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUserMapper.insertSelective(convertLiveUser(getUserById(userId), livedId));
     }
 
-    public Boolean startRecorde(Integer userId) {
-        return true;
+    public Boolean startRecorde(Integer userId) throws ServiceException {
+        LiveStatuses onlineLive = liveStatusesMapper.findOnlineByAnchorId(userId);
+        ValidateUtils.notNull(onlineLive);
+        return agoraRecordingService.startRecording(String.valueOf(onlineLive.getLiveId()), String.valueOf(userId));
     }
 
-    public Boolean stopRecorde(Integer userId) {
+    public Boolean stopRecorde(Integer userId) throws ServiceException {
+        LiveStatuses onlineLive = liveStatusesMapper.findOnlineByAnchorId(userId);
+        ValidateUtils.notNull(onlineLive);
+        agoraRecordingService.stopRecording(String.valueOf(onlineLive.getLiveId()), String.valueOf(userId));
         return true;
     }
 

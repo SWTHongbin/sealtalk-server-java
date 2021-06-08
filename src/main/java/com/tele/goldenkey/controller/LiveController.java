@@ -78,7 +78,7 @@ public class LiveController extends BaseController {
      * @return
      */
     @PostMapping(value = "start/recorde")
-    public APIResult<Boolean> startRecorde() {
+    public APIResult<Boolean> startRecorde() throws ServiceException {
         return APIResultWrap.ok(liveService.startRecorde(getCurrentUserId()));
     }
 
@@ -88,7 +88,7 @@ public class LiveController extends BaseController {
      * @return
      */
     @PostMapping(value = "stop/recorde")
-    public APIResult<Boolean> stopRecorde() {
+    public APIResult<Boolean> stopRecorde() throws ServiceException {
         return APIResultWrap.ok(liveService.stopRecorde(getCurrentUserId()));
     }
 

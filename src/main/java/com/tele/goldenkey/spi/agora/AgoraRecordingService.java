@@ -67,7 +67,7 @@ public class AgoraRecordingService {
         RBucket<RecordDto> bucket = redissonClient.getBucket("recording_" + liveId);
         ValidateUtils.isTrue(bucket.isExists());
         RecordDto recordDto = bucket.get();
-        //  bucket.deleteAsync();
+        bucket.deleteAsync();
         HttpEntity<Object> httpEntity = new HttpEntity<>(JSONObject.toJSONString(new Acquire(liveId, uId)), getHttpBaseHeader());
         String url = String.format(STOP_CLOUD_RECORDING_URL, recordDto.getResourceId(), recordDto.getSid());
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
