@@ -1,6 +1,9 @@
 package com.tele.goldenkey.spi.agora;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,8 +32,6 @@ public class AgoraRecordingService {
     private final static String STOP_CLOUD_RECORDING_URL = "https://api.agora.io/v1/apps/a75d7dfc56454049aa425f39b085db94/cloud_recording/resourceid/%s/sid/%s/mode/mix/stop";
 
     private final static String CNAME_PREFIX = "tele_";
-
-    private final static StorageDto static_storageDto = new StorageDto();
 
     private final RestTemplate restTemplate;
 
@@ -47,19 +50,22 @@ public class AgoraRecordingService {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json;charset=utf-8");
         headers.set("Authorization", RtmTokenBuilderSample.BASE_AUTHORIZATION);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(new Acquire(CNAME_PREFIX.concat(liveId), uId), headers);
+        String token = RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + uId, uId, RtcTokenBuilder.Role.Role_Publisher);
+        RecordeDto recordeDto = new RecordeDto(CNAME_PREFIX.concat(liveId), uId, new RecordeClient(token));
+        log.info("======{}", JSON.toJSONString(recordeDto));
+        HttpEntity<Object> httpEntity = new HttpEntity<>(recordeDto, headers);
         String body = restTemplate.exchange(String.format(START_CLOUD_RECORDING_URL, resourceId), HttpMethod.POST, httpEntity, String.class).getBody();
         JSONObject json = JSONObject.parseObject(body);
         return json.getString("resourceId");
     }
 
-    public String stopRecording(String liveId, String uId) {
+    public String stopRecording(String liveId, String uId, String sid) {
         String resourceId = getResourceId(liveId, uId);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json;charset=utf-8");
         headers.set("Authorization", RtmTokenBuilderSample.BASE_AUTHORIZATION);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(new Acquire(CNAME_PREFIX.concat(liveId), uId), headers);
-        String body = restTemplate.exchange(String.format(STOP_CLOUD_RECORDING_URL, resourceId), HttpMethod.POST, httpEntity, String.class).getBody();
+        HttpEntity<Object> httpEntity = new HttpEntity<>(null, headers);
+        String body = restTemplate.exchange(String.format(STOP_CLOUD_RECORDING_URL, resourceId, sid), HttpMethod.POST, httpEntity, String.class).getBody();
         JSONObject json = JSONObject.parseObject(body);
         return json.getString("resourceId");
     }
@@ -76,7 +82,7 @@ public class AgoraRecordingService {
         String body = restTemplate.exchange(GET_RESOURCE_URL, HttpMethod.POST, httpEntity, String.class).getBody();
         JSONObject json = JSONObject.parseObject(body);
         resourceId = json.getString("resourceId");
-        rMapCache.put(key, resourceId, 30, TimeUnit.DAYS);
+        rMapCache.put(key, resourceId, 4, TimeUnit.MINUTES);
         return resourceId;
     }
 
@@ -101,34 +107,36 @@ public class AgoraRecordingService {
     }
 
     @Data
+    @AllArgsConstructor
     private static class RecordeDto {
-
-        private String uid;
 
         private String cname;
 
+        private String uid;
+
         private RecordeClient clientRequest;
+
     }
 
     @Data
     private static class RecordeClient {
+        public RecordeClient(String token) {
+            this.token = token;
+        }
 
         private String token;
 
-        private RecordeConfig recordingConfig;
+        private RecordeConfig recordingConfig = new RecordeConfig();
 
-        private RecordingFileConfig recordingFileConfig;
-
-        private StorageDto storageConfig = static_storageDto;
+        private StorageDto storageConfig = new StorageDto();
     }
 
     @Data
     private static class RecordeConfig {
+
+        private String streamTypes = "2";
     }
 
-    @Data
-    private static class RecordingFileConfig {
-    }
 
     @Data
     private static class StorageDto {

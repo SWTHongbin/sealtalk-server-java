@@ -14,6 +14,11 @@ class AgoraRecordingServiceTest {
 
     @Test
     void getResourceId() {
-       // service.getResourceId("151", "15");
+        // service.getResourceId("151", "15");
+    }
+
+    @Test
+    void startRecording() {
+        service.startRecording("1511", "15");
     }
 }
