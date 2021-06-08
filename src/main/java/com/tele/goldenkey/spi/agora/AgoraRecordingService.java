@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
 import com.tele.goldenkey.util.ValidateUtils;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -67,8 +69,8 @@ public class AgoraRecordingService {
         RBucket<RecordDto> bucket = redissonClient.getBucket("recording_" + liveId);
         ValidateUtils.isTrue(bucket.isExists());
         RecordDto recordDto = bucket.get();
-        bucket.deleteAsync();
-        HttpEntity<Object> httpEntity = new HttpEntity<>(JSONObject.toJSONString(new Acquire(liveId, uId)), getHttpBaseHeader());
+          bucket.deleteAsync();
+        HttpEntity<Acquire> httpEntity = new HttpEntity<>(new Acquire(liveId, uId, new Acquire.Request()), getHttpBaseHeader());
         String url = String.format(STOP_CLOUD_RECORDING_URL, recordDto.getResourceId(), recordDto.getSid());
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
     }
@@ -102,13 +104,14 @@ public class AgoraRecordingService {
     }
 
     @Data
+    @AllArgsConstructor
     private static class Acquire {
 
         private String cname;
 
         private String uid;
 
-        private Request clientRequest = new Request();
+        private Request clientRequest = new Request(24);
 
         public Acquire(String cname, String uid) {
             this.cname = cname;
@@ -116,7 +119,10 @@ public class AgoraRecordingService {
         }
 
         @Data
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class Request {
+            private Integer resourceExpiredHour;
         }
     }
 

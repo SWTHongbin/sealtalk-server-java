@@ -46,12 +46,12 @@ public class LiveSpiServiceTest {
     }
 
     @Test
-    void startRecorde() throws ServiceException {
+    public void startRecorde() throws ServiceException {
         liveSpiService.startRecorde(5);
     }
 
     @Test
-    void stopRecorde() throws ServiceException {
+    public void stopRecorde() throws ServiceException {
         liveSpiService.stopRecorde(5);
     }
 
