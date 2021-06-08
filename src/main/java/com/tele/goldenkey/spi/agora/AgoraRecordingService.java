@@ -24,6 +24,9 @@ import java.util.concurrent.TimeUnit;
 
 import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
 
+/**
+ * 云 录制
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

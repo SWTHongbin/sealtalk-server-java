@@ -20,6 +20,7 @@ import com.tele.goldenkey.service.AbstractBaseService;
 import com.tele.goldenkey.spi.agora.AgoraRecordingService;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -28,6 +29,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
@@ -109,7 +111,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public Boolean stopRecorde(Integer userId) throws ServiceException {
         LiveStatuses onlineLive = liveStatusesMapper.findOnlineByAnchorId(userId);
         ValidateUtils.notNull(onlineLive);
-        agoraRecordingService.stopRecording(String.valueOf(onlineLive.getLiveId()), String.valueOf(userId));
+        log.info("liveId{},userId:{},stop recorde result{}", onlineLive.getLiveId(), userId, agoraRecordingService.stopRecording(String.valueOf(onlineLive.getLiveId()), String.valueOf(userId)));
         return true;
     }
 
