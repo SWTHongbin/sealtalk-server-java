@@ -1,8 +1,10 @@
 package com.tele.goldenkey.dto;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class LiveTokenDto {
 
     /**
@@ -44,12 +46,12 @@ public class LiveTokenDto {
     private String streamKey;
 
     /**
-     * 录制userId
+     * 分享userId
      */
-    private String recordeUserId;
+    private String shareUserId;
 
     /**
-     * 录制rtcToken
+     * 分享rtcToken
      */
-    private String recordeRtcToken;
+    private String shareRtcToken;
 }

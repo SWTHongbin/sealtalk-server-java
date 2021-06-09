@@ -33,8 +33,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.tele.goldenkey.spi.agora.AgoraRecordingService.CNAME_PREFIX;
-
 /**
  * 直播相关
  */
@@ -70,14 +68,13 @@ public class LiveController extends BaseController {
     public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) throws ServiceException {
         Integer userId = getCurrentUserId();
         Long liveId = liveService.initRoom(userId, liveParam);
-        LiveTokenDto liveTokenDto = liveService.anchor(liveId);
-        if (liveParam.getRecorde()) {
-            liveTokenDto.setRecordeUserId(String.valueOf(liveId) + System.currentTimeMillis());
-            liveTokenDto.setRecordeRtcToken(agoraRecordingService.startRecording(CNAME_PREFIX + liveId, liveTokenDto.getRecordeUserId()));
-        }
-        liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher));
-        liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + userId);
-        liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
+        liveService.recorde(liveId);
+        LiveTokenDto liveTokenDto = liveService.anchor(liveId)
+                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
+                .setChannelId(AGORA_CHANNEL_PREFIX + userId)
+                .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
+        liveTokenDto.setShareUserId(String.valueOf(System.currentTimeMillis()))
+                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveTokenDto.getShareUserId(), liveTokenDto.getShareUserId(), RtcTokenBuilder.Role.Role_Publisher));
         applicationContext.publishEvent(new LiveEvent<Void>(EventType.open, liveId, userId, null));
         return APIResultWrap.ok(liveTokenDto);
     }
@@ -198,12 +195,12 @@ public class LiveController extends BaseController {
     public APIResult<LiveTokenDto> getLiveUrl(@PathVariable("livedId") Long livedId) throws ServiceException {
         Integer userId = getCurrentUserId();
         liveService.join(userId, livedId);
-        LiveTokenDto liveTokenDto = new LiveTokenDto();
-        liveTokenDto.setRoomDto(liveService.room(livedId));
-        liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber));
-        liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
-        liveTokenDto.setUserId(userId);
-        liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + livedId);
+        LiveTokenDto liveTokenDto = new LiveTokenDto()
+                .setRoomDto(liveService.room(livedId))
+                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber))
+                .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
+                .setUserId(userId)
+                .setChannelId(AGORA_CHANNEL_PREFIX + livedId);
         applicationContext.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, userId, liveTokenDto.getRoomDto().getAnchorId())));
         return APIResultWrap.ok(liveTokenDto);
     }

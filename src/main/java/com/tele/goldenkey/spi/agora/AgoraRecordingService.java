@@ -44,7 +44,7 @@ public class AgoraRecordingService {
     private final RedissonClient redissonClient;
 
 
-    public String startRecording(String liveId, String uId) throws ServiceException {
+    public void startRecording(String liveId, String uId) throws ServiceException {
         String resourceId = getResourceId(liveId, uId);
         ValidateUtils.notNull(resourceId);
         String token = RtcTokenBuilderSample.buildRtcToken(CNAME_PREFIX + liveId, uId, RtcTokenBuilder.Role.Role_Publisher);
@@ -57,7 +57,6 @@ public class AgoraRecordingService {
         ValidateUtils.isTrue(recordDto != null && StringUtils.isNotEmpty(recordDto.getSid()));
         recordDto.setUId(uId);
         redissonClient.getBucket("recording_" + liveId).set(recordDto, 2, TimeUnit.DAYS);
-        return token;
     }
 
 

@@ -78,6 +78,13 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper.closeById(livedId) > 0;
     }
 
+    public void recorde(Long livedId) throws ServiceException {
+        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
+        if (liveStatuses.getRecorde() == 1) {
+            agoraRecordingService.startRecording(CNAME_PREFIX + livedId, String.valueOf(livedId) + System.currentTimeMillis());
+        }
+    }
+
     public Long initRoom(Integer userId, LiveParam liveParam) {
         LiveStatuses liveStatuses = new LiveStatuses();
         liveStatuses.setType(liveParam.getType());
@@ -139,5 +146,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUser.setPortraitUri(users.getPortraitUri());
         return liveUser;
     }
+
 
 }
