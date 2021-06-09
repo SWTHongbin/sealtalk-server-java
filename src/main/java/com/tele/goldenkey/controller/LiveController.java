@@ -17,7 +17,6 @@ import com.tele.goldenkey.model.dto.MyLiveDto;
 import com.tele.goldenkey.model.dto.PageDto;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
-import com.tele.goldenkey.spi.agora.AgoraRecordingService;
 import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.RtmTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.eums.EventType;
@@ -69,11 +68,11 @@ public class LiveController extends BaseController {
         Long liveId = liveService.initRoom(userId, liveParam);
         liveService.recorde(liveId);
         LiveTokenDto liveTokenDto = liveService.anchor(liveId)
-                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
+                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
                 .setChannelId(AGORA_CHANNEL_PREFIX + liveId)
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
         liveTokenDto.setShareUserId(String.valueOf(System.currentTimeMillis()))
-                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveTokenDto.getShareUserId(), liveTokenDto.getShareUserId(), RtcTokenBuilder.Role.Role_Publisher));
+                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, liveTokenDto.getShareUserId(), RtcTokenBuilder.Role.Role_Publisher));
         applicationContext.publishEvent(new LiveEvent<Void>(EventType.open, liveId, userId, null));
         return APIResultWrap.ok(liveTokenDto);
     }
@@ -196,7 +195,7 @@ public class LiveController extends BaseController {
         liveService.join(userId, livedId);
         LiveTokenDto liveTokenDto = new LiveTokenDto()
                 .setRoomDto(liveService.room(livedId))
-                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber))
+                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + livedId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber))
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
                 .setUserId(userId)
                 .setChannelId(AGORA_CHANNEL_PREFIX + livedId);
