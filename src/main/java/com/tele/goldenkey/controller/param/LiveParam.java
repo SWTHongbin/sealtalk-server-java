@@ -34,6 +34,11 @@ public class LiveParam {
     private String fmLink;
 
     /**
+     * 是否开启录制
+     */
+    private Boolean recorde;
+
+    /**
      * 商品信息
      */
     private List<Goods> goods;

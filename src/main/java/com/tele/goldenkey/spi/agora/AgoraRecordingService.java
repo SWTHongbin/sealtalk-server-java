@@ -22,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
 
 /**
  * 云 录制
@@ -32,43 +31,43 @@ import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
 @RequiredArgsConstructor
 public class AgoraRecordingService {
 
+    public final static String CNAME_PREFIX = "tele_";
+
     private final static String GET_RESOURCE_URL = "https://api.agora.io/v1/apps/a75d7dfc56454049aa425f39b085db94/cloud_recording/acquire";
 
     private final static String START_CLOUD_RECORDING_URL = "https://api.agora.io/v1/apps/a75d7dfc56454049aa425f39b085db94/cloud_recording/resourceid/%s/mode/mix/start";
 
     private final static String STOP_CLOUD_RECORDING_URL = "https://api.agora.io/v1/apps/a75d7dfc56454049aa425f39b085db94/cloud_recording/resourceid/%s/sid/%s/mode/mix/stop";
 
-    private final static String CNAME_PREFIX = "tele_";
-
     private final RestTemplate restTemplate;
 
     private final RedissonClient redissonClient;
 
 
-    public Boolean startRecording(String liveId, String uId) throws ServiceException {
-        liveId = CNAME_PREFIX.concat(liveId);
+    public String startRecording(String liveId, String uId) throws ServiceException {
         String resourceId = getResourceId(liveId, uId);
         ValidateUtils.notNull(resourceId);
-        String token = RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + uId, uId, RtcTokenBuilder.Role.Role_Publisher);
+        String token = RtcTokenBuilderSample.buildRtcToken(CNAME_PREFIX + liveId, uId, RtcTokenBuilder.Role.Role_Publisher);
         HttpEntity<Object> httpEntity = new HttpEntity<>(initStartRecordParam(liveId, uId, token), getHttpBaseHeader());
         String url = String.format(START_CLOUD_RECORDING_URL, resourceId);
         String body = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
         log.info(" liveId:{},uId:{}-start recording  result:{}", liveId, uId, body);
+
         RecordDto recordDto = JSONObject.parseObject(body, RecordDto.class);
         ValidateUtils.isTrue(recordDto != null && StringUtils.isNotEmpty(recordDto.getSid()));
+        recordDto.setUId(uId);
         redissonClient.getBucket("recording_" + liveId).set(recordDto, 2, TimeUnit.DAYS);
-        return true;
+        return token;
     }
 
 
-    public String stopRecording(String liveId, String uId) throws ServiceException {
-        liveId = CNAME_PREFIX.concat(liveId);
+    public String stopRecording(String liveId) throws ServiceException {
         RBucket<RecordDto> bucket = redissonClient.getBucket("recording_" + liveId);
         ValidateUtils.isTrue(bucket.isExists());
         RecordDto recordDto = bucket.get();
         bucket.deleteAsync();
-        log.info(" liveId:{},uId:{}-stop recordeDto :{}", liveId, uId, recordDto);
-        HttpEntity<Acquire> httpEntity = new HttpEntity<>(new Acquire(liveId, uId, new Acquire.Request()), getHttpBaseHeader());
+        log.info(" liveId:{},uId:{}-stop recordeDto :{}", liveId, recordDto.getUId(), recordDto);
+        HttpEntity<Acquire> httpEntity = new HttpEntity<>(new Acquire(liveId, recordDto.getUId(), new Acquire.Request()), getHttpBaseHeader());
         String url = String.format(STOP_CLOUD_RECORDING_URL, recordDto.getResourceId(), recordDto.getSid());
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
     }
@@ -99,6 +98,8 @@ public class AgoraRecordingService {
         private String resourceId;
 
         private String sid;
+
+        private String uId;
     }
 
     @Data

@@ -10,6 +10,9 @@ public class LiveTokenDto {
      */
     private LiveRoomDto roomDto;
 
+    /**
+     * 视频 cdn url
+     */
     private String url;
 
     /**
@@ -18,17 +21,17 @@ public class LiveTokenDto {
     private Long livedId;
 
     /**
-     *
+     * 视频 rtc token
      */
     private String rtcToken;
 
     /**
-     *
+     * 视频 channelId
      */
     private String channelId;
 
     /**
-     *
+     * 云信令
      */
     private String rtmToken;
 
@@ -37,5 +40,16 @@ public class LiveTokenDto {
      */
     private Integer userId;
 
+
     private String streamKey;
+
+    /**
+     * 录制userId
+     */
+    private String recordeUserId;
+
+    /**
+     * 录制rtcToken
+     */
+    private String recordeRtcToken;
 }

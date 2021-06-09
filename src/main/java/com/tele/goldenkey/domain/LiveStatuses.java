@@ -48,6 +48,11 @@ public class LiveStatuses implements Serializable {
     private String goods;
 
     /**
+     * 录制  1 是  0 否
+     */
+    private Integer recorde;
+
+    /**
      * 主题
      */
     private String theme;

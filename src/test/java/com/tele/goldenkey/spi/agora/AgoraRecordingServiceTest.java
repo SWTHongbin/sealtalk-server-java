@@ -25,7 +25,7 @@ class AgoraRecordingServiceTest {
 
     @Test
     void stopRecording() throws ServiceException {
-        System.out.println(service.stopRecording("1511", "15"));
+        System.out.println(service.stopRecording("1511"));
     }
 
 

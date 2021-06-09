@@ -17,6 +17,7 @@ import com.tele.goldenkey.model.dto.MyLiveDto;
 import com.tele.goldenkey.model.dto.PageDto;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
+import com.tele.goldenkey.spi.agora.AgoraRecordingService;
 import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.RtmTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.eums.EventType;
@@ -32,6 +33,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.tele.goldenkey.spi.agora.AgoraRecordingService.CNAME_PREFIX;
+
 /**
  * 直播相关
  */
@@ -39,10 +42,13 @@ import java.util.List;
 @RequestMapping("/live")
 @RequiredArgsConstructor
 public class LiveController extends BaseController {
+
+    public final static String AGORA_CHANNEL_PREFIX = "agora_";
+
     private final LiveService liveService;
     private final ApplicationContext applicationContext;
     private final LiveUserService userService;
-    public final static String AGORA_CHANNEL_PREFIX = "agora_";
+    private final AgoraRecordingService agoraRecordingService;
 
     /**
      * 我的直播列表
@@ -61,10 +67,14 @@ public class LiveController extends BaseController {
      * @return
      */
     @PostMapping(value = "/get/push-url")
-    public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) {
+    public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) throws ServiceException {
         Integer userId = getCurrentUserId();
         Long liveId = liveService.initRoom(userId, liveParam);
         LiveTokenDto liveTokenDto = liveService.anchor(liveId);
+        if (liveParam.getRecorde()) {
+            liveTokenDto.setRecordeUserId(String.valueOf(liveId) + System.currentTimeMillis());
+            liveTokenDto.setRecordeRtcToken(agoraRecordingService.startRecording(CNAME_PREFIX + liveId, liveTokenDto.getRecordeUserId()));
+        }
         liveTokenDto.setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher));
         liveTokenDto.setChannelId(AGORA_CHANNEL_PREFIX + userId);
         liveTokenDto.setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
@@ -72,25 +82,6 @@ public class LiveController extends BaseController {
         return APIResultWrap.ok(liveTokenDto);
     }
 
-    /**
-     * 主播开始录取直播
-     *
-     * @return
-     */
-    @PostMapping(value = "start/recorde")
-    public APIResult<Boolean> startRecorde() throws ServiceException {
-        return APIResultWrap.ok(liveService.startRecorde(getCurrentUserId()));
-    }
-
-    /**
-     * 主播关闭录取直播
-     *
-     * @return
-     */
-    @PostMapping(value = "stop/recorde")
-    public APIResult<Boolean> stopRecorde() throws ServiceException {
-        return APIResultWrap.ok(liveService.stopRecorde(getCurrentUserId()));
-    }
 
     /**
      * 是否开播

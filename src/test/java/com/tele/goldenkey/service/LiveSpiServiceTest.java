@@ -39,21 +39,12 @@ public class LiveSpiServiceTest {
     }
 
     @Test
-    public void close() {
+    public void close() throws ServiceException {
         System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
         System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
         System.out.println(liveSpiService.close(12233l));
     }
 
-    @Test
-    public void startRecorde() throws ServiceException {
-        liveSpiService.startRecorde(5);
-    }
-
-    @Test
-    public void stopRecorde() throws ServiceException {
-        liveSpiService.stopRecorde(5);
-    }
 
     @Test
     public void eventJoin() throws InterruptedException {

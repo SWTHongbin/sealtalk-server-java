@@ -27,6 +27,7 @@ import tk.mybatis.mapper.common.Mapper;
 import java.util.Date;
 import java.util.List;
 
+import static com.tele.goldenkey.spi.agora.AgoraRecordingService.CNAME_PREFIX;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
@@ -39,6 +40,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     private final FriendShipManager friendShipManager;
     private final UsersMapper usersMapper;
     private final AgoraRecordingService agoraRecordingService;
+
 
     @Override
     protected Mapper<LiveStatuses> getMapper() {
@@ -68,7 +70,11 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatuses != null && liveStatuses.getStatus() == 1;
     }
 
-    public Boolean close(Long livedId) {
+    public Boolean close(Long livedId) throws ServiceException {
+        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
+        if (liveStatuses.getRecorde() == 1) {
+            agoraRecordingService.stopRecording(CNAME_PREFIX + livedId);
+        }
         return liveStatusesMapper.closeById(livedId) > 0;
     }
 
@@ -81,6 +87,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveStatuses.setFmLink(liveParam.getFmLink());
         liveStatuses.setGoods(JSONObject.toJSONString(liveParam.getGoods()));
         liveStatuses.setAnchorId(userId);
+        liveStatuses.setRecorde(liveParam.getRecorde() ? 1 : 0);
         liveStatuses.setLinkMai(liveParam.getLinkMai());
         liveStatusesMapper.insertSelective(liveStatuses);
         LiveUser liveUser = convertLiveUser(getUserById(userId), liveStatuses.getLiveId());
@@ -100,19 +107,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public void join(Integer userId, Long livedId) {
         liveUserMapper.deleteByUserId(userId);
         liveUserMapper.insertSelective(convertLiveUser(getUserById(userId), livedId));
-    }
-
-    public Boolean startRecorde(Integer userId) throws ServiceException {
-        LiveStatuses onlineLive = liveStatusesMapper.findOnlineByAnchorId(userId);
-        ValidateUtils.notNull(onlineLive);
-        return agoraRecordingService.startRecording(String.valueOf(onlineLive.getLiveId()), String.valueOf(userId));
-    }
-
-    public Boolean stopRecorde(Integer userId) throws ServiceException {
-        LiveStatuses onlineLive = liveStatusesMapper.findOnlineByAnchorId(userId);
-        ValidateUtils.notNull(onlineLive);
-        log.info("liveId{},userId:{},stop recorde result{}", onlineLive.getLiveId(), userId, agoraRecordingService.stopRecording(String.valueOf(onlineLive.getLiveId()), String.valueOf(userId)));
-        return true;
     }
 
     public LiveRoomDto room(Long livedId) {
