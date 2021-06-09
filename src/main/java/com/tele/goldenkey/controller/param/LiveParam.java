@@ -36,7 +36,7 @@ public class LiveParam {
     /**
      * 是否开启录制
      */
-    private Boolean recorde;
+    private Boolean recorde = false;
 
     /**
      * 商品信息
