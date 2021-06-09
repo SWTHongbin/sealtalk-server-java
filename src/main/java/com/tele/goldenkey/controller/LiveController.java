@@ -46,7 +46,6 @@ public class LiveController extends BaseController {
     private final LiveService liveService;
     private final ApplicationContext applicationContext;
     private final LiveUserService userService;
-    private final AgoraRecordingService agoraRecordingService;
 
     /**
      * 我的直播列表
