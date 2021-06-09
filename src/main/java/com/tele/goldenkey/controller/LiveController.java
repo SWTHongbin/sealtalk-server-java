@@ -70,7 +70,7 @@ public class LiveController extends BaseController {
         liveService.recorde(liveId);
         LiveTokenDto liveTokenDto = liveService.anchor(liveId)
                 .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + userId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
-                .setChannelId(AGORA_CHANNEL_PREFIX + userId)
+                .setChannelId(AGORA_CHANNEL_PREFIX + liveId)
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
         liveTokenDto.setShareUserId(String.valueOf(System.currentTimeMillis()))
                 .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveTokenDto.getShareUserId(), liveTokenDto.getShareUserId(), RtcTokenBuilder.Role.Role_Publisher));
