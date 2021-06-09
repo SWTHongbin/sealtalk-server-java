@@ -3,6 +3,7 @@ package com.tele.goldenkey.controller.param;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -41,7 +42,7 @@ public class LiveParam {
     /**
      * 商品信息
      */
-    private List<Goods> goods;
+    private List<Goods> goods = Collections.emptyList();
 
     @Data
     public static class Goods {
