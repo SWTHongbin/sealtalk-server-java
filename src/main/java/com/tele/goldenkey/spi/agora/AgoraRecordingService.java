@@ -23,6 +23,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
+import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
+
 
 /**
  * 云 录制
@@ -31,8 +33,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class AgoraRecordingService {
-
-    private final static String CNAME_PREFIX = "tele_";
 
     private final static String GET_RESOURCE_URL = "https://api.agora.io/v1/apps/a75d7dfc56454049aa425f39b085db94/cloud_recording/acquire";
 
@@ -45,12 +45,13 @@ public class AgoraRecordingService {
     private final RedissonClient redissonClient;
 
 
-    public void startRecording(String liveId, String token) throws ServiceException {
+    public void startRecording(String liveId) throws ServiceException {
         String uId = liveId + RandomUtil.randomBetween(10000, 99999);
-        liveId = CNAME_PREFIX.concat(liveId);
+        liveId = AGORA_CHANNEL_PREFIX.concat(liveId);
         String resourceId = getResourceId(liveId, uId);
         ValidateUtils.notNull(resourceId);
 
+        String token = RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, uId, RtcTokenBuilder.Role.Role_Publisher);
         HttpEntity<Object> httpEntity = new HttpEntity<>(initStartRecordParam(liveId, uId, token), getHttpBaseHeader());
         String url = String.format(START_CLOUD_RECORDING_URL, resourceId);
         String body = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
@@ -62,9 +63,8 @@ public class AgoraRecordingService {
         redissonClient.getBucket("recording_" + liveId).set(recordDto, 2, TimeUnit.DAYS);
     }
 
-
     public String stopRecording(String liveId) throws ServiceException {
-        liveId = CNAME_PREFIX.concat(liveId);
+        liveId = AGORA_CHANNEL_PREFIX.concat(liveId);
         RBucket<RecordDto> bucket = redissonClient.getBucket("recording_" + liveId);
         ValidateUtils.isTrue(bucket.isExists());
         RecordDto recordDto = bucket.get();
