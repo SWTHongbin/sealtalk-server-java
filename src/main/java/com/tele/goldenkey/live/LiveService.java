@@ -18,6 +18,7 @@ import com.tele.goldenkey.model.dto.MyLiveDto;
 import com.tele.goldenkey.model.dto.PageDto;
 import com.tele.goldenkey.service.AbstractBaseService;
 import com.tele.goldenkey.spi.agora.AgoraRecordingService;
+import com.tele.goldenkey.util.RandomUtil;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +82,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public void recorde(Long livedId) throws ServiceException {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses.getRecorde() == 1) {
-            agoraRecordingService.startRecording(CNAME_PREFIX + livedId, String.valueOf(livedId) + System.currentTimeMillis());
+            agoraRecordingService.startRecording(CNAME_PREFIX + livedId, String.valueOf(livedId) + RandomUtil.randomBetween(10000, 99999));
         }
     }
 

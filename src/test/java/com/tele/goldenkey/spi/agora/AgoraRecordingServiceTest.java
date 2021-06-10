@@ -1,11 +1,14 @@
 package com.tele.goldenkey.spi.agora;
 
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.util.RandomUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static com.tele.goldenkey.spi.agora.AgoraRecordingService.CNAME_PREFIX;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -20,7 +23,7 @@ class AgoraRecordingServiceTest {
 
     @Test
     void startRecording() throws ServiceException {
-        service.startRecording("1511", "15");
+        service.startRecording(CNAME_PREFIX + "82", String.valueOf(82) + RandomUtil.randomBetween(10000, 99999));
     }
 
     @Test

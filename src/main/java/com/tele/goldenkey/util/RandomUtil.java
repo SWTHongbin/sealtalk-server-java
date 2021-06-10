@@ -1,8 +1,5 @@
 package com.tele.goldenkey.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -25,5 +22,4 @@ public class RandomUtil {
     public static int randomBetween(Integer min, Integer max) {
         return random.nextInt(max - min + 1) + min;
     }
-
 }
