@@ -58,6 +58,11 @@ public class LiveParam {
         private String goodsLink;
 
         /**
+         * 商品描述
+         */
+        private String description;
+
+        /**
          * 图片地址
          */
         private String pictureLink;
