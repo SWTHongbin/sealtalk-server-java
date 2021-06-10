@@ -3,6 +3,7 @@ package com.tele.goldenkey.spi.agora;
 import com.alibaba.fastjson.JSONObject;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
+import com.tele.goldenkey.util.RandomUtil;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AgoraRecordingService {
 
-    public final static String CNAME_PREFIX = "tele_";
+    private final static String CNAME_PREFIX = "tele_";
 
     private final static String GET_RESOURCE_URL = "https://api.agora.io/v1/apps/a75d7dfc56454049aa425f39b085db94/cloud_recording/acquire";
 
@@ -44,9 +45,12 @@ public class AgoraRecordingService {
     private final RedissonClient redissonClient;
 
 
-    public void startRecording(String liveId, String uId) throws ServiceException {
+    public void startRecording(String liveId) throws ServiceException {
+        String uId = liveId + RandomUtil.randomBetween(10000, 99999);
+        liveId = CNAME_PREFIX.concat(liveId);
         String resourceId = getResourceId(liveId, uId);
         ValidateUtils.notNull(resourceId);
+
         String token = RtcTokenBuilderSample.buildRtcToken(CNAME_PREFIX + liveId, uId, RtcTokenBuilder.Role.Role_Publisher);
         HttpEntity<Object> httpEntity = new HttpEntity<>(initStartRecordParam(liveId, uId, token), getHttpBaseHeader());
         String url = String.format(START_CLOUD_RECORDING_URL, resourceId);
@@ -61,6 +65,7 @@ public class AgoraRecordingService {
 
 
     public String stopRecording(String liveId) throws ServiceException {
+        liveId = CNAME_PREFIX.concat(liveId);
         RBucket<RecordDto> bucket = redissonClient.getBucket("recording_" + liveId);
         ValidateUtils.isTrue(bucket.isExists());
         RecordDto recordDto = bucket.get();
