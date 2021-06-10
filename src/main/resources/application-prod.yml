@@ -116,7 +116,7 @@ sealtalk-config:
   qiniu_access_key: IDWmE1z9uVy0Svg8PyrW9w8ebshSTzMU40QXIdVk
   qiniu_secret_key: -sBKxJdD-t1jq7qEtZdfX2pbvLOfnvORJ5MQXJGl
   qiniu_bucket_name: tele-live
-  qiniu_bucket_domain: www.telepathytech.com
+  qiniu_bucket_domain: telepathytech.com
   yunpian_api_key: 830c36ecb0ef1667e02769e1f33d9942
   yunpian_limited_time: 1     #云片发送验证码限制时间单位 1小时
   yunpian_limited_count: 20   #云片发送验证码次数限制    20次
