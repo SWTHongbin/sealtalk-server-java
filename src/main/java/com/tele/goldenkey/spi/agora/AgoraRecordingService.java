@@ -143,8 +143,8 @@ public class AgoraRecordingService {
                 "            \"region\": 3," +
                 "            \"bucket\": \"tele-live\"," +
                 "            \"secretKey\": \"-sBKxJdD-t1jq7qEtZdfX2pbvLOfnvORJ5MQXJGl\"," +
-                "            \"vendor\": 0," +
-                "            \"fileNamePrefix\": [\"agora\",\"recorde\"]" +
+                "            \"vendor\": 0" +
+                //      "            \"fileNamePrefix\": [\"agora\",\"recorde\"]" +
                 "       }" +
                 "   }" +
                 "}";
