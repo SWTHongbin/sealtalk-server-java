@@ -77,10 +77,10 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper.closeById(livedId) > 0;
     }
 
-    public void recorde(Long livedId) throws ServiceException {
+    public void recorde(Long livedId,String token) throws ServiceException {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses.getRecorde() == 1) {
-            agoraRecordingService.startRecording(String.valueOf(livedId));
+            agoraRecordingService.startRecording(String.valueOf(livedId),token);
         }
     }
 

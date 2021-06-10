@@ -20,7 +20,7 @@ class AgoraRecordingServiceTest {
 
     @Test
     void startRecording() throws ServiceException {
-        service.startRecording("82");
+        service.startRecording("82", null);
     }
 
     @Test

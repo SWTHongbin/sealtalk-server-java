@@ -66,10 +66,10 @@ public class LiveController extends BaseController {
     public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) throws ServiceException {
         Integer userId = getCurrentUserId();
         Long liveId = liveService.initRoom(userId, liveParam);
-        liveService.recorde(liveId);
+        String token = RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher);
+        liveService.recorde(liveId, token);
         LiveTokenDto liveTokenDto = liveService.anchor(liveId)
-                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
-                .setChannelId(AGORA_CHANNEL_PREFIX + liveId)
+                .setRtcToken(token).setChannelId(AGORA_CHANNEL_PREFIX + liveId)
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
         liveTokenDto.setShareUserId(String.valueOf(System.currentTimeMillis()))
                 .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, liveTokenDto.getShareUserId(), RtcTokenBuilder.Role.Role_Publisher));

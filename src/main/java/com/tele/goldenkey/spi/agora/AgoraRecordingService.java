@@ -45,13 +45,12 @@ public class AgoraRecordingService {
     private final RedissonClient redissonClient;
 
 
-    public void startRecording(String liveId) throws ServiceException {
+    public void startRecording(String liveId, String token) throws ServiceException {
         String uId = liveId + RandomUtil.randomBetween(10000, 99999);
         liveId = CNAME_PREFIX.concat(liveId);
         String resourceId = getResourceId(liveId, uId);
         ValidateUtils.notNull(resourceId);
 
-        String token = RtcTokenBuilderSample.buildRtcToken(CNAME_PREFIX + liveId, uId, RtcTokenBuilder.Role.Role_Publisher);
         HttpEntity<Object> httpEntity = new HttpEntity<>(initStartRecordParam(liveId, uId, token), getHttpBaseHeader());
         String url = String.format(START_CLOUD_RECORDING_URL, resourceId);
         String body = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
@@ -114,7 +113,7 @@ public class AgoraRecordingService {
 
         private String uid;
 
-        private Request clientRequest = new Request(24);
+        private Request clientRequest = new Request("NA", 24);
 
         public Acquire(String cname, String uid) {
             this.cname = cname;
@@ -125,6 +124,7 @@ public class AgoraRecordingService {
         @AllArgsConstructor
         @NoArgsConstructor
         public static class Request {
+            private String region;
             private Integer resourceExpiredHour;
         }
     }
@@ -143,8 +143,8 @@ public class AgoraRecordingService {
                 "            \"region\": 3," +
                 "            \"bucket\": \"tele-live\"," +
                 "            \"secretKey\": \"-sBKxJdD-t1jq7qEtZdfX2pbvLOfnvORJ5MQXJGl\"," +
-                "            \"vendor\": 0" +
-                //      "            \"fileNamePrefix\": [\"agora\",\"recorde\"]" +
+                "            \"vendor\": 0, " +
+                "            \"fileNamePrefix\": [\"agora\",\"recorde\"]" +
                 "       }" +
                 "   }" +
                 "}";
