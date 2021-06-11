@@ -18,6 +18,9 @@ import com.tele.goldenkey.model.dto.MyLiveDto;
 import com.tele.goldenkey.model.dto.PageDto;
 import com.tele.goldenkey.service.AbstractBaseService;
 import com.tele.goldenkey.spi.agora.AgoraRecordingService;
+import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
+import com.tele.goldenkey.spi.agora.RtmTokenBuilderSample;
+import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,7 @@ import tk.mybatis.mapper.common.Mapper;
 import java.util.Date;
 import java.util.List;
 
+import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
@@ -56,6 +60,21 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return new PageDto<>(resp, page);
     }
 
+    public LiveTokenDto openLive(Integer userId, LiveParam liveParam) throws ServiceException {
+        Long liveId = initRoom(userId, liveParam);
+        if (liveParam.getRecorde()) {
+            agoraRecordingService.startRecording(String.valueOf(liveId));
+        }
+        String shareId = String.valueOf(System.currentTimeMillis());
+        return anchor(liveId)
+                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
+                .setChannelId(AGORA_CHANNEL_PREFIX + liveId)
+                .setLivedId(liveId)
+                .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
+                .setShareUserId(shareId)
+                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, shareId, RtcTokenBuilder.Role.Role_Publisher));
+    }
+
     public LiveTokenDto anchor(Long livedId) {
         LiveTokenDto liveTokenDto = new LiveTokenDto();
         liveTokenDto.setRoomDto(room(livedId));
@@ -77,14 +96,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper.closeById(livedId) > 0;
     }
 
-    public void recorde(Long livedId) throws ServiceException {
-        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
-        if (liveStatuses.getRecorde() == 1) {
-            agoraRecordingService.startRecording(String.valueOf(livedId));
-        }
-    }
-
-    public Long initRoom(Integer userId, LiveParam liveParam) {
+    private Long initRoom(Integer userId, LiveParam liveParam) {
         LiveStatuses liveStatuses = new LiveStatuses();
         liveStatuses.setType(liveParam.getType());
         liveStatuses.setTheme(liveParam.getTheme());

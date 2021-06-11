@@ -69,7 +69,7 @@ public class AgoraRecordingService {
         ValidateUtils.isTrue(bucket.isExists());
         RecordDto recordDto = bucket.get();
         bucket.deleteAsync();
-        log.info(" liveId:{},uId:{}-stop recordeDto :{}", liveId, recordDto.getUId(), recordDto);
+        log.info(" liveId:{},uId:{}-stop recordeDto :{}", liveId, recordDto.getUId(), JSONObject.toJSONString(recordDto));
         HttpEntity<Acquire> httpEntity = new HttpEntity<>(new Acquire(liveId, recordDto.getUId(), new Acquire.Request()), getHttpBaseHeader());
         String url = String.format(STOP_CLOUD_RECORDING_URL, recordDto.getResourceId(), recordDto.getSid());
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
@@ -133,10 +133,25 @@ public class AgoraRecordingService {
         return "{" +
                 "    \"uid\": \"" + uId + "\"," +
                 "    \"cname\": \"" + liveId + "\"," +
-                "    \"clientRequest\": {" +
+                "\"clientRequest\": {" +
                 "        \"token\": \"" + token + "\"," +
                 "        \"recordingConfig\": {" +
-                "            \"streamTypes\": 2" +
+                "            \"maxIdleTime\": 30," +
+                "            \"streamTypes\": 2," +
+                "            \"audioProfile\": 1," +
+                "            \"channelType\": 0, " +
+                "            \"videoStreamType\": 1, " +
+                "            \"transcodingConfig\": {" +
+                "                \"height\": 640, " +
+                "                \"width\": 360," +
+                "                \"bitrate\": 500, " +
+                "                \"fps\": 15, " +
+                "                \"mixedVideoLayout\": 1," +
+                "                \"backgroundColor\": \"#FF0000\"" +
+                "                        }," +
+                "            \"subscribeVideoUids\": [\"123\",\"456\"], " +
+                "            \"subscribeAudioUids\": [\"123\",\"456\"]," +
+                "            \"subscribeUidGroup\": 0" +
                 "       }, " +
                 "        \"storageConfig\": {" +
                 "            \"accessKey\": \"IDWmE1z9uVy0Svg8PyrW9w8ebshSTzMU40QXIdVk\"," +
