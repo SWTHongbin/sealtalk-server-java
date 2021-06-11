@@ -186,12 +186,13 @@ public class LiveController extends BaseController {
     public APIResult<LiveTokenDto> getLiveUrl(@PathVariable("livedId") Long livedId) throws ServiceException {
         Integer userId = getCurrentUserId();
         liveService.join(userId, livedId);
+        String channelName = AGORA_CHANNEL_PREFIX + livedId;
         LiveTokenDto liveTokenDto = new LiveTokenDto()
                 .setRoomDto(liveService.room(livedId))
-                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + livedId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber))
+                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber))
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
                 .setUserId(userId)
-                .setChannelId(AGORA_CHANNEL_PREFIX + livedId);
+                .setChannelId(channelName);
         applicationContext.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, userId, liveTokenDto.getRoomDto().getAnchorId())));
         return APIResultWrap.ok(liveTokenDto);
     }

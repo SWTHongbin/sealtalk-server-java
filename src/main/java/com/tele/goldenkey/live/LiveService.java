@@ -65,14 +65,14 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         if (liveParam.getRecorde()) {
             agoraRecordingService.startRecording(String.valueOf(liveId));
         }
-        String shareId = String.valueOf(System.currentTimeMillis());
+        String shareId = String.valueOf(System.currentTimeMillis()), channelName = AGORA_CHANNEL_PREFIX + liveId;
         return anchor(liveId)
-                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
-                .setChannelId(AGORA_CHANNEL_PREFIX + liveId)
+                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
+                .setChannelId(channelName)
                 .setLivedId(liveId)
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
                 .setShareUserId(shareId)
-                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, shareId, RtcTokenBuilder.Role.Role_Publisher));
+                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, shareId, RtcTokenBuilder.Role.Role_Publisher));
     }
 
     public LiveTokenDto anchor(Long livedId) {
