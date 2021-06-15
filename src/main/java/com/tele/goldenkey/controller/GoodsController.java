@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 商品组件
+ * 商品相关
  */
 @RestController
 @RequestMapping("/goods")
