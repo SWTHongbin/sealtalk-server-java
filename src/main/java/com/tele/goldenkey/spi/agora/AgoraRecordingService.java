@@ -48,6 +48,7 @@ public class AgoraRecordingService {
     public void startRecording(String liveId) throws ServiceException {
         String uId = liveId + RandomUtil.randomBetween(10000, 99999);
         liveId = AGORA_CHANNEL_PREFIX.concat(liveId);
+
         String resourceId = getResourceId(liveId, uId);
         ValidateUtils.notNull(resourceId);
 
