@@ -70,10 +70,12 @@ public class AgoraRecordingService {
         ValidateUtils.isTrue(bucket.isExists());
         RecordDto recordDto = bucket.get();
         bucket.deleteAsync();
-        log.info(" liveId:{},uId:{}-stop recordeDto :{}", liveId, recordDto.getUId(), JSONObject.toJSONString(recordDto));
         HttpEntity<Acquire> httpEntity = new HttpEntity<>(new Acquire(liveId, recordDto.getUId(), new Acquire.Request()), getHttpBaseHeader());
         String url = String.format(STOP_CLOUD_RECORDING_URL, recordDto.getResourceId(), recordDto.getSid());
-        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
+        String body = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
+        log.info(" liveId:{},uId:{}-stop recordeDto :{},result:{}", liveId, recordDto.getUId(), recordDto, body);
+        JSONObject serverResponse = JSONObject.parseObject(body).getJSONObject("serverResponse");
+        return serverResponse != null ? serverResponse.getString("fileList") : null;
     }
 
     private String getResourceId(String liveId, String uId) {
@@ -129,6 +131,7 @@ public class AgoraRecordingService {
             private Integer resourceExpiredHour;
             private Integer scene;
         }
+
     }
 
     private String initStartRecordParam(String liveId, String uId, String token) {

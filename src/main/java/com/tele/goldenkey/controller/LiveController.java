@@ -199,14 +199,13 @@ public class LiveController extends BaseController {
     }
 
     /**
-     * 回放
+     * 获取录制url
      *
      * @param livedId 房间id
      * @return
      */
-    @PostMapping(value = "/playback/{livedId}")
+    @GetMapping(value = "/record-url/{livedId}")
     public APIResult<String> playback(@PathVariable("livedId") Long livedId) {
-        //todo
-        return APIResultWrap.ok("");
+        return APIResultWrap.ok(liveService.recordUrl(livedId));
     }
 }

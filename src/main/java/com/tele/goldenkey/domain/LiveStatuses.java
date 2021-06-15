@@ -52,6 +52,11 @@ public class LiveStatuses implements Serializable {
     private String theme;
 
     /**
+     * 录制url
+     */
+    private String recordUrl;
+
+    /**
      * 直播方式
      *
      * @see com.tele.goldenkey.enums.SkuType

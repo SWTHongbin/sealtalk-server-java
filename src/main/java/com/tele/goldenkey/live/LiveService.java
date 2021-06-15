@@ -92,7 +92,8 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public Boolean close(Long livedId) throws ServiceException {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses.getRecorde() == 1) {
-            agoraRecordingService.stopRecording(String.valueOf(livedId));
+            liveStatuses.setRecordUrl(agoraRecordingService.stopRecording(String.valueOf(livedId)));
+            liveStatusesMapper.updateByPrimaryKeySelective(liveStatuses);
         }
         return liveStatusesMapper.closeById(livedId) > 0;
     }
@@ -144,6 +145,10 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveRoomDto.setCount(liveUserMapper.countByLiveId(livedId));
         liveRoomDto.setAnchorId(liveStatuses.getAnchorId());
         return liveRoomDto;
+    }
+
+    public String recordUrl(Long livedId) {
+        return liveStatusesMapper.findById(livedId).getRecordUrl();
     }
 
     private Users getUserById(Integer id) {
