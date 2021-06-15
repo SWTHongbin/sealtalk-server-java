@@ -6,7 +6,10 @@ import com.tele.goldenkey.dao.GoodsMapper;
 import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.dao.LiveUserMapper;
 import com.tele.goldenkey.dao.UsersMapper;
-import com.tele.goldenkey.domain.*;
+import com.tele.goldenkey.domain.Friendships;
+import com.tele.goldenkey.domain.LiveStatuses;
+import com.tele.goldenkey.domain.LiveUser;
+import com.tele.goldenkey.domain.Users;
 import com.tele.goldenkey.dto.LiveRoomDto;
 import com.tele.goldenkey.dto.LiveTokenDto;
 import com.tele.goldenkey.exception.ServiceException;
@@ -110,11 +113,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUser.setMaiPower(1);
         liveUser.setMaiStatus(1);
         liveUserMapper.insertSelective(liveUser);
-        liveParam.getGoods().stream().map(x -> {
-            Goods goods = x.convertDao();
-            goods.setUserId(userId);
-            return goods;
-        }).forEach(goodsMapper::insertSelective);
+        liveParam.getGoods().stream().map(x -> x.convertDao(userId)).forEach(goodsMapper::insertSelective);
         return liveStatuses.getLiveId();
     }
 

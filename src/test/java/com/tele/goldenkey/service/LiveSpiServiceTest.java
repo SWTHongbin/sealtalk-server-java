@@ -45,6 +45,11 @@ public class LiveSpiServiceTest {
     }
 
     @Test
+    public void liveOption() throws ServiceException {
+        System.out.println(liveSpiService.liveOption(104, 104L, true));
+    }
+
+    @Test
     public void close() throws ServiceException {
         System.out.println(liveSpiService.close(104L));
     }

@@ -56,8 +56,6 @@ public class GoodsController extends BaseController {
      */
     @PostMapping("add")
     public APIResult<Boolean> add(@RequestBody @Validated GoodsParam goodsParam) {
-        Goods goods = goodsParam.convertDao();
-        goods.setUserId(super.getCurrentUserId());
-        return APIResultWrap.ok(goodsService.saveSelective(goods) > 0);
+        return APIResultWrap.ok(goodsService.saveSelective(goodsParam.convertDao(super.getCurrentUserId())) > 0);
     }
 }

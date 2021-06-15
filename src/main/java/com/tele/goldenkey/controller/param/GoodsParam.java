@@ -32,8 +32,9 @@ public class GoodsParam {
     @NotEmpty
     private String pictureLink;
 
-    public com.tele.goldenkey.domain.Goods convertDao() {
+    public Goods convertDao(Integer userId) {
         Goods goods = new Goods();
+        goods.setUserId(userId);
         goods.setName(name);
         goods.setGoodsLink(goodsLink);
         goods.setDescription(description);
