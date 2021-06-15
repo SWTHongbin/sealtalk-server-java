@@ -113,7 +113,7 @@ public class AgoraRecordingService {
 
         private String uid;
 
-        private Request clientRequest = new Request("NA", 24);
+        private Request clientRequest = new Request("NA", 24, 0);
 
         public Acquire(String cname, String uid) {
             this.cname = cname;
@@ -126,6 +126,7 @@ public class AgoraRecordingService {
         public static class Request {
             private String region;
             private Integer resourceExpiredHour;
+            private Integer scene;
         }
     }
 
