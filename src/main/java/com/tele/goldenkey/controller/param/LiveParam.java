@@ -42,32 +42,8 @@ public class LiveParam {
     /**
      * 商品信息
      */
-    private List<Goods> goods = Collections.emptyList();
+    private List<GoodsParam> goods = Collections.emptyList();
 
-    @Data
-    public static class Goods {
-
-        /**
-         * 名称
-         */
-        private String name;
-
-        /**
-         * 商品链接
-         */
-        private String goodsLink;
-
-        /**
-         * 商品描述
-         */
-        private String description;
-
-        /**
-         * 图片地址
-         */
-        private String pictureLink;
-
-    }
 
     public LiveParam() {
     }

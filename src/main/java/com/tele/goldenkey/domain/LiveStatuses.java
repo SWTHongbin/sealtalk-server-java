@@ -42,12 +42,6 @@ public class LiveStatuses implements Serializable {
     private String fmLink;
 
     /**
-     * 商品信息
-     */
-    @Column(name = "goods")
-    private String goods;
-
-    /**
      * 录制  1 是  0 否
      */
     private Integer recorde;

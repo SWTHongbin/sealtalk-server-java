@@ -1,7 +1,6 @@
 package com.tele.goldenkey.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
 import com.tele.goldenkey.controller.param.LiveParam;
 import com.tele.goldenkey.event.type.LiveEvent;
 import com.tele.goldenkey.exception.ServiceException;
@@ -33,7 +32,7 @@ public class LiveSpiServiceTest {
 
         System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), "AKIAU6KHWM6YI5ZPBFVF");
         System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), "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");
-        System.out.println(liveSpiService.anchor(12233L));
+        System.out.println(liveSpiService.anchor(12233L, 1));
     }
 
     @Test
@@ -51,16 +50,16 @@ public class LiveSpiServiceTest {
 
     @Test
     public void openLive() throws ServiceException {
-        LiveParam liveParam = new LiveParam();
-        liveParam.setRecorde(true);
-        liveParam.setTheme("test");
-        liveParam.setType(1);
-        System.out.println(JSONObject.toJSONString(liveSpiService.openLive(5, liveParam)));
+//        LiveParam liveParam = new LiveParam();
+//        liveParam.setRecorde(true);
+//        liveParam.setTheme("test");
+//        liveParam.setType(1);
+//        System.out.println(JSONObject.toJSONString(liveSpiService.openLive(5, liveParam)));
     }
 
     @Test
     public void close() throws ServiceException {
-        System.out.println(liveSpiService.close(93L));
+        System.out.println(liveSpiService.close(104L));
     }
 
     @Test

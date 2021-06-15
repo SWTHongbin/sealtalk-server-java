@@ -1,6 +1,6 @@
 package com.tele.goldenkey.dto;
 
-import com.tele.goldenkey.controller.param.LiveParam;
+import com.tele.goldenkey.domain.Goods;
 import lombok.Data;
 
 import java.util.List;
@@ -45,6 +45,6 @@ public class LiveRoomDto {
      */
     private String fmLink;
 
-    private List<LiveParam.Goods> goods;
+    private List<Goods> goods;
 
 }

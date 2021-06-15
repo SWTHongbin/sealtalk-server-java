@@ -1,15 +1,12 @@
 package com.tele.goldenkey.live;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.tele.goldenkey.controller.param.LiveParam;
+import com.tele.goldenkey.dao.GoodsMapper;
 import com.tele.goldenkey.dao.LiveStatusesMapper;
 import com.tele.goldenkey.dao.LiveUserMapper;
 import com.tele.goldenkey.dao.UsersMapper;
-import com.tele.goldenkey.domain.Friendships;
-import com.tele.goldenkey.domain.LiveStatuses;
-import com.tele.goldenkey.domain.LiveUser;
-import com.tele.goldenkey.domain.Users;
+import com.tele.goldenkey.domain.*;
 import com.tele.goldenkey.dto.LiveRoomDto;
 import com.tele.goldenkey.dto.LiveTokenDto;
 import com.tele.goldenkey.exception.ServiceException;
@@ -25,6 +22,7 @@ import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.Date;
@@ -42,6 +40,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     private final LiveUserMapper liveUserMapper;
     private final FriendShipManager friendShipManager;
     private final UsersMapper usersMapper;
+    private final GoodsMapper goodsMapper;
     private final AgoraRecordingService agoraRecordingService;
 
 
@@ -60,13 +59,12 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return new PageDto<>(resp, page);
     }
 
-    public LiveTokenDto openLive(Integer userId, LiveParam liveParam) throws ServiceException {
-        Long liveId = initRoom(userId, liveParam);
-        if (liveParam.getRecorde()) {
+    public LiveTokenDto liveOption(Integer userId, Long liveId, boolean recorde) throws ServiceException {
+        if (recorde) {
             agoraRecordingService.startRecording(String.valueOf(liveId));
         }
         String shareId = String.valueOf(System.currentTimeMillis()), channelName = AGORA_CHANNEL_PREFIX + liveId;
-        return anchor(liveId)
+        return anchor(liveId, userId)
                 .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
                 .setChannelId(channelName)
                 .setLivedId(liveId)
@@ -75,9 +73,9 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
                 .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, shareId, RtcTokenBuilder.Role.Role_Publisher));
     }
 
-    public LiveTokenDto anchor(Long livedId) {
+    public LiveTokenDto anchor(Long livedId, Integer userId) {
         LiveTokenDto liveTokenDto = new LiveTokenDto();
-        liveTokenDto.setRoomDto(room(livedId));
+        liveTokenDto.setRoomDto(room(livedId, userId));
         liveTokenDto.setLivedId(livedId);
         liveTokenDto.setUserId(liveTokenDto.getRoomDto().getAnchorId());
         return liveTokenDto;
@@ -96,14 +94,14 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper.closeById(livedId) > 0;
     }
 
-    private Long initRoom(Integer userId, LiveParam liveParam) {
+    @Transactional(rollbackFor = Exception.class)
+    public Long initRoom(Integer userId, LiveParam liveParam) {
         LiveStatuses liveStatuses = new LiveStatuses();
         liveStatuses.setType(liveParam.getType());
         liveStatuses.setTheme(liveParam.getTheme());
         liveStatuses.setStartTime(new Date());
         liveStatuses.setStatus(1);
         liveStatuses.setFmLink(liveParam.getFmLink());
-        liveStatuses.setGoods(JSONObject.toJSONString(liveParam.getGoods()));
         liveStatuses.setAnchorId(userId);
         liveStatuses.setRecorde(liveParam.getRecorde() ? 1 : 0);
         liveStatuses.setLinkMai(liveParam.getLinkMai());
@@ -112,6 +110,11 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUser.setMaiPower(1);
         liveUser.setMaiStatus(1);
         liveUserMapper.insertSelective(liveUser);
+        liveParam.getGoods().stream().map(x -> {
+            Goods goods = x.convertDao();
+            goods.setUserId(userId);
+            return goods;
+        }).forEach(goodsMapper::insertSelective);
         return liveStatuses.getLiveId();
     }
 
@@ -127,7 +130,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUserMapper.insertSelective(convertLiveUser(getUserById(userId), livedId));
     }
 
-    public LiveRoomDto room(Long livedId) {
+    public LiveRoomDto room(Long livedId, Integer userId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses == null) return null;
         LiveRoomDto liveRoomDto = new LiveRoomDto();
@@ -138,7 +141,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveRoomDto.setTheme(liveStatuses.getTheme());
         liveRoomDto.setLinkMai(liveStatuses.getLinkMai());
         liveRoomDto.setFmLink(liveStatuses.getFmLink());
-        liveRoomDto.setGoods(JSONObject.parseArray(liveStatuses.getGoods(), LiveParam.Goods.class));
+        liveRoomDto.setGoods(goodsMapper.page(userId));
         liveRoomDto.setCount(liveUserMapper.countByLiveId(livedId));
         liveRoomDto.setAnchorId(liveStatuses.getAnchorId());
         return liveRoomDto;
