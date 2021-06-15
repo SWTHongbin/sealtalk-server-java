@@ -7,6 +7,7 @@ import com.tele.goldenkey.controller.param.MaiEventParam;
 import com.tele.goldenkey.dto.LiveEventDto;
 import com.tele.goldenkey.dto.LiveTokenDto;
 import com.tele.goldenkey.dto.LiveUserDto;
+import com.tele.goldenkey.enums.SkuType;
 import com.tele.goldenkey.event.type.LiveEvent;
 import com.tele.goldenkey.exception.ServiceException;
 import com.tele.goldenkey.live.LiveEventCls;
@@ -17,6 +18,7 @@ import com.tele.goldenkey.model.dto.MyLiveDto;
 import com.tele.goldenkey.model.dto.PageDto;
 import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
+import com.tele.goldenkey.service.PricePackageService;
 import com.tele.goldenkey.spi.agora.RtcTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.RtmTokenBuilderSample;
 import com.tele.goldenkey.spi.agora.eums.EventType;
@@ -32,6 +34,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.tele.goldenkey.constant.ErrorCode.PARAMETER_ERROR;
+
 /**
  * 直播相关
  */
@@ -45,6 +49,7 @@ public class LiveController extends BaseController {
     private final LiveService liveService;
     private final ApplicationContext applicationContext;
     private final LiveUserService userService;
+    private final PricePackageService pricePackageService;
 
     /**
      * 我的直播列表
@@ -65,6 +70,9 @@ public class LiveController extends BaseController {
     @PostMapping(value = "/get/push-url")
     public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) throws ServiceException {
         Integer userId = getCurrentUserId();
+        if(!pricePackageService.enoughBalance(userId, SkuType.byCodeOf(liveParam.getType()))){
+            return APIResultWrap.error(PARAMETER_ERROR.getErrorCode(), "余额不足,请先充值");
+        }
         Long liveId = liveService.initRoom(userId, liveParam);
         LiveTokenDto liveTokenDto = liveService.liveOption(userId, liveId, liveParam.getRecorde());
         applicationContext.publishEvent(new LiveEvent<Void>(EventType.open, liveTokenDto.getLivedId(), userId, null));
