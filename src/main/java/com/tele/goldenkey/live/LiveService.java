@@ -45,6 +45,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     private final UsersMapper usersMapper;
     private final GoodsMapper goodsMapper;
     private final AgoraRecordingService agoraRecordingService;
+    private final static String QI_NIU_RECORD_URL = "http://telepathytech.com/";
 
 
     @Override
@@ -92,7 +93,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     public Boolean close(Long livedId) throws ServiceException {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses.getRecorde() == 1) {
-            liveStatuses.setRecordUrl(agoraRecordingService.stopRecording(String.valueOf(livedId)));
+            liveStatuses.setRecordUrl(QI_NIU_RECORD_URL.concat(agoraRecordingService.stopRecording(String.valueOf(livedId))));
             liveStatusesMapper.updateByPrimaryKeySelective(liveStatuses);
         }
         return liveStatusesMapper.closeById(livedId) > 0;
