@@ -48,7 +48,6 @@ public class AgoraRecordingService {
     public void startRecording(String liveId) throws ServiceException {
         String uId = liveId + RandomUtil.randomBetween(10000, 99999);
         liveId = AGORA_CHANNEL_PREFIX.concat(liveId);
-
         String resourceId = getResourceId(liveId, uId);
         ValidateUtils.notNull(resourceId);
 
@@ -79,16 +78,10 @@ public class AgoraRecordingService {
     }
 
     private String getResourceId(String liveId, String uId) {
-        RMapCache<String, String> rMapCache = redissonClient.getMapCache("resourceId");
-        String key = liveId.concat(uId), resourceId = rMapCache.get(key);
-        if (StringUtils.isNotEmpty(resourceId)) return resourceId;
-
         HttpEntity<Object> httpEntity = new HttpEntity<>(new Acquire(liveId, uId), getHttpBaseHeader());
         String body = restTemplate.exchange(GET_RESOURCE_URL, HttpMethod.POST, httpEntity, String.class).getBody();
         JSONObject json = JSONObject.parseObject(body);
-        resourceId = json.getString("resourceId");
-        rMapCache.putAsync(key, resourceId, 4, TimeUnit.MINUTES);
-        return resourceId;
+        return json.getString("resourceId");
     }
 
     private HttpHeaders getHttpBaseHeader() {

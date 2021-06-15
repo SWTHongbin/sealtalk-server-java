@@ -63,8 +63,8 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return new PageDto<>(resp, page);
     }
 
-    public LiveTokenDto liveOption(Integer userId, Long liveId, boolean recorde) throws ServiceException {
-        if (recorde) {
+    public LiveTokenDto liveOption(Integer userId, Long liveId, boolean isRecorde) throws ServiceException {
+        if (isRecorde) {
             agoraRecordingService.startRecording(String.valueOf(liveId));
         }
         String shareId = String.valueOf(System.currentTimeMillis()), channelName = AGORA_CHANNEL_PREFIX + liveId;
