@@ -51,7 +51,7 @@ public class AgoraRecordingService {
         String resourceId = getResourceId(liveId, uId);
         ValidateUtils.notNull(resourceId);
 
-        String token = RtcTokenBuilderSample.buildRtcToken(AGORA_CHANNEL_PREFIX + liveId, uId, RtcTokenBuilder.Role.Role_Publisher);
+        String token = RtcTokenBuilderSample.buildRtcToken(liveId, uId, RtcTokenBuilder.Role.Role_Subscriber);
         HttpEntity<Object> httpEntity = new HttpEntity<>(initStartRecordParam(liveId, uId, token), getHttpBaseHeader());
         String url = String.format(START_CLOUD_RECORDING_URL, resourceId);
         String body = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
