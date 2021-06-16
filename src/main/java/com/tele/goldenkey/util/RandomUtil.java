@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public class RandomUtil {
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     /**
      * 生成随机数，区间[min,max]
