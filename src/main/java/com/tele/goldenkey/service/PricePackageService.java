@@ -34,11 +34,12 @@ public class PricePackageService extends AbstractBaseService<UserPricePackage, L
         return getBalance(sku, getPricePackage(userId));
     }
 
-    public  boolean enoughBalance(Integer userId,SkuType skuType){
-        return  getBalance(skuType,getPricePackage(userId)).compareTo(BigDecimal.ZERO)>0;
+    public boolean enoughBalance(Integer userId, SkuType skuType) {
+        return getBalance(skuType, getPricePackage(userId)).compareTo(BigDecimal.ZERO) > 0;
     }
-    public  BigDecimal getBalance(Integer userId,SkuType skuType){
-         return  getBalance(skuType,getPricePackage(userId));
+
+    public BigDecimal getBalance(Integer userId, SkuType skuType) {
+        return getBalance(skuType, getPricePackage(userId));
     }
 
     public UserPricePackage getPricePackage(Integer userId) {
