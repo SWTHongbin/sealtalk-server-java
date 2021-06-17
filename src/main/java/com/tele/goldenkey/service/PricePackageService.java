@@ -28,7 +28,6 @@ public class PricePackageService extends AbstractBaseService<UserPricePackage, L
         return getBalance(sku, pricePackage);
     }
 
-
     public BigDecimal deduct(SkuType sku, Integer userId, BigDecimal second) throws ServiceException {
         ValidateUtils.isTrue(optionBalance(sku, userId, second.negate()) > 0);
         return getBalance(sku, getPricePackage(userId));
