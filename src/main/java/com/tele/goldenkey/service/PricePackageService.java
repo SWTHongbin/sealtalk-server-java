@@ -51,6 +51,7 @@ public class PricePackageService extends AbstractBaseService<UserPricePackage, L
     }
 
     private static BigDecimal getBalance(SkuType sku, UserPricePackage userPricePackage) {
+        if (userPricePackage == null) return BigDecimal.ZERO;
         switch (sku) {
             case audio:
                 return userPricePackage.getAudioBalance();
@@ -61,8 +62,7 @@ public class PricePackageService extends AbstractBaseService<UserPricePackage, L
     }
 
     private void createPricePackage(SkuType sku, Integer userId, BigDecimal second) {
-        UserPricePackage pricePackage;
-        pricePackage = new UserPricePackage();
+        UserPricePackage pricePackage = new UserPricePackage();
         pricePackage.setUserId(userId);
         if (sku == SkuType.audio) {
             pricePackage.setAudioBalance(second);
