@@ -41,7 +41,7 @@ public class GoodsController extends BaseController {
      * @return
      */
     @PostMapping("del/{id}")
-    public APIResult<Boolean> del(@PathVariable Long id) {
+    public APIResult<Boolean> delById(@PathVariable Long id) {
         return APIResultWrap.ok(goodsService.deleteByPrimaryKey(id) > 0);
     }
 
@@ -51,8 +51,21 @@ public class GoodsController extends BaseController {
      * @return
      */
     @PostMapping("del")
-    public APIResult<Boolean> del(@RequestBody @Validated DelGoodsParam delGoodsParam) {
+    public APIResult<Boolean> delByIds(@RequestBody @Validated DelGoodsParam delGoodsParam) {
         delGoodsParam.getIds().forEach(goodsService::deleteByPrimaryKey);
+        return APIResultWrap.ok(true);
+    }
+
+    /**
+     * 删除用户下所有商品
+     *
+     * @return
+     */
+    @PostMapping("del-all")
+    public APIResult<Boolean> delAllByUserId() {
+        Goods goods = new Goods();
+        goods.setUserId(super.getCurrentUserId());
+        goodsService.delete(goods);
         return APIResultWrap.ok(true);
     }
 
