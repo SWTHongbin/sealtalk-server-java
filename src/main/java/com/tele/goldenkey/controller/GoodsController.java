@@ -30,7 +30,7 @@ public class GoodsController extends BaseController {
      */
     @GetMapping("list")
     public APIResult<PageDto<Goods>> list(SearchPageDto searchPageDto) {
-        Integer userId = super.getCurrentUserId();
+        Integer userId = getCurrentUserId();
         return APIResultWrap.ok(goodsService.list(userId, searchPageDto));
     }
 
@@ -64,7 +64,7 @@ public class GoodsController extends BaseController {
     @PostMapping("del-all")
     public APIResult<Boolean> delAllByUserId() {
         Goods goods = new Goods();
-        goods.setUserId(super.getCurrentUserId());
+        goods.setUserId(getCurrentUserId());
         goodsService.delete(goods);
         return APIResultWrap.ok(true);
     }
@@ -77,6 +77,6 @@ public class GoodsController extends BaseController {
      */
     @PostMapping("add")
     public APIResult<Boolean> add(@RequestBody @Validated GoodsParam goodsParam) {
-        return APIResultWrap.ok(goodsService.saveSelective(goodsParam.convertDao(super.getCurrentUserId())) > 0);
+        return APIResultWrap.ok(goodsService.saveSelective(goodsParam.convertDao(getCurrentUserId())) > 0);
     }
 }
