@@ -1,5 +1,6 @@
 package com.tele.goldenkey.controller;
 
+import com.tele.goldenkey.controller.param.DelGoodsParam;
 import com.tele.goldenkey.controller.param.GoodsParam;
 import com.tele.goldenkey.domain.Goods;
 import com.tele.goldenkey.model.dto.PageDto;
@@ -41,11 +42,18 @@ public class GoodsController extends BaseController {
      */
     @PostMapping("del/{id}")
     public APIResult<Boolean> del(@PathVariable Long id) {
-        Integer userId = super.getCurrentUserId();
-        Goods goods = new Goods();
-        goods.setId(id);
-        goods.setUserId(userId);
-        return APIResultWrap.ok(goodsService.delete(goods) > 0);
+        return APIResultWrap.ok(goodsService.deleteByPrimaryKey(id) > 0);
+    }
+
+    /**
+     * 批量删除
+     *
+     * @return
+     */
+    @PostMapping("del")
+    public APIResult<Boolean> del(@RequestBody @Validated DelGoodsParam delGoodsParam) {
+        delGoodsParam.getIds().forEach(goodsService::deleteByPrimaryKey);
+        return APIResultWrap.ok(true);
     }
 
     /**
