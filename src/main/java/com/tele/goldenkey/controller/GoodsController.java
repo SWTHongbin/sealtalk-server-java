@@ -9,12 +9,14 @@ import com.tele.goldenkey.model.response.APIResult;
 import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.service.GoodsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * 商品相关
  */
+@Slf4j
 @RestController
 @RequestMapping("/goods")
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class GoodsController extends BaseController {
     @GetMapping("list")
     public APIResult<PageDto<Goods>> list(SearchPageDto searchPageDto) {
         Integer userId = getCurrentUserId();
+        log.info("商品列表 用户id:{}", userId);
         return APIResultWrap.ok(goodsService.list(userId, searchPageDto));
     }
 
@@ -66,6 +69,7 @@ public class GoodsController extends BaseController {
         Goods goods = new Goods();
         goods.setUserId(getCurrentUserId());
         goodsService.delete(goods);
+        log.info("用户id:{}手动处理商品", getCurrentUserId());
         return APIResultWrap.ok(true);
     }
 
@@ -77,6 +81,7 @@ public class GoodsController extends BaseController {
      */
     @PostMapping("add")
     public APIResult<Boolean> add(@RequestBody @Validated GoodsParam goodsParam) {
+        log.info("用户:{}添加商品信息：{}", getCurrentUserId(), goodsParam);
         return APIResultWrap.ok(goodsService.saveSelective(goodsParam.convertDao(getCurrentUserId())) > 0);
     }
 }

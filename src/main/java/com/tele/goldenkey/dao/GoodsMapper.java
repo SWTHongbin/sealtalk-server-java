@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface GoodsMapper extends Mapper<Goods> {
 
-
-    @Select(" SELECT * FROM goods WHERE  user_id=#{userId} ORDER BY id DESC")
+    @Select(" SELECT * FROM goods WHERE  user_id=#{userId} ORDER BY id DESC ")
     List<Goods> page(@Param("userId") Integer userId);
 }
