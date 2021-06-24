@@ -31,11 +31,7 @@ public class ServerApiParamHolder {
     public static String getTraceId() {
         ServerApiParams serverApiParams = serverApiParamsThreadLocal.get();
         if (serverApiParams != null) {
-            if (serverApiParams != null) {
-                return serverApiParams.getTraceId();
-            } else {
-                return "";
-            }
+            return serverApiParams.getTraceId();
         }
         return "";
     }

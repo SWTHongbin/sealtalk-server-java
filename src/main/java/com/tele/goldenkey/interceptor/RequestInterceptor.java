@@ -78,11 +78,11 @@ public class RequestInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        response.setHeader("Access-Control-Allow-Origin",sealtalkConfig.getCorsHosts());
-        response.setHeader("Access-Control-Allow-Methods","*");
+        response.setHeader("Access-Control-Allow-Origin", sealtalkConfig.getCorsHosts());
+        response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type,x-requested-with,Authorization,token,Accept,Referer,User-Agent");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        if(request.getMethod().equals("OPTIONS")){
+        if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             return false;
         }
@@ -90,9 +90,8 @@ public class RequestInterceptor implements HandlerInterceptor {
         ServerApiParams serverApiParams = new ServerApiParams();
         serverApiParams.setTraceId(UUID.randomUUID().toString());
         String uri = request.getRequestURI();
-
         RequestUriInfo requestUriInfo = getRequestUriInfo(request);
-//        log.info("preHandle requestUriInfo: ip={}, remoteAddress={},uri={}", requestUriInfo.getIp(), requestUriInfo.getRemoteAddress(), requestUriInfo.getUri());
+        log.info("preHandle requestUriInfo: ip={}, remoteAddress={},uri={}", requestUriInfo.getIp(), requestUriInfo.getRemoteAddress(), requestUriInfo.getUri());
         serverApiParams.setRequestUriInfo(requestUriInfo);
 
         if (!excludeUrlSet.contains(uri)) {
