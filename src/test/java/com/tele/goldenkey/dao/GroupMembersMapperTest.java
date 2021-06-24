@@ -3,6 +3,7 @@ package com.tele.goldenkey.dao;
 import com.tele.goldenkey.constant.GroupRole;
 import com.tele.goldenkey.domain.GroupMembers;
 import com.tele.goldenkey.exception.ServiceException;
+import com.tele.goldenkey.util.N3d;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +43,11 @@ public class GroupMembersMapperTest {
 
         List<GroupMembers> groupMembersList = new ArrayList<>();
         Integer index = 0;
-        int size =1003;
-        for(int i=0;i<size;i++){
+        int size = 1003;
+        for (int i = 0; i < size; i++) {
             GroupMembers groupMembers = new GroupMembers();
             groupMembers.setGroupId(groupId);
-            Integer memberId = memberIdFirst +i;
+            Integer memberId = memberIdFirst + i;
             groupMembers.setMemberId(memberId);
             groupMembers.setRole(memberId.equals(creatorId) ? GroupRole.CREATOR.getCode() : GroupRole.MEMBER.getCode());
             groupMembers.setTimestamp(System.currentTimeMillis());
@@ -54,23 +55,27 @@ public class GroupMembersMapperTest {
             groupMembers.setUpdatedAt(groupMembers.getCreatedAt());
             groupMembersList.add(groupMembers);
             index++;
-            if( index % 1000 == 0 || index.equals(size)){
+            if (index % 1000 == 0 || index.equals(size)) {
                 int count = groupMembersMapper.insertBatch(groupMembersList);
-                System.out.println("count="+count);
+                System.out.println("count=" + count);
                 groupMembersList.clear();
             }
         }
 
         long endTime = System.currentTimeMillis();
 
-        System.out.println("time cost："+(endTime-beginTime));
+        System.out.println("time cost：" + (endTime - beginTime));
 
 
     }
 
+    @Test
+    public void decode() throws ServiceException {
+        System.out.println(N3d.decode("ewRh2rY5f") + "");
+    }
 
     @Test
-    public void insertBatch2() throws ServiceException {
+    public void insertBatch2() {
         long beginTime = System.currentTimeMillis();
 
         Integer groupId = 90001;
@@ -80,10 +85,10 @@ public class GroupMembersMapperTest {
 
         List<GroupMembers> groupMembersList = new ArrayList<>();
 
-        for(int i=0;i<1000;i++){
+        for (int i = 0; i < 1000; i++) {
             GroupMembers groupMembers = new GroupMembers();
             groupMembers.setGroupId(groupId);
-            Integer memberId = memberIdFirst +i;
+            Integer memberId = memberIdFirst + i;
             groupMembers.setMemberId(memberId);
             groupMembers.setRole(memberId.equals(creatorId) ? GroupRole.CREATOR.getCode() : GroupRole.MEMBER.getCode());
             groupMembers.setTimestamp(System.currentTimeMillis());
@@ -95,7 +100,7 @@ public class GroupMembersMapperTest {
 
         long endTime = System.currentTimeMillis();
 
-        System.out.println("time cost："+(endTime-beginTime));
+        System.out.println("time cost：" + (endTime - beginTime));
 
     }
 }
