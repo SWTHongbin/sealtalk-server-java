@@ -34,16 +34,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/user/**")
                 .addPathPatterns("/misc/**")
                 .addPathPatterns("/group/**")
-                .addPathPatterns("/live/**");
+                .addPathPatterns("/live/**")
+                .addPathPatterns("/goods/**");
     }
-
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins(sealtalkConfig.getCorsHosts())
-//                .allowedMethods("GET,POST,PUT,DELETE,HEAD,OPTIONS")
-//                .allowedHeaders("Content-Type,token")
-//                .allowCredentials(true);
-//
-//    }
 }

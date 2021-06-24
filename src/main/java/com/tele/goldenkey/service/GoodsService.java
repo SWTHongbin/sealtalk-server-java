@@ -14,6 +14,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GoodsService extends AbstractBaseService<Goods, Long> {
+
     private final GoodsMapper goodsMapper;
 
     @Override

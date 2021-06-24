@@ -12,8 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 class GoodsControllerTest {
     @Autowired
-    private GoodsController controller;
-    @Autowired
     private GoodsService goodsService;
 
     @Test
