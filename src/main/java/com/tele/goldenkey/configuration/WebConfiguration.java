@@ -35,6 +35,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/misc/**")
                 .addPathPatterns("/group/**")
                 .addPathPatterns("/live/**")
-                .addPathPatterns("/goods/**");
+                .addPathPatterns("/goods/**")
+                .addPathPatterns("/apple/**");
     }
 }

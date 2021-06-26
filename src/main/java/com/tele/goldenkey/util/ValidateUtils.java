@@ -53,9 +53,21 @@ public class ValidateUtils {
         }
     }
 
+    public static void notNull(Object o, String msg) throws ServiceException {
+        if (o == null) {
+            throw new ServiceException(ErrorCode.PARAM_ERROR, msg);
+        }
+    }
+
     public static void isTrue(boolean flag) throws ServiceException {
         if (!flag) {
             throw new ServiceException(ErrorCode.PARAM_ERROR);
+        }
+    }
+
+    public static void isTrue(boolean flag, String msg) throws ServiceException {
+        if (!flag) {
+            throw new ServiceException(ErrorCode.PARAM_ERROR, msg);
         }
     }
 
