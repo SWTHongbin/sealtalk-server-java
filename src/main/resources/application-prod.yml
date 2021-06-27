@@ -11,9 +11,8 @@ server:
       force-response: true
 
 spring:
-
   flyway:
-    enabled: true
+    enabled: false
     # 禁止清理数据库表
     clean-disabled: true
     baseline-description: baselines
@@ -28,7 +27,6 @@ mybatis:
 
 logging:
   config: classpath:logback-config.xml
-
 
 sealtalk:
   datasource:

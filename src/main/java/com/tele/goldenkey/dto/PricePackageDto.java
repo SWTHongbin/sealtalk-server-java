@@ -1,5 +1,6 @@
 package com.tele.goldenkey.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import static java.util.stream.Collectors.toList;
 public class PricePackageDto {
 
     private final static PricePackageDto single;
+    private final static long minute_seconds = 1000 * 60;
 
     static {
         single = new PricePackageDto();
@@ -38,21 +40,19 @@ public class PricePackageDto {
     }
 
     @Data
+    @AllArgsConstructor
     public static class Price {
-
-        private final static long minute_seconds = 1000 * 60;
 
         public static List<Price> init(double price) {
             return IntStream.range(1, 7)
-                    .mapToObj(x -> new Price(price, x * price, x * minute_seconds))
+                    .mapToObj(x -> new Price(x, price, x * price, x * minute_seconds))
                     .collect(toList());
         }
 
-        public Price(Double price, Double amount, Long second) {
-            this.price = price;
-            this.amount = amount;
-            this.second = second;
-        }
+        /**
+         * id
+         */
+        private Integer id;
 
         /**
          * 单价
