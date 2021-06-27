@@ -70,9 +70,7 @@ public class LiveController extends BaseController {
     @PostMapping(value = "/get/push-url")
     public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) throws ServiceException {
         Integer userId = getCurrentUserId();
-        if(!pricePackageService.enoughBalance(userId, SkuType.byCodeOf(liveParam.getType()))){
-            return APIResultWrap.error(PARAMETER_ERROR.getErrorCode(), "余额不足,请先充值");
-        }
+        ValidateUtils.isTrue(pricePackageService.enoughBalance(userId, SkuType.byCodeOf(liveParam.getType())),"余额不足,请先充值");
         Long liveId = liveService.initRoom(userId, liveParam);
         LiveTokenDto liveTokenDto = liveService.liveOption(userId, liveId, liveParam.getRecorde());
         applicationContext.publishEvent(new LiveEvent<Void>(EventType.open, liveTokenDto.getLivedId(), userId, null));
