@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * apple  相关
+ * 支付回调  相关
  */
 
 @RestController
-@RequestMapping("/apple")
+@RequestMapping("pay")
 @RequiredArgsConstructor
-public class AppleController extends BaseController {
+public class PayController extends BaseController {
 
     private final AppleService appleService;
 
@@ -27,7 +27,7 @@ public class AppleController extends BaseController {
      * @param payload 校验体（base64字符串）
      * @return
      */
-    @GetMapping("/iap")
+    @GetMapping("/ios/iap")
     public APIResult iap(@RequestParam("orderNo") String orderNo, @RequestParam("payload") String payload) throws ServiceException {
         return appleService.iap(getCurrentUserId(), orderNo, payload);
     }
