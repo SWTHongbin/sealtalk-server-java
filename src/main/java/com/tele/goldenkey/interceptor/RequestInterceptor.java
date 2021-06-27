@@ -91,7 +91,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         serverApiParams.setTraceId(UUID.randomUUID().toString());
         String uri = request.getRequestURI();
         RequestUriInfo requestUriInfo = getRequestUriInfo(request);
-        log.info("preHandle requestUriInfo: ip={}, remoteAddress={},uri={}", requestUriInfo.getIp(), requestUriInfo.getRemoteAddress(), requestUriInfo.getUri());
+        // log.info("preHandle requestUriInfo: ip={}, remoteAddress={},uri={}", requestUriInfo.getIp(), requestUriInfo.getRemoteAddress(), requestUriInfo.getUri());
         serverApiParams.setRequestUriInfo(requestUriInfo);
 
         if (!excludeUrlSet.contains(uri)) {
@@ -142,7 +142,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                log.info("getAuthCookie " + cookie.getName() + "=" + cookie.getValue());
+                //  log.info("getAuthCookie " + cookie.getName() + "=" + cookie.getValue());
                 if (cookie.getName().equals(sealtalkConfig.getAuthCookieName())) {
                     return cookie;
                 }
