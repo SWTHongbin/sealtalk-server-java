@@ -23,12 +23,12 @@ public class AppleController extends BaseController {
     /**
      * 苹果内购校验
      *
-     * @param transactionId 苹果内购交易ID
-     * @param payload       校验体（base64字符串）
+     * @param orderNo 订单号
+     * @param payload 校验体（base64字符串）
      * @return
      */
     @GetMapping("/iap")
-    public APIResult iap(@RequestParam("transactionId") String transactionId, @RequestParam("payload") String payload) throws ServiceException {
-        return appleService.iap(transactionId, payload);
+    public APIResult iap(@RequestParam("orderNo") String orderNo, @RequestParam("payload") String payload) throws ServiceException {
+        return appleService.iap(getCurrentUserId(), orderNo, payload);
     }
 }

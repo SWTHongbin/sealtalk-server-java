@@ -23,17 +23,17 @@ public class PricePackageController extends BaseController {
 
     private final PricePackageService pricePackageService;
 
-    /**
-     * 充值
-     *
-     * @param code     1音频 ;2视频
-     * @param priceDto
-     * @return 剩余  单位秒
-     */
-    @PostMapping("recharge/{code}")
-    public APIResult<BigDecimal> recharge(@PathVariable Integer code, @RequestBody @Validated OptionPriceDto priceDto) throws ServiceException {
-        return APIResultWrap.ok(pricePackageService.recharge(SkuType.byCodeOf(code), getCurrentUserId(), priceDto.getSecond()));
-    }
+//    /**
+//     * 充值
+//     *
+//     * @param code     1音频 ;2视频
+//     * @param priceDto
+//     * @return 剩余  单位秒
+//     */
+//    @PostMapping("recharge/{code}")
+//    public APIResult<BigDecimal> recharge(@PathVariable Integer code, @RequestBody @Validated OptionPriceDto priceDto) throws ServiceException {
+//        return APIResultWrap.ok(pricePackageService.recharge(SkuType.byCodeOf(code), getCurrentUserId(), priceDto.getSecond()));
+//    }
 
     /**
      * 扣减

@@ -1,9 +1,11 @@
 package com.tele.goldenkey.dto;
 
+import com.tele.goldenkey.enums.SkuType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -33,6 +35,16 @@ public class PricePackageDto {
     private List<Price> video;
 
     private PricePackageDto() {
+    }
+
+    public Optional<Price> findBySkuAndId(SkuType skuType, Integer id) {
+        switch (skuType) {
+            case video:
+                return this.getVideo().stream().filter(x -> x.getId().equals(id)).findAny();
+            case audio:
+                return this.getAudio().stream().filter(x -> x.getId().equals(id)).findAny();
+        }
+        return Optional.empty();
     }
 
     public static PricePackageDto getInstance() {

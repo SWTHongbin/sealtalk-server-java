@@ -1,8 +1,9 @@
 package com.tele.goldenkey.controller.param;
 
 import lombok.Data;
-import lombok.NonNull;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class LiveParam {
     /**
      * 直播主题
      */
-    @NonNull
+    @NotEmpty
     private String theme;
 
     /**
@@ -20,13 +21,13 @@ public class LiveParam {
      *
      * @see com.tele.goldenkey.enums.SkuType
      */
-    @NonNull
+    @NotNull
     private Integer type;
 
     /**
      * 连麦  1开启  0 关闭
      */
-    @NonNull
+    @NotNull
     private Integer linkMai;
 
     /**
