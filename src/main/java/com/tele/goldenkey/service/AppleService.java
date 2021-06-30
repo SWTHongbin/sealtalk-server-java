@@ -34,23 +34,14 @@ public class AppleService {
         SkuType skuType = SkuType.byCodeOf(prepareOrderParam.getType());
         Optional<PricePackageDto.Price> optional = PricePackageDto.getInstance().findBySkuAndId(skuType, prepareOrderParam.getPackageId());
         ValidateUtils.isTrue(optional.isPresent());
-
-        getVerifyResult(payload);
-        //  String inApp = returnJson.getString("in_app");
-        //  List<HashMap> inApps = JSONObject.parseArray(inApp, HashMap.class);
-        //  ValidateUtils.isTrue(!CollectionUtils.isEmpty(inApps), "未能获取获取到交易列表");
-        //  ArrayList<String> transactionIds = new ArrayList<>();
-        // for (HashMap app : inApps) {
-        //     transactionIds.add((String) app.get("transaction_id"));
-        //   }
-        //交易列表包含当前交易，则认为交易成功
-        //  ValidateUtils.isTrue(transactionIds.contains(orderNo), "当前交易不在交易列表中");
+        verifyResult(payload);
+        log.info("订单号:{},userId:{},苹果支付回调:{}", orderNo, userId, prepareOrderParam);
         pricePackageService.recharge(skuType, userId, BigDecimal.valueOf(optional.get().getSecond()));
         bucket.delete();
         return APIResultWrap.ok();
     }
 
-    private void getVerifyResult(String payload) throws ServiceException {
+    private void verifyResult(String payload) throws ServiceException {
         String verifyResult = IosVerifyUtil.buyAppVerify(payload, 1);
         ValidateUtils.notNull(verifyResult, "苹果验证失败,返回数据为空");
         log.info("线上，苹果平台返回JSON:" + verifyResult);
@@ -63,7 +54,7 @@ public class AppleService {
             states = appleReturn.getString("status");
         }
         log.info("苹果平台返回值：appleReturn" + appleReturn);
-        ValidateUtils.isTrue(Objects.equals("0", states), "支付失败，错误码：" + states);
+        ValidateUtils.isTrue(Objects.equals("0", states), "支付失败,错误码：" + states);
         //String receipt = appleReturn.getString("receipt");
         //     JSONObject.parseObject(receipt);
     }
