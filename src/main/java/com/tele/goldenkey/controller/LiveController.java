@@ -175,7 +175,7 @@ public class LiveController extends BaseController {
                                     @RequestBody @Validated MaiEventParam param) throws ServiceException {
         LiveEventCls event = LiveEventFactory.getByKey(eventName);
         ValidateUtils.notNull(event);
-        LiveEventDto liveEventDto = event.getLiveEventDto(param.getLivedId(), getCurrentUserId(), liveService.getRoomAnchorId(param.getLivedId()));
+        LiveEventDto liveEventDto = event.getLiveEventDto(param.getLivedId(), getCurrentUserId(), param.getTerminalId());
         eventPublisher.publishEvent(event.execute(liveEventDto));
         return APIResultWrap.ok(null, "操作成功");
     }
