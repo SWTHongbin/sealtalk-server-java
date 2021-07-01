@@ -11,7 +11,7 @@ public abstract class LiveEventCls {
 
     abstract String getEventName();
 
-    public abstract LiveEventDto getLiveEventDto(Long livedId, Integer userId, Integer terminalId) throws ServiceException;
+    public abstract LiveEventDto getLiveEventDto(Long livedId, Integer currentUserId, Integer terminalId) throws ServiceException;
 
     public abstract LiveEvent execute(LiveEventDto liveEventDto) throws ServiceException;
 }

@@ -65,14 +65,14 @@ public class LiveListener implements ApplicationContextAware {
                 }
                 log.info("单播消息推送:{}", JSON.toJSONString(rtmMsgDto));
                 sendMsgOfTerminal(String.valueOf(event.getFromUserId()), String.valueOf(event.getToTerminalId()), rtmMsgDto);
-                break;
+                return;
             case broadcast:
                 if (event.getFromUserId() != null) {
                     rtmMsgDto.setMessage(usersService.getCurrentUserNickNameWithCache(event.getFromUserId()) + event.getMsgType().desc);
                 }
                 log.info("广播消息推送:{}", JSON.toJSONString(rtmMsgDto));
                 sendMsgOfBroadcast(AGORA_CHANNEL_PREFIX + event.getLiveId(), rtmMsgDto);
-                break;
+                return;
         }
     }
 }
