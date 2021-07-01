@@ -75,7 +75,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
                 .setLivedId(liveId)
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
                 .setShareUserId(shareId)
-                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, shareId, RtcTokenBuilder.Role.Role_Publisher));
+                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, shareId, RtcTokenBuilder.Role.Role_Subscriber));
     }
 
     private LiveTokenDto anchor(Long livedId) {

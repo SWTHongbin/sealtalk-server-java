@@ -25,7 +25,7 @@ import com.tele.goldenkey.spi.agora.eums.EventType;
 import com.tele.goldenkey.spi.agora.media.RtcTokenBuilder;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +45,7 @@ public class LiveController extends BaseController {
     public final static String AGORA_CHANNEL_PREFIX = "agora_";
 
     private final LiveService liveService;
-    private final ApplicationContext applicationContext;
+    private final ApplicationEventPublisher eventPublisher;
     private final LiveUserService userService;
     private final PricePackageService pricePackageService;
 
@@ -71,7 +71,7 @@ public class LiveController extends BaseController {
         ValidateUtils.isTrue(pricePackageService.enoughBalance(userId, SkuType.byCodeOf(liveParam.getType())), "余额不足,请先充值");
         Long liveId = liveService.initRoom(userId, liveParam);
         LiveTokenDto liveTokenDto = liveService.liveOption(userId, liveId, liveParam.getRecorde());
-        applicationContext.publishEvent(new LiveEvent<Void>(EventType.open, liveTokenDto.getLivedId(), userId, null));
+        eventPublisher.publishEvent(new LiveEvent<Void>(EventType.open, liveTokenDto.getLivedId(), userId, null));
         return APIResultWrap.ok(liveTokenDto);
     }
 
@@ -101,7 +101,7 @@ public class LiveController extends BaseController {
         liveService.close(livedId);
         LiveEventCls event = LiveEventFactory.getByKey(EventType.close.name());
         LiveEventDto liveEventDto = event.getLiveEventDto(livedId, getCurrentUserId(), null);
-        applicationContext.publishEvent(event.execute(liveEventDto));
+        eventPublisher.publishEvent(event.execute(liveEventDto));
         return APIResultWrap.ok(null, "关闭成功");
     }
 
@@ -125,7 +125,7 @@ public class LiveController extends BaseController {
     @PostMapping(value = "/leave")
     public APIResult<Void> leave() throws ServiceException {
         Integer id = getCurrentUserId();
-        applicationContext.publishEvent(new LiveEvent<Void>(EventType.leave, liveService.leave(id), id, null));
+        eventPublisher.publishEvent(new LiveEvent<Void>(EventType.leave, liveService.leave(id), id, null));
         return APIResultWrap.ok(null, "操作成功");
     }
 
@@ -156,7 +156,7 @@ public class LiveController extends BaseController {
         EventType eventType = EventType.valueOf(eventName);
         ValidateUtils.notNull(eventType.personalFunction);
         Method method = LiveUserService.class.getMethod(eventType.personalFunction.name(), Integer.class, EventType.class);
-        applicationContext.publishEvent(method.invoke(userService, getCurrentUserId(), eventType));
+        eventPublisher.publishEvent(method.invoke(userService, getCurrentUserId(), eventType));
         return APIResultWrap.ok(null, "操作成功");
     }
 
@@ -176,7 +176,7 @@ public class LiveController extends BaseController {
         LiveEventCls event = LiveEventFactory.getByKey(eventName);
         ValidateUtils.notNull(event);
         LiveEventDto liveEventDto = event.getLiveEventDto(param.getLivedId(), getCurrentUserId(), param.getTerminalId());
-        applicationContext.publishEvent(event.execute(liveEventDto));
+        eventPublisher.publishEvent(event.execute(liveEventDto));
         return APIResultWrap.ok(null, "操作成功");
     }
 
@@ -198,7 +198,7 @@ public class LiveController extends BaseController {
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
                 .setUserId(userId)
                 .setChannelId(channelName);
-        applicationContext.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, userId, liveTokenDto.getRoomDto().getAnchorId())));
+        eventPublisher.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, userId, liveTokenDto.getRoomDto().getAnchorId())));
         return APIResultWrap.ok(liveTokenDto);
     }
 

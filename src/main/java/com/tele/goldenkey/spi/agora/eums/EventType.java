@@ -41,6 +41,9 @@ public enum EventType {
      */
     public EventType[] additionalEvent;
 
+    /**
+     * 个人
+     */
     public PersonalFunction personalFunction;
     /**
      * 消息广播类型
