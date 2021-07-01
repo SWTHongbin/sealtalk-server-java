@@ -63,12 +63,13 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return new PageDto<>(resp, page);
     }
 
+    //房主房间操作
     public LiveTokenDto liveOption(Integer userId, Long liveId, boolean isRecorde) throws ServiceException {
         if (isRecorde) {
             agoraRecordingService.startRecording(String.valueOf(liveId));
         }
         String shareId = String.valueOf(System.currentTimeMillis()), channelName = AGORA_CHANNEL_PREFIX + liveId;
-        return anchor(liveId, userId)
+        return anchor(liveId)
                 .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
                 .setChannelId(channelName)
                 .setLivedId(liveId)
@@ -77,9 +78,9 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
                 .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, shareId, RtcTokenBuilder.Role.Role_Publisher));
     }
 
-    public LiveTokenDto anchor(Long livedId, Integer userId) {
+    private LiveTokenDto anchor(Long livedId) {
         LiveTokenDto liveTokenDto = new LiveTokenDto();
-        liveTokenDto.setRoomDto(room(livedId, userId));
+        liveTokenDto.setRoomDto(room(livedId));
         liveTokenDto.setLivedId(livedId);
         liveTokenDto.setUserId(liveTokenDto.getRoomDto().getAnchorId());
         return liveTokenDto;
@@ -131,7 +132,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveUserMapper.insertSelective(convertLiveUser(getUserById(userId), livedId));
     }
 
-    public LiveRoomDto room(Long livedId, Integer userId) {
+    public LiveRoomDto room(Long livedId) {
         LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
         if (liveStatuses == null) return null;
         LiveRoomDto liveRoomDto = new LiveRoomDto();
@@ -142,7 +143,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveRoomDto.setTheme(liveStatuses.getTheme());
         liveRoomDto.setLinkMai(liveStatuses.getLinkMai());
         liveRoomDto.setFmLink(liveStatuses.getFmLink());
-        liveRoomDto.setGoods(goodsMapper.page(userId));
+        liveRoomDto.setGoods(goodsMapper.page(liveStatuses.getAnchorId()));
         liveRoomDto.setCount(liveUserMapper.countByLiveId(livedId));
         liveRoomDto.setAnchorId(liveStatuses.getAnchorId());
         return liveRoomDto;

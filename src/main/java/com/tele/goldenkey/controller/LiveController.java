@@ -34,8 +34,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.tele.goldenkey.constant.ErrorCode.PARAMETER_ERROR;
-
 /**
  * 直播相关
  */
@@ -70,7 +68,7 @@ public class LiveController extends BaseController {
     @PostMapping(value = "/get/push-url")
     public APIResult<LiveTokenDto> getPushUrl(@RequestBody @Validated LiveParam liveParam) throws ServiceException {
         Integer userId = getCurrentUserId();
-        ValidateUtils.isTrue(pricePackageService.enoughBalance(userId, SkuType.byCodeOf(liveParam.getType())),"余额不足,请先充值");
+        ValidateUtils.isTrue(pricePackageService.enoughBalance(userId, SkuType.byCodeOf(liveParam.getType())), "余额不足,请先充值");
         Long liveId = liveService.initRoom(userId, liveParam);
         LiveTokenDto liveTokenDto = liveService.liveOption(userId, liveId, liveParam.getRecorde());
         applicationContext.publishEvent(new LiveEvent<Void>(EventType.open, liveTokenDto.getLivedId(), userId, null));
@@ -195,7 +193,7 @@ public class LiveController extends BaseController {
         liveService.join(userId, livedId);
         String channelName = AGORA_CHANNEL_PREFIX + livedId;
         LiveTokenDto liveTokenDto = new LiveTokenDto()
-                .setRoomDto(liveService.room(livedId, userId))
+                .setRoomDto(liveService.room(livedId))
                 .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber))
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
                 .setUserId(userId)

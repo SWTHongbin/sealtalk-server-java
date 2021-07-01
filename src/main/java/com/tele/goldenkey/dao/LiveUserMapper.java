@@ -50,7 +50,7 @@ public interface LiveUserMapper extends Mapper<LiveUser> {
             " AND liveId = #{param.livedId}",
             "</if>",
             " </where> ",
-            " ORDER BY createdAt asc ",
+            " ORDER BY id desc ",
             "</script>"})
     List<LiveUser> selectByUserParam(@Param("param") LiveUserParam param);
 
