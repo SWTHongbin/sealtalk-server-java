@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBucket;
-import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,8 +22,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
-
 
 /**
  * 云 录制
@@ -33,15 +30,11 @@ import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
 @Service
 @RequiredArgsConstructor
 public class AgoraRecordingService {
-
+    private final static String AGORA_CHANNEL_PREFIX = "agora_";
     private final static String GET_RESOURCE_URL = "https://api.agora.io/v1/apps/a75d7dfc56454049aa425f39b085db94/cloud_recording/acquire";
-
     private final static String START_CLOUD_RECORDING_URL = "https://api.agora.io/v1/apps/a75d7dfc56454049aa425f39b085db94/cloud_recording/resourceid/%s/mode/mix/start";
-
     private final static String STOP_CLOUD_RECORDING_URL = "https://api.agora.io/v1/apps/a75d7dfc56454049aa425f39b085db94/cloud_recording/resourceid/%s/sid/%s/mode/mix/stop";
-
     private final RestTemplate restTemplate;
-
     private final RedissonClient redissonClient;
 
 
