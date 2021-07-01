@@ -28,7 +28,9 @@ class LiveUserServiceTest {
     void getUser() {
         System.out.println(JSON.toJSONString(userService.getUser(5)));
     }
-
+    void myist() {
+        System.out.println(JSON.toJSONString(userService.getUser(5)));
+    }
     @Test
     void decode() throws ServiceException {
         System.out.println(N3d.decode("iiq6ugIY2"));

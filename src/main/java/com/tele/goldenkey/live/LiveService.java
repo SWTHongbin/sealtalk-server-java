@@ -55,7 +55,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
 
     public PageDto<MyLiveDto.Resp> userLiveList(MyLiveDto.Rep rep, Integer userId) throws ServiceException {
         List<Friendships> friendList = friendShipManager.getFriendList(userId);
-        List<Integer> userIds = friendList.stream().map(Friendships::getUserId).collect(toList());
+        List<Integer> userIds = friendList.stream().map(x -> x.getUsers().getId()).collect(toList());
         userIds.add(userId);
         rep.setUserId(userIds);
         Page<Object> page = rep.startPage();
