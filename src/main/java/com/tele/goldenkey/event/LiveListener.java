@@ -11,30 +11,22 @@ import com.tele.goldenkey.spi.agora.eums.EventType;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
 import static com.tele.goldenkey.spi.agora.RtmTokenBuilderSample.sendMsgOfBroadcast;
 import static com.tele.goldenkey.spi.agora.RtmTokenBuilderSample.sendMsgOfTerminal;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LiveListener implements ApplicationContextAware {
+public class LiveListener {
 
     private final UsersService usersService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    private ApplicationContext applicationContext;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 
     @Async
     @EventListener
@@ -45,12 +37,14 @@ public class LiveListener implements ApplicationContextAware {
                 LiveEventCls liveEventCls = LiveEventFactory.getByKey(type.name());
                 ValidateUtils.notNull(liveEventCls);
                 LiveEventDto liveEventDto = liveEventCls.getLiveEventDto(event.getLiveId(), event.getFromUserId(), event.getToTerminalId());
-                applicationContext.publishEvent(liveEventCls.execute(liveEventDto));
+                eventPublisher.publishEvent(liveEventCls.execute(liveEventDto));
             } catch (Exception e) {
                 log.error("监听事件异常:", e);
             }
         }
     }
+
+    private final static String AGORA_CHANNEL_PREFIX = "agora_";
 
     @Async
     @EventListener

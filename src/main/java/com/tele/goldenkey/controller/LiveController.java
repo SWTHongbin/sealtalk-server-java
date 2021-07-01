@@ -42,7 +42,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LiveController extends BaseController {
 
-    public final static String AGORA_CHANNEL_PREFIX = "agora_";
+    private final static String AGORA_CHANNEL_PREFIX = "agora_";
 
     private final LiveService liveService;
     private final ApplicationEventPublisher eventPublisher;

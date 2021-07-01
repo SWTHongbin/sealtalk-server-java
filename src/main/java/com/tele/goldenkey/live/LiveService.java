@@ -31,14 +31,13 @@ import tk.mybatis.mapper.common.Mapper;
 import java.util.Date;
 import java.util.List;
 
-import static com.tele.goldenkey.controller.LiveController.AGORA_CHANNEL_PREFIX;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
-
+    private final static String AGORA_CHANNEL_PREFIX = "agora_";
     private final LiveStatusesMapper liveStatusesMapper;
     private final LiveUserMapper liveUserMapper;
     private final FriendShipManager friendShipManager;
@@ -69,9 +68,8 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         }
         String shareId = String.valueOf(System.currentTimeMillis()), channelName = AGORA_CHANNEL_PREFIX + liveId;
         return new LiveTokenDto().setRoomDto(room(liveId))
-                .setLivedId(liveId).setUserId(userId)
+                .setLivedId(liveId).setUserId(userId).setChannelId(channelName)
                 .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
-                .setChannelId(channelName)
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
                 .setShareUserId(shareId)
                 .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, shareId, RtcTokenBuilder.Role.Role_Subscriber));
