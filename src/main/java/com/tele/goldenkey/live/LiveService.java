@@ -47,7 +47,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     private final AgoraRecordingService agoraRecordingService;
     private final static String QI_NIU_RECORD_URL = "http://telepathytech.com/";
 
-
     @Override
     protected Mapper<LiveStatuses> getMapper() {
         return liveStatusesMapper;
@@ -76,14 +75,6 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
                 .setShareUserId(shareId)
                 .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, shareId, RtcTokenBuilder.Role.Role_Subscriber));
-    }
-
-    private LiveTokenDto anchor(Long livedId) {
-        LiveTokenDto liveTokenDto = new LiveTokenDto();
-        liveTokenDto.setRoomDto(room(livedId));
-        liveTokenDto.setLivedId(livedId);
-        liveTokenDto.setUserId(liveTokenDto.getRoomDto().getAnchorId());
-        return liveTokenDto;
     }
 
     public Boolean isOpen(Long livedId) {
@@ -149,6 +140,12 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveRoomDto;
     }
 
+    public Integer getRoomAnchorId(Long livedId) {
+        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
+        if (liveStatuses == null) return null;
+        return liveStatuses.getAnchorId();
+    }
+
     public String recordUrl(Long livedId) {
         return liveStatusesMapper.findById(livedId).getRecordUrl();
     }
@@ -167,5 +164,12 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveUser;
     }
 
+    private LiveTokenDto anchor(Long livedId) {
+        LiveTokenDto liveTokenDto = new LiveTokenDto();
+        liveTokenDto.setRoomDto(room(livedId));
+        liveTokenDto.setLivedId(livedId);
+        liveTokenDto.setUserId(liveTokenDto.getRoomDto().getAnchorId());
+        return liveTokenDto;
+    }
 
 }
