@@ -23,6 +23,7 @@ public class ApplyMaiEvent extends LiveEventCls {
 
     private final LiveStatusesMapper liveStatusesMapper;
     private final LiveUserMapper userMapper;
+    private final LiveService liveService;
 
     @Override
     String getEventName() {
@@ -31,7 +32,7 @@ public class ApplyMaiEvent extends LiveEventCls {
 
     @Override
     public LiveEventDto getLiveEventDto(Long livedId, Integer userId, Integer terminalId) {
-        return new LiveEventDto(livedId, userId, terminalId);
+        return new LiveEventDto(livedId, userId, liveService.getRoomAnchorId(livedId));
     }
 
     @Override
