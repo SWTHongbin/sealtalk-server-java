@@ -137,12 +137,7 @@ public class AgoraRecordingService {
                 "                \"width\": 360," +
                 "                \"bitrate\": 500, " +
                 "                \"fps\": 15, " +
-                "                \"mixedVideoLayout\": 1," +
-                "                \"backgroundColor\": \"#FF0000\"" +
-                "                        }," +
-                "            \"subscribeVideoUids\": [\"123\",\"456\"], " +
-                "            \"subscribeAudioUids\": [\"123\",\"456\"]," +
-                "            \"subscribeUidGroup\": 0" +
+                "                \"mixedVideoLayout\": 1 }" +
                 "       }, " +
                 "        \"storageConfig\": {" +
                 "            \"accessKey\": \"IDWmE1z9uVy0Svg8PyrW9w8ebshSTzMU40QXIdVk\"," +
