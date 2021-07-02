@@ -34,6 +34,11 @@ public class LiveRoomDto {
     private Integer linkMai;
 
     /**
+     * 录制地址
+     */
+    private String recordUrl;
+
+    /**
      * 主播id
      */
     private Integer anchorId;

@@ -42,6 +42,11 @@ public class MyLiveDto {
          * 封面
          */
         private String fmLink;
+
+        /**
+         * 录制地址
+         */
+        private String recordUrl;
         /**
          * 用户id
          */

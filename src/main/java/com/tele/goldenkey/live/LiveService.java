@@ -132,6 +132,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveRoomDto.setTheme(liveStatuses.getTheme());
         liveRoomDto.setLinkMai(liveStatuses.getLinkMai());
         liveRoomDto.setFmLink(liveStatuses.getFmLink());
+        liveRoomDto.setRecordUrl(liveStatuses.getRecordUrl());
         liveRoomDto.setGoods(goodsMapper.page(liveStatuses.getAnchorId()));
         liveRoomDto.setCount(liveUserMapper.countByLiveId(livedId));
         liveRoomDto.setAnchorId(liveStatuses.getAnchorId());

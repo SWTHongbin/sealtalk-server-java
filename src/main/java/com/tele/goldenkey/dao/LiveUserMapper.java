@@ -55,7 +55,7 @@ public interface LiveUserMapper extends Mapper<LiveUser> {
     List<LiveUser> selectByUserParam(@Param("param") LiveUserParam param);
 
     @Select({" <script> ",
-            " SELECT ls.liveId,ls.theme,ls.fmLink,lu.userId,lu.portraitUri,lu.`name`  ",
+            " SELECT ls.liveId,ls.record_url,ls.theme,ls.fmLink,lu.userId,lu.portraitUri,lu.`name`  ",
             " FROM ",
             " live_statuses ls,live_user lu WHERE ls.liveId = lu.liveId ",
             " AND ls.anchorId in ",
