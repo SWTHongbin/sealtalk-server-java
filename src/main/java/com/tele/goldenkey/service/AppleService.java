@@ -32,7 +32,7 @@ public class AppleService {
     @Transactional
     public APIResult iap(Integer userId, String orderNo, String payload) throws ServiceException {
         RLock lock = redissonClient.getLock("order.lock." + orderNo);
-        ValidateUtils.isTrue(lock.tryLock(), "请稍等");
+        ValidateUtils.isTrue(lock.tryLock(), "请稍等,订单已在处理中");
         try {
             RBucket<PrepareOrderParam> bucket = redissonClient.getBucket("order" + userId + orderNo);
             ValidateUtils.isTrue(bucket.isExists(), "订单编号不存在");
