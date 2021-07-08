@@ -8,10 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-/**
- * @author lihongbin
- * @date 2021年04月20日 23:54
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor

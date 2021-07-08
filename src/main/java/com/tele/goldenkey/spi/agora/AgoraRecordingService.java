@@ -135,8 +135,8 @@ public class AgoraRecordingService {
                 "            \"transcodingConfig\": {" +
                 "                \"height\": 640, " +
                 "                \"width\": 360," +
-                "                \"bitrate\": 500, " +
-                "                \"fps\": 15, " +
+                "                \"bitrate\": 720, " +
+                "                \"fps\": 20, " +
                 "                \"mixedVideoLayout\": 1 }" +
                 "       }, " +
                 "        \"storageConfig\": {" +
