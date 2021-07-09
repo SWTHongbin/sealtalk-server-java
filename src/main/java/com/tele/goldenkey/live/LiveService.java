@@ -91,8 +91,8 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper.updateByPrimaryKeySelective(update) > 0;
     }
 
-    public List<Long> openNoPing100s() {
-        LocalDateTime localDateTime = LocalDateTime.now().plusSeconds(-100);
+    public List<Long> openNoPing15s() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusSeconds(-15);
         return liveStatusesMapper.openNoPing100s(localDateTime);
     }
 

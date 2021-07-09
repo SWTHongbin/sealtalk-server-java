@@ -16,8 +16,9 @@ public class CloseLiveTask {
     private final LiveService liveService;
 
     @Scheduled(cron = "*/9 * * * * ? ")
-    public void closeNoPing100s() {
-        liveService.openNoPing100s().forEach(
+    public void closeNoPing15s() {
+        log.info(" -----------------------start scan no ping 15s-------------------------------------");
+        liveService.openNoPing15s().forEach(
                 x -> {
                     try {
                         liveService.close(x);
