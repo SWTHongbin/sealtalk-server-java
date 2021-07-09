@@ -5,18 +5,11 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LiveStatusesMapper extends Mapper<LiveStatuses> {
 
-    LiveStatuses findById(@Param("livedId") Long livedId);
-
-    Integer closeById(@Param("livedId") Long livedId);
-
-    Integer openById(@Param("livedId") Long livedId);
-
-    List<LiveStatuses> noLongerUsed();
-
-    @Select(" SELECT * FROM live_statuses WHERE anchorId = #{anchorId} AND `status` = 1 ORDER BY liveId DESC LIMIT 0,1")
-    LiveStatuses findOnlineByAnchorId(@Param("anchorId") Integer anchorId);
+    @Select(" SELECT liveId FROM live_statuses WHERE `status` = 1 AND pingTime < #{time} ORDER BY liveId DESC LIMIT 0,1000")
+    List<Long> openNoPing100s(@Param("time") LocalDateTime time);
 }

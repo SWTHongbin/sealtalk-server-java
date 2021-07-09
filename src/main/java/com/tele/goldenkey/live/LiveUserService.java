@@ -50,7 +50,7 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
         ValidateUtils.notNull(user);
         int code = 0;
         if (eventType == EventType.up_mai) {
-            LiveStatuses liveStatuses = statusesMapper.findById(user.getLivedId());
+            LiveStatuses liveStatuses = statusesMapper.selectByPrimaryKey(user.getLivedId());
             ValidateUtils.notNull(liveStatuses);
             if (liveStatuses.getLinkMai() != 1) {
                 throw new ServiceException(ErrorCode.SERVER_ERROR, "房间设置不允许连麦");
@@ -75,7 +75,7 @@ public class LiveUserService extends AbstractBaseService<LiveUser, Integer> {
             code = 1;
         }
         liveUserMapper.updateSpeech(code, userId);
-        return new LiveEvent<Void>(eventType, user.getLivedId(),userId, null);
+        return new LiveEvent<Void>(eventType, user.getLivedId(), userId, null);
     }
 
     public static LiveUserDto getLiveUserDto(LiveUser x) {

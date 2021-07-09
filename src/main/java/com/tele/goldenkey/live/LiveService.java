@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -76,17 +77,23 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public Boolean isOpen(Long livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.selectByPrimaryKey(livedId);
         return liveStatuses != null && liveStatuses.getStatus() == 1;
     }
 
     public Boolean close(Long livedId) throws ServiceException {
-        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.selectByPrimaryKey(livedId), update = new LiveStatuses();
         if (liveStatuses.getRecorde() == 1) {
-            liveStatuses.setRecordUrl(QI_NIU_RECORD_URL.concat(agoraRecordingService.stopRecording(String.valueOf(livedId))));
-            liveStatusesMapper.updateByPrimaryKeySelective(liveStatuses);
+            update.setRecordUrl(QI_NIU_RECORD_URL.concat(agoraRecordingService.stopRecording(String.valueOf(livedId))));
         }
-        return liveStatusesMapper.closeById(livedId) > 0;
+        update.setLiveId(livedId);
+        update.setStatus(0);
+        return liveStatusesMapper.updateByPrimaryKeySelective(update) > 0;
+    }
+
+    public List<Long> openNoPing100s() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusSeconds(-100);
+        return liveStatusesMapper.openNoPing100s(localDateTime);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -129,7 +136,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public LiveRoomDto room(Long livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.selectByPrimaryKey(livedId);
         if (liveStatuses == null) return null;
         LiveRoomDto liveRoomDto = new LiveRoomDto();
         liveRoomDto.setType(liveStatuses.getType());
@@ -147,13 +154,13 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
     }
 
     public Integer getRoomAnchorId(Long livedId) {
-        LiveStatuses liveStatuses = liveStatusesMapper.findById(livedId);
+        LiveStatuses liveStatuses = liveStatusesMapper.selectByPrimaryKey(livedId);
         if (liveStatuses == null) return null;
         return liveStatuses.getAnchorId();
     }
 
     public String recordUrl(Long livedId) {
-        return liveStatusesMapper.findById(livedId).getRecordUrl();
+        return liveStatusesMapper.selectByPrimaryKey(livedId).getRecordUrl();
     }
 
     private Users getUserById(Integer id) {

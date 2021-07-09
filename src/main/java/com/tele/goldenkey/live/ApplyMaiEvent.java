@@ -37,7 +37,7 @@ public class ApplyMaiEvent extends LiveEventCls {
 
     @Override
     public LiveEvent<Map> execute(LiveEventDto liveEventDto) throws ServiceException {
-        LiveStatuses liveStatuses = liveStatusesMapper.findById(liveEventDto.getLivedId());
+        LiveStatuses liveStatuses = liveStatusesMapper.selectByPrimaryKey(liveEventDto.getLivedId());
         ValidateUtils.notNull(liveStatuses);
         if (liveStatuses.getLinkMai() != 1) {
             throw new ServiceException(ErrorCode.SERVER_ERROR, "房间设置不允许连麦");

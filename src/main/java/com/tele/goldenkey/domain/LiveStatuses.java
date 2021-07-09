@@ -78,9 +78,6 @@ public class LiveStatuses implements Serializable {
     @Column(name = "pingTime")
     private Date pingTime;
 
-    @Column(name = "adminMaiStatus")
-    private Integer adminMaiStatus;
-
     @Column(name = "createdAt")
     private Date createdAt;
 
