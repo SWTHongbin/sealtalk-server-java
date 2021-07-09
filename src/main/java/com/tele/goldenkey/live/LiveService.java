@@ -116,6 +116,13 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveUser.getLiveId();
     }
 
+    public boolean ping(Long livedId) {
+        LiveStatuses liveStatuses = new LiveStatuses();
+        liveStatuses.setLiveId(livedId);
+        liveStatuses.setPingTime(new Date());
+        return liveStatusesMapper.updateByPrimaryKeySelective(liveStatuses) > 0;
+    }
+
     public void join(Integer userId, Long livedId) {
         liveUserMapper.deleteByUserId(userId);
         liveUserMapper.insertSelective(convertLiveUser(getUserById(userId), livedId));
@@ -127,8 +134,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         LiveRoomDto liveRoomDto = new LiveRoomDto();
         liveRoomDto.setType(liveStatuses.getType());
         liveRoomDto.setIsOpen(liveStatuses.getStatus() == 1);
-        long timestamp = liveRoomDto.getIsOpen() ? liveStatuses.getStartTime().getTime() : liveStatuses.getUpdatedAt().getTime() - liveStatuses.getStartTime().getTime();
-        liveRoomDto.setTimestamp(timestamp);
+        liveRoomDto.setTimestamp(liveRoomDto.getIsOpen() ? liveStatuses.getStartTime().getTime() : liveStatuses.getUpdatedAt().getTime() - liveStatuses.getStartTime().getTime());
         liveRoomDto.setTheme(liveStatuses.getTheme());
         liveRoomDto.setLinkMai(liveStatuses.getLinkMai());
         liveRoomDto.setFmLink(liveStatuses.getFmLink());
@@ -136,6 +142,7 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         liveRoomDto.setGoods(goodsMapper.page(liveStatuses.getAnchorId()));
         liveRoomDto.setCount(liveUserMapper.countByLiveId(livedId));
         liveRoomDto.setAnchorId(liveStatuses.getAnchorId());
+        liveRoomDto.setAnchorHeaderUrl(usersMapper.selectByPrimaryKey(liveStatuses.getAnchorId()).getPortraitUri());
         return liveRoomDto;
     }
 

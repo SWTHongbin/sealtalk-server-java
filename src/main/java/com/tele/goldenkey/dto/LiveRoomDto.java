@@ -43,6 +43,11 @@ public class LiveRoomDto {
      */
     private Integer anchorId;
 
+    /**
+     * 主播头像url
+     */
+    private String anchorHeaderUrl;
+
     private Boolean isOpen;
 
     /**

@@ -141,6 +141,17 @@ public class LiveController extends BaseController {
     }
 
     /**
+     * ping
+     *
+     * @param livedId 房间id
+     * @return
+     */
+    @PostMapping(value = "/ping/{livedId}")
+    public APIResult<Boolean> ping(@PathVariable("livedId") Long livedId) {
+        return APIResultWrap.ok(liveService.ping(livedId));
+    }
+
+    /**
      * 个人操作-(开关麦) (开关语音)
      *
      * @param eventName
@@ -192,12 +203,10 @@ public class LiveController extends BaseController {
         Integer userId = getCurrentUserId();
         liveService.join(userId, livedId);
         String channelName = AGORA_CHANNEL_PREFIX + livedId;
-        LiveTokenDto liveTokenDto = new LiveTokenDto()
-                .setRoomDto(liveService.room(livedId))
+        LiveTokenDto liveTokenDto = new LiveTokenDto().setUserId(userId)
+                .setRoomDto(liveService.room(livedId)).setChannelId(channelName)
                 .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber))
-                .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
-                .setUserId(userId)
-                .setChannelId(channelName);
+                .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
         eventPublisher.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, userId, liveTokenDto.getRoomDto().getAnchorId())));
         return APIResultWrap.ok(liveTokenDto);
     }
