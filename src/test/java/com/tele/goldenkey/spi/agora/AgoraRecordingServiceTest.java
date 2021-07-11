@@ -20,12 +20,12 @@ class AgoraRecordingServiceTest {
 
     @Test
     void startRecording() throws ServiceException {
-        service.startRecording("87");
+        service.startRecording("208");
     }
 
     @Test
     void stopRecording() throws ServiceException {
-        System.out.println(service.stopRecording("1511"));
+        System.out.println(service.stopRecording("208"));
     }
 
 }
