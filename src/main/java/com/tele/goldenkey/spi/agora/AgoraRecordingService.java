@@ -44,7 +44,7 @@ public class AgoraRecordingService {
         String resourceId = getResourceId(liveId, uId);
         ValidateUtils.notNull(resourceId);
 
-        String token = RtcTokenBuilderSample.buildRtcToken(liveId, uId, RtcTokenBuilder.Role.Role_Subscriber);
+        String token = RtcTokenBuilderSample.buildRtcToken(liveId, uId, RtcTokenBuilder.Role.Role_Subscriber, Integer.MAX_VALUE);
         HttpEntity<Object> httpEntity = new HttpEntity<>(initStartRecordParam(liveId, uId, token), getHttpBaseHeader());
         String url = String.format(START_CLOUD_RECORDING_URL, resourceId);
         String body = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
@@ -135,7 +135,7 @@ public class AgoraRecordingService {
                 "            \"transcodingConfig\": {" +
                 "                \"height\": 640, " +
                 "                \"width\": 360," +
-                "                \"bitrate\": 720, " +
+                "                \"bitrate\": 500, " +
                 "                \"fps\": 20, " +
                 "                \"mixedVideoLayout\": 1 }" +
                 "       }, " +

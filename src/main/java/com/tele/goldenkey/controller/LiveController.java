@@ -205,7 +205,7 @@ public class LiveController extends BaseController {
         String channelName = AGORA_CHANNEL_PREFIX + livedId;
         LiveTokenDto liveTokenDto = new LiveTokenDto().setUserId(userId)
                 .setRoomDto(liveService.room(livedId)).setChannelId(channelName)
-                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber))
+                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Subscriber, 0))
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)));
         eventPublisher.publishEvent(LiveEventFactory.getByKey(EventType.join.name()).execute(new LiveEventDto(livedId, userId, liveTokenDto.getRoomDto().getAnchorId())));
         return APIResultWrap.ok(liveTokenDto);

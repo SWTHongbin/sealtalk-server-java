@@ -70,10 +70,10 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         String shareId = String.valueOf(System.currentTimeMillis()), channelName = AGORA_CHANNEL_PREFIX + liveId;
         return new LiveTokenDto().setRoomDto(room(liveId))
                 .setLivedId(liveId).setUserId(userId).setChannelId(channelName)
-                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher))
+                .setRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, String.valueOf(userId), RtcTokenBuilder.Role.Role_Publisher, 0))
                 .setRtmToken(RtmTokenBuilderSample.buildRtmToken(String.valueOf(userId)))
                 .setShareUserId(shareId)
-                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, shareId, RtcTokenBuilder.Role.Role_Subscriber));
+                .setShareRtcToken(RtcTokenBuilderSample.buildRtcToken(channelName, shareId, RtcTokenBuilder.Role.Role_Subscriber, 0));
     }
 
     public Boolean isOpen(Long livedId) {
@@ -91,9 +91,8 @@ public class LiveService extends AbstractBaseService<LiveStatuses, Integer> {
         return liveStatusesMapper.updateByPrimaryKeySelective(update) > 0;
     }
 
-    public List<Long> openNoPing15s() {
-        LocalDateTime localDateTime = LocalDateTime.now().plusSeconds(-15);
-        return liveStatusesMapper.openNoPing100s(localDateTime);
+    public List<Long> openNoPing() {
+        return liveStatusesMapper.openNoPingRange(LocalDateTime.now().plusHours(-1), LocalDateTime.now().plusSeconds(-15));
     }
 
     @Transactional(rollbackFor = Exception.class)

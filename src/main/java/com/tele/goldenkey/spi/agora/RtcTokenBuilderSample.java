@@ -16,7 +16,7 @@ public class RtcTokenBuilderSample {
      * @param role    角色
      * @return
      */
-    public static String buildRtcToken(String groupId, String userId, RtcTokenBuilder.Role role) {
-        return new RtcTokenBuilder().buildTokenWithUserAccount(appId, appCertificate, groupId, userId, role, 0);
+    public static String buildRtcToken(String groupId, String userId, RtcTokenBuilder.Role role,int privilegeTs) {
+        return new RtcTokenBuilder().buildTokenWithUserAccount(appId, appCertificate, groupId, userId, role, privilegeTs);
     }
 }
