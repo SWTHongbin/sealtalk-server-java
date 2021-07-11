@@ -66,8 +66,10 @@ public class AgoraRecordingService {
         String body = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
         log.info(" liveId:{},uId:{}-stop recordeDto :{},result:{}", liveId, recordDto.getUId(), recordDto, body);
         JSONObject serverResponse = JSONObject.parseObject(body).getJSONObject("serverResponse");
+        String filUrl = serverResponse != null ? serverResponse.getString("fileList") : null;
+        ValidateUtils.notEmpty(filUrl);
         bucket.deleteAsync();
-        return serverResponse != null ? serverResponse.getString("fileList") : null;
+        return filUrl;
     }
 
     private String getResourceId(String liveId, String uId) {
