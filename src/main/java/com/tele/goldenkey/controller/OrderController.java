@@ -9,6 +9,7 @@ import com.tele.goldenkey.model.response.APIResultWrap;
 import com.tele.goldenkey.util.RandomUtil;
 import com.tele.goldenkey.util.ValidateUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 订单相关
  */
+@Slf4j
 @RestController
 @RequestMapping("/order")
 @RequiredArgsConstructor
@@ -43,6 +45,7 @@ public class OrderController extends BaseController {
         orderParam.setUserId(userId);
         orderParam.setOrderNo(orderNo);
         redissonClient.getBucket("order" + userId + orderNo).set(orderParam, 1, TimeUnit.HOURS);
+        log.info("订单号:{},订单信息:{}", orderNo, orderParam);
         return APIResultWrap.ok(orderNo);
     }
 
