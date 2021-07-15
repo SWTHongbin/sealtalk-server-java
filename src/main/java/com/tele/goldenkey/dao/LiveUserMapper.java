@@ -69,7 +69,7 @@ public interface LiveUserMapper extends Mapper<LiveUser> {
             "<if test=\"rep.status != null\">",
             " AND ls.`status` = #{rep.status}",
             "</if>",
-            " ORDER BY ls.createdAt DESC ",
+            " ORDER BY ls.liveId DESC ",
             " </script>"})
     @ResultType(MyLiveDto.Resp.class)
     List<MyLiveDto.Resp> userLive(@Param("rep") MyLiveDto.Rep rep);
