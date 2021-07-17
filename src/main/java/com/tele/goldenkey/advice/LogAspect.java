@@ -62,7 +62,7 @@ public class LogAspect {
         log.info("响应: traceId={},uri={},uid={},return value={}",
                 ServerApiParamHolder.getTraceId(),
                 ServerApiParamHolder.getURI(),
-                ServerApiParamHolder.getEncodedCurrentUserId(),
+                ServerApiParamHolder.get().getCurrentUserId(),
                 JSON.toJSONString(returnValue));
     }
 }
